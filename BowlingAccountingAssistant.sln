@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BowlingAccountingAssistant", "BowlingAccountingAssistant\BowlingAccountingAssistant.csproj", "{C238CC73-1344-40AB-A214-0016B1F337A9}"
 EndProject
@@ -12,6 +12,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL_Logger", "BL_Logger\BL_Logger.csproj", "{94AC49E7-04A8-40FA-AE3A-7FD71E5C9A08}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{0AD1342C-7001-4DE1-B6A3-152B613E6DC7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0822F38B-FEC4-4A1D-BCB4-9F4B7D2E9C8F}"
+	ProjectSection(SolutionItems) = preProject
+		bowlingBall.ico = bowlingBall.ico
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
