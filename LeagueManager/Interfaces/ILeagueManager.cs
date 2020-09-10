@@ -14,5 +14,6 @@ namespace LeagueManager.Interfaces {
         decimal PaidToLanes(int leagueId, int week);
         decimal PrizeMoney(int leagueId, int week);
         int TotalPlayers(int leagueId);
+        decimal AmountPaidToday(int leagueId, int week);
     }
 }

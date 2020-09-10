@@ -101,7 +101,7 @@ namespace LeagueManager {
             workSheet.Cells["B1"].Value = league.Name;
             workSheet.Cells[_laneFee].Value = league.LaneFee;
             workSheet.Cells[_prizeAmount].Value = league.PrizeAmountPerWeek;
-            workSheet.Cells[_costPerWeek].Formula = "=SUM(B2:B3)";
+            workSheet.Cells[_costPerWeek].Formula = "SUM(B2:B3)";
             workSheet.Cells[_numberOfWeeks].Value = league.NumberOfWeeks;
             workSheet.Cells[_totalPlayersOnLeague].Value = _leagueManager.TotalPlayers(league.Id);
 
@@ -111,11 +111,12 @@ namespace LeagueManager {
         }
 
         private void WeekHeader(ExcelWorksheet workSheet, int week, int teamCount, int playerPerTeam) {
-            workSheet.Cells["A1"].Value = "Paid To Date";
-            workSheet.Cells["B1"].Value = "Paid To Lanes";
-            workSheet.Cells["C1"].Value = "Owed To Lanes";
-            workSheet.Cells["D1"].Value = "Prize Money";
-            HeaderStyle(workSheet.Cells["A1:D1"]);
+            workSheet.Cells["A1"].Value = "Paid Today";
+            workSheet.Cells["B1"].Value = "Paid To Date";
+            workSheet.Cells["C1"].Value = "Paid To Lanes";
+            workSheet.Cells["D1"].Value = "Owed To Lanes";
+            workSheet.Cells["E1"].Value = "Prize Money";
+            HeaderStyle(workSheet.Cells["A1:E1"]);
 
             var locationsOfPaidAmounts = new List<string>();
             var row = _teamRowStart + 2;
@@ -134,14 +135,15 @@ namespace LeagueManager {
             }
 
             var currentLaneFee = $"(('{_leagueInfoPage}'!{_laneFee}) * '{_leagueInfoPage}'!{_totalPlayersOnLeague}) * {week + 1}";
+            workSheet.Cells["A2"].Formula = $"{locationsOfPaidAmounts.Aggregate((i, j) => i + " + " + j)}";
             if (week == 0) {
-                workSheet.Cells["A2"].Formula = $"={locationsOfPaidAmounts.Aggregate((i, j) => i + " + " + j)}";
+                workSheet.Cells["B2"].Formula = "A2";
             } else {
-                workSheet.Cells["A2"].Formula = $"={locationsOfPaidAmounts.Aggregate((i, j) => i + " + " + j)} + 'Week {week}'!A2";
+                workSheet.Cells["B2"].Formula = $"A2 + 'Week {week}'!B2";
             }
-            workSheet.Cells["B2"].Formula = $"=IF( {currentLaneFee} > A2, A2, {currentLaneFee})";
-            workSheet.Cells["C2"].Formula = currentLaneFee;
-            workSheet.Cells["D2"].Formula = "=IF(A2-B2 > 0, A2-B2,0)";
+            workSheet.Cells["C2"].Formula = $"IF( {currentLaneFee} > B2, B2, {currentLaneFee})";
+            workSheet.Cells["D2"].Formula = currentLaneFee;
+            workSheet.Cells["E2"].Formula = "IF(B2-C2 > 0, B2-C2,0)";
         }
 
         private void TeamHeader(ExcelWorksheet workSheet, int row, int column) {
@@ -174,14 +176,14 @@ namespace LeagueManager {
                 workSheet.Cells[row + i, column + 1].Value = PaidAmounts[i];
 
                 if(week == 0) {
-                    workSheet.Cells[row + i, column + 2].Formula = $"={workSheet.Cells[row + i, column + 1].Address}";
-                    workSheet.Cells[row + i, column + 3].Formula = $"='{_leagueInfoPage}'!{_costPerWeek}";
+                    workSheet.Cells[row + i, column + 2].Formula = $"{workSheet.Cells[row + i, column + 1].Address}";
+                    workSheet.Cells[row + i, column + 3].Formula = $"'{_leagueInfoPage}'!{_costPerWeek}";
                 } else {
-                    workSheet.Cells[row + i, column + 2].Formula = $"={workSheet.Cells[row + i, column + 1].Address} + 'Week {week}'!{workSheet.Cells[row + i, column + 2].Address}";
-                    workSheet.Cells[row + i, column + 3].Formula = $"='{_leagueInfoPage}'!{_costPerWeek} + 'Week {week}'!{workSheet.Cells[row + i, column + 3].Address}";
+                    workSheet.Cells[row + i, column + 2].Formula = $"{workSheet.Cells[row + i, column + 1].Address} + 'Week {week}'!{workSheet.Cells[row + i, column + 2].Address}";
+                    workSheet.Cells[row + i, column + 3].Formula = $"'{_leagueInfoPage}'!{_costPerWeek} + 'Week {week}'!{workSheet.Cells[row + i, column + 3].Address}";
                 }
                 
-                workSheet.Cells[row + i, column + 4].Formula = $"={workSheet.Cells[row + i, column + 2].Address} - {workSheet.Cells[row + i, column + 3].Address}";
+                workSheet.Cells[row + i, column + 4].Formula = $"{workSheet.Cells[row + i, column + 2].Address} - {workSheet.Cells[row + i, column + 3].Address}";
             }
         }
     }

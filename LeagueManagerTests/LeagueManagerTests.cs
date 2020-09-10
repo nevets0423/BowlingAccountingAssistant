@@ -4,6 +4,7 @@ using LeagueManagerTests.Test_Helpers;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LeagueManagerTests {
     [TestFixture]
@@ -103,6 +104,24 @@ namespace LeagueManagerTests {
                .Return(2);
 
             var results = _leagueManager.PrizeMoney(league.Id, week);
+
+            Assert.AreEqual(expectedResult, results);
+            _dataAccessor.VerifyAllExpectations();
+        }
+
+        [TestCase(0, 20)]
+        [TestCase(1, 20)]
+        [TestCase(2, 50)]
+        [TestCase(3, 30)]
+        [TestCase(4, 5)]
+        public void Total_Paid_Today_Sums_Correctly(int week, decimal expectedResult) {
+            _teamInfo.Players.First().AmountPaidEachWeek.Add(5);
+
+            _dataAccessor.Expect(m => m.GetAllTeams(Arg<int>.Is.Equal(0)))
+               .Repeat.Once()
+               .Return(new List<TeamInfo>() { _teamInfo });
+
+            var results = _leagueManager.AmountPaidToday(0, week);
 
             Assert.AreEqual(expectedResult, results);
             _dataAccessor.VerifyAllExpectations();

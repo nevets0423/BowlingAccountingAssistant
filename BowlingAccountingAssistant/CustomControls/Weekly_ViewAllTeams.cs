@@ -29,6 +29,7 @@ namespace BowlingAccountingAssistant {
             paidToLanes_textBox.Text = _leagueManager.PaidToLanes(_leagueInfo.Id, _week).ToString();
             prizeMoney_textBox.Text = _leagueManager.PrizeMoney(_leagueInfo.Id, _week).ToString();
             owedToLanes_textBox.Text = _leagueManager.OwedToLanes(_leagueInfo.Id, _week).ToString();
+            PaidToday_textBox.Text = _leagueManager.AmountPaidToday(_leagueInfo.Id, _week).ToString();
         }
 
         private void AddTeams() {

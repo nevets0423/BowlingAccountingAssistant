@@ -90,5 +90,9 @@ namespace BowlingAccountingAssistant {
         private void numberOfWeeks_numericUpDown_ValueChanged(object sender, EventArgs e) {
             EnableSave();
         }
+
+        private void LeagueInfoPage_Click(object sender, EventArgs e) {
+            EnableSave();
+        }
     }
 }

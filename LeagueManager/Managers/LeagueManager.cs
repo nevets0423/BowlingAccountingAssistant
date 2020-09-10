@@ -75,5 +75,21 @@ namespace LeagueManager {
         public void Save() {
             _dataAccessor.Save();
         }
+
+        public decimal AmountPaidToday(int leagueId, int week) {
+            var teams = _dataAccessor.GetAllTeams(leagueId);
+
+            var totalPaidToday = 0m;
+
+            foreach(var team in teams) {
+                foreach(var player in team.Players) {
+                    if(player.AmountPaidEachWeek.Count > week) {
+                        totalPaidToday += player.AmountPaidEachWeek[week];
+                    }
+                }
+            }
+
+            return totalPaidToday;
+        }
     }
 }
