@@ -7,6 +7,7 @@ namespace LeagueManager {
         public int TeamId;
         public string Name;
         public decimal PaidToDate;
+        public int WeekStarted;
         public List<decimal> AmountPaidEachWeek;
 
         public object Clone() {
@@ -16,6 +17,7 @@ namespace LeagueManager {
                 TeamId = this.TeamId,
                 Name = (string)this.Name.Clone(),
                 PaidToDate = this.PaidToDate,
+                WeekStarted = this.WeekStarted,
                 AmountPaidEachWeek = (List<decimal>)this.AmountPaidEachWeek.Copy()
             };
         }

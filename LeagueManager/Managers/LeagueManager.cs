@@ -43,7 +43,9 @@ namespace LeagueManager {
 
             foreach (var team in teams) {
                 foreach (var player in team.Players) {
-                    totalPaid += player.AmountPaidEachWeek.Take(week + 1).Sum();
+                    if (player.WeekStarted <= week+1) {
+                        totalPaid += player.AmountPaidEachWeek.Take(week + 1).Sum();
+                    }
                 }
             }
 
@@ -51,7 +53,12 @@ namespace LeagueManager {
         }
 
         public decimal OwedToLanes(int leagueId, int week) {
-            return (GetLeague(leagueId).LaneFee * (week + 1)) * _dataAccessor.PlayersOnLeague(leagueId);
+            var laneFee = GetLeague(leagueId).LaneFee;
+            var owed = 0m;
+            for (int w = week; w >= 0; w--) {
+                owed += laneFee * _dataAccessor.ActivePlayersForWeek(leagueId, w);
+            }
+            return owed;
         }
 
         public decimal PaidToLanes(int leagueId, int week) {
@@ -83,7 +90,7 @@ namespace LeagueManager {
 
             foreach(var team in teams) {
                 foreach(var player in team.Players) {
-                    if(player.AmountPaidEachWeek.Count > week) {
+                    if(player.AmountPaidEachWeek.Count > week && player.WeekStarted <= week+1) {
                         totalPaidToday += player.AmountPaidEachWeek[week];
                     }
                 }

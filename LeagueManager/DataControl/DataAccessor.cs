@@ -97,6 +97,7 @@ namespace LeagueManager.DataControl {
             player.AmountPaidEachWeek = (List<decimal>)updatedPlayer.AmountPaidEachWeek.Copy();
             player.Name = updatedPlayer.Name;
             player.PaidToDate = updatedPlayer.PaidToDate;
+            player.WeekStarted = updatedPlayer.WeekStarted;
         }
 
         public TeamInfo GetTeam(int teamId) {
@@ -130,6 +131,16 @@ namespace LeagueManager.DataControl {
             var players = 0;
             GetAllTeams(leagueId).ForEach(t => players += t.Players.Count);
             return players;
+        }
+
+        public int ActivePlayersForWeek(int leagueId, int week) {
+            var players = 0;
+            GetAllTeams(leagueId).ForEach(t => players += (t.Players.Where(p => p.WeekStarted <= week)).Count());
+            return players;
+        }
+
+        public bool PlayerActiveForWeek(int Week, int playerId, int teamId) {
+            return GetPlayer(playerId, teamId).WeekStarted <= Week;
         }
     }
 }

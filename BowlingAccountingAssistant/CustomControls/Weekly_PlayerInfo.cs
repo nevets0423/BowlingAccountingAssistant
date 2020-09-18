@@ -22,6 +22,7 @@ namespace BowlingAccountingAssistant {
             _playerInfo = playerInfo;
             _week = week;
 
+            paid_textBox.Enabled = _playerInfo.WeekStarted <= _week + 1;
             name_textBox.Text = _playerInfo.Name;
             UpdateAmounts();
         }
@@ -31,15 +32,18 @@ namespace BowlingAccountingAssistant {
             if (!paid_textBox.Focused) {
                 paid_textBox.Text = (_playerInfo.AmountPaidEachWeek.Count > _week) ? _playerInfo.AmountPaidEachWeek[_week].ToString() : string.Empty;
             }
-            paidToDate_textBox.Text = _playerManager.AmountPaidToDate(_playerInfo.Id, _playerInfo.TeamId, _week).ToString();
-            oweToDate_textBox.Text = _playerManager.GetTotalCostToDate(_playerInfo.TeamId, _week).ToString();
-            var difference = _playerManager.AmountStillOwedToDate(_playerInfo.Id, _playerInfo.TeamId, _week);
-            difference_textBox.Text = difference.ToString();
 
-            if(difference < 0) {
-                name_textBox.BackColor = Color.LightSalmon;
-            } else {
-                name_textBox.BackColor = paidToDate_textBox.BackColor;
+            if (_playerInfo.WeekStarted <= _week + 1) {
+                paidToDate_textBox.Text = _playerManager.AmountPaidToDate(_playerInfo.Id, _playerInfo.TeamId, _week).ToString();
+                oweToDate_textBox.Text = _playerManager.GetTotalCostToDate(_playerInfo.TeamId, _week).ToString();
+                var difference = _playerManager.AmountStillOwedToDate(_playerInfo.Id, _playerInfo.TeamId, _week);
+                difference_textBox.Text = difference.ToString();
+
+                if (difference < 0) {
+                    name_textBox.BackColor = Color.LightSalmon;
+                } else {
+                    name_textBox.BackColor = paidToDate_textBox.BackColor;
+                }
             }
 
             _updatingPaidAmount = false;

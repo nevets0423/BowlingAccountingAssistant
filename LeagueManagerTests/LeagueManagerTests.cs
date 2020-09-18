@@ -26,7 +26,7 @@ namespace LeagueManagerTests {
             _teamInfo.Players.Add(player2);
         }
 
-        [TestCase(0,20)]
+        [TestCase(0, 20)]
         [TestCase(1, 40)]
         [TestCase(2, 90)]
         [TestCase(3, 120)]
@@ -42,18 +42,20 @@ namespace LeagueManagerTests {
             _dataAccessor.VerifyAllExpectations();
         }
 
-        [TestCase(0, 20)]
-        [TestCase(1, 40)]
-        [TestCase(2, 60)]
-        [TestCase(3, 80)]
-        public void Lane_Fee_Amount_Is_Correct(int week, decimal expectedResult) {
+        [TestCase(0, 1, 10)]
+        [TestCase(1, 1, 20)]
+        [TestCase(2, 2, 60)]
+        [TestCase(3, 3, 120)]
+        public void Lane_Fee_Amount_Is_Correct(int week, int activePlayers, decimal expectedResult) {
             var league = GenerateObjects.GenerateNewLeague();
             _dataAccessor.Expect(m => m.GetLeague(Arg<int>.Is.Equal(league.Id)))
                 .Repeat.Once()
                 .Return(league);
             _dataAccessor.Expect(m => m.PlayersOnLeague(Arg<int>.Is.Equal(0)))
-               .Repeat.Once()
-               .Return(2);
+               .Repeat.Never();
+            _dataAccessor.Expect(m => m.ActivePlayersForWeek(Arg<int>.Is.Equal(league.Id), Arg<int>.Is.Anything))
+                .Repeat.AtLeastOnce()
+                .Return(activePlayers);
 
             var results = _leagueManager.OwedToLanes(league.Id, week);
 
@@ -61,13 +63,13 @@ namespace LeagueManagerTests {
             _dataAccessor.VerifyAllExpectations();
         }
 
-        [TestCase(0, 20)]
-        [TestCase(1, 40)]
-        [TestCase(2, 60)]
-        [TestCase(3, 80)]
-        [TestCase(4, 100)]
-        [TestCase(12, 120)]
-        public void Total_Amount_Paid_To_Lanes_Sums_Correctly(int week, decimal expectedResult) {
+        [TestCase(0, 2, 20)]
+        [TestCase(1, 2, 40)]
+        [TestCase(2, 2, 60)]
+        [TestCase(3, 2, 80)]
+        [TestCase(4, 2, 100)]
+        [TestCase(12, 2, 120)]
+        public void Total_Amount_Paid_To_Lanes_Sums_Correctly(int week, int activePlayers, decimal expectedResult) {
             var league = GenerateObjects.GenerateNewLeague();
             _dataAccessor.Expect(m => m.GetLeague(Arg<int>.Is.Equal(league.Id)))
                 .Repeat.Once()
@@ -76,8 +78,10 @@ namespace LeagueManagerTests {
                .Repeat.Once()
                .Return(new List<TeamInfo>() { _teamInfo });
             _dataAccessor.Expect(m => m.PlayersOnLeague(Arg<int>.Is.Equal(0)))
-               .Repeat.Once()
-               .Return(2);
+               .Repeat.Never();
+            _dataAccessor.Expect(m => m.ActivePlayersForWeek(Arg<int>.Is.Equal(league.Id), Arg<int>.Is.Anything))
+               .Repeat.AtLeastOnce()
+               .Return(activePlayers);
 
             var results = _leagueManager.PaidToLanes(league.Id, week);
 
@@ -85,13 +89,13 @@ namespace LeagueManagerTests {
             _dataAccessor.VerifyAllExpectations();
         }
 
-        [TestCase(0, 0)]
-        [TestCase(1, 0)]
-        [TestCase(2, 30)]
-        [TestCase(3, 40)]
-        [TestCase(4, 20)]
-        [TestCase(12, 0)]
-        public void Prize_Amount_Sums_Correctly(int week, decimal expectedResult) {
+        [TestCase(0, 2, 0)]
+        [TestCase(1, 2, 0)]
+        [TestCase(2, 2, 30)]
+        [TestCase(3, 2, 40)]
+        [TestCase(4, 2, 20)]
+        [TestCase(12, 2, 0)]
+        public void Prize_Amount_Sums_Correctly(int week, int activePlayers, decimal expectedResult) {
             var league = GenerateObjects.GenerateNewLeague();
             _dataAccessor.Expect(m => m.GetLeague(Arg<int>.Is.Equal(league.Id)))
                 .Repeat.Once()
@@ -100,8 +104,10 @@ namespace LeagueManagerTests {
                .Repeat.Once()
                .Return(new List<TeamInfo>() { _teamInfo });
             _dataAccessor.Expect(m => m.PlayersOnLeague(Arg<int>.Is.Equal(0)))
-               .Repeat.Once()
-               .Return(2);
+               .Repeat.Never();
+            _dataAccessor.Expect(m => m.ActivePlayersForWeek(Arg<int>.Is.Equal(league.Id), Arg<int>.Is.Anything))
+               .Repeat.AtLeastOnce()
+               .Return(activePlayers);
 
             var results = _leagueManager.PrizeMoney(league.Id, week);
 
