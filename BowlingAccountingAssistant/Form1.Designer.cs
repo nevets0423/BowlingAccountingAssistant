@@ -37,6 +37,7 @@
             this.team_tabPage = new System.Windows.Forms.TabPage();
             this.editPage_EditeAllTeams1 = new BowlingAccountingAssistant.EditPage_EditeAllTeams();
             this.newLeague_label = new System.Windows.Forms.Label();
+            this.downLoadInstallerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.week_tabPage.SuspendLayout();
@@ -60,29 +61,30 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newLeagueToolStripMenuItem,
             this.saveToolStripMenuItem,
-            this.exportToolStripMenuItem});
+            this.exportToolStripMenuItem,
+            this.downLoadInstallerToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newLeagueToolStripMenuItem
             // 
             this.newLeagueToolStripMenuItem.Name = "newLeagueToolStripMenuItem";
-            this.newLeagueToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.newLeagueToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.newLeagueToolStripMenuItem.Text = "New League";
             this.newLeagueToolStripMenuItem.Click += new System.EventHandler(this.newLeagueToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveData);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
@@ -166,6 +168,13 @@
             this.newLeague_label.TabIndex = 3;
             this.newLeague_label.Text = "Please Create a leauge by clicking File Then New League";
             // 
+            // downLoadInstallerToolStripMenuItem
+            // 
+            this.downLoadInstallerToolStripMenuItem.Name = "downLoadInstallerToolStripMenuItem";
+            this.downLoadInstallerToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.downLoadInstallerToolStripMenuItem.Text = "DownLoad Installer";
+            this.downLoadInstallerToolStripMenuItem.Click += new System.EventHandler(this.DownLoadInstallerToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -207,6 +216,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.Label newLeague_label;
+        private System.Windows.Forms.ToolStripMenuItem downLoadInstallerToolStripMenuItem;
     }
 }
 

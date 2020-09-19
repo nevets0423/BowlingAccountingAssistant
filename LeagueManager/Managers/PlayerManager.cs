@@ -33,8 +33,13 @@ namespace LeagueManager {
             return _dataAccessor.GetAllPlayers(teamId);
         }
 
-        public decimal GetTotalCostToDate(int teamId, int week) {
-            return _dataAccessor.GetCostPerWeek(teamId) * (week + 1);
+        public decimal GetTotalCostToDate(int teamId, int playerId, int week) {
+            var startWeek = _dataAccessor.GetPlayer(playerId, teamId).WeekStarted-1;
+            var weeksActive = (week+1) - startWeek;
+            if(weeksActive < 0) {
+                weeksActive = 0;
+            }
+            return _dataAccessor.GetCostPerWeek(teamId) * weeksActive;
         }
 
         public PlayerInfo UpdatePlayerAmountPaid(PlayerInfo playerInfo, int week, decimal amount) {
@@ -55,7 +60,7 @@ namespace LeagueManager {
         }
 
         public decimal AmountStillOwedToDate(int playerId, int teamId, int week) {
-            return  AmountPaidToDate(playerId, teamId, week) - GetTotalCostToDate(teamId, week);
+            return  AmountPaidToDate(playerId, teamId, week) - GetTotalCostToDate(teamId, playerId, week);
         }
     }
 }

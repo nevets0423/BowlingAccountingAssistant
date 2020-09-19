@@ -63,6 +63,28 @@ namespace LeagueManagerTests {
             _dataAccessor.VerifyAllExpectations();
         }
 
+        [Test]
+        public void Lane_Fee_Amount_Is_Correct_When_One_Player_Starts_Late() {
+            var league = GenerateObjects.GenerateNewLeague();
+            _dataAccessor.Expect(m => m.GetLeague(Arg<int>.Is.Equal(league.Id)))
+                .Repeat.Once()
+                .Return(league);
+            _dataAccessor.Expect(m => m.ActivePlayersForWeek(Arg<int>.Is.Equal(league.Id), Arg<int>.Is.Equal(0)))
+               .Repeat.AtLeastOnce()
+               .Return(1);
+            _dataAccessor.Expect(m => m.ActivePlayersForWeek(Arg<int>.Is.Equal(league.Id), Arg<int>.Is.Equal(1)))
+               .Repeat.AtLeastOnce()
+               .Return(1);
+            _dataAccessor.Expect(m => m.ActivePlayersForWeek(Arg<int>.Is.Equal(league.Id), Arg<int>.Is.Equal(2)))
+               .Repeat.AtLeastOnce()
+               .Return(2);
+
+            var results = _leagueManager.OwedToLanes(league.Id, 2);
+
+            Assert.AreEqual(40, results);
+            _dataAccessor.VerifyAllExpectations();
+        }
+
         [TestCase(0, 2, 20)]
         [TestCase(1, 2, 40)]
         [TestCase(2, 2, 60)]

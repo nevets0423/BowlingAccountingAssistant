@@ -3,7 +3,7 @@
 namespace LeagueManager.Interfaces {
     public interface IPlayerManager {
         int AddNewPlayer(int teamId);
-        decimal GetTotalCostToDate(int teamId, int week);
+        decimal GetTotalCostToDate(int teamId, int playerId, int week);
         PlayerInfo GetPlayer(int playerId, int teamId);
         List<PlayerInfo> GetPlayers(int teamId);
         void RemovePlayer(PlayerInfo player);

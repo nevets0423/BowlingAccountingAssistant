@@ -35,7 +35,7 @@ namespace BowlingAccountingAssistant {
 
             if (_playerInfo.WeekStarted <= _week + 1) {
                 paidToDate_textBox.Text = _playerManager.AmountPaidToDate(_playerInfo.Id, _playerInfo.TeamId, _week).ToString();
-                oweToDate_textBox.Text = _playerManager.GetTotalCostToDate(_playerInfo.TeamId, _week).ToString();
+                oweToDate_textBox.Text = _playerManager.GetTotalCostToDate(_playerInfo.TeamId, _playerInfo.Id, _week).ToString();
                 var difference = _playerManager.AmountStillOwedToDate(_playerInfo.Id, _playerInfo.TeamId, _week);
                 difference_textBox.Text = difference.ToString();
 

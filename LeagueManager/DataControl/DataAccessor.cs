@@ -85,7 +85,8 @@ namespace LeagueManager.DataControl {
                 TeamId = teamId,
                 AmountPaidEachWeek = new List<decimal>(),
                 Name = string.Empty,
-                PaidToDate = 0
+                PaidToDate = 0,
+                WeekStarted = 1
             });
             return playerId;
         }
@@ -135,7 +136,7 @@ namespace LeagueManager.DataControl {
 
         public int ActivePlayersForWeek(int leagueId, int week) {
             var players = 0;
-            GetAllTeams(leagueId).ForEach(t => players += (t.Players.Where(p => p.WeekStarted <= week)).Count());
+            GetAllTeams(leagueId).ForEach(t => players += (t.Players.Where(p => p.WeekStarted-1 <= week)).Count());
             return players;
         }
 

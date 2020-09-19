@@ -18,7 +18,7 @@ namespace BowlingAccountingAssistant {
             _playerinfo = playerInfo;
 
             Name_textBox.Text = _playerinfo.Name;
-            WeekStarted_numericUpDown.Value = _playerinfo.WeekStarted;
+            WeekStarted_numericUpDown.Value = (_playerinfo.WeekStarted == 0) ? 1 : _playerinfo.WeekStarted;
             loading = false;
         }
         

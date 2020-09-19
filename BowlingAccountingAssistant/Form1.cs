@@ -175,5 +175,9 @@ namespace BowlingAccountingAssistant {
 
             return null;
         }
+
+        private void DownLoadInstallerToolStripMenuItem_Click(object sender, EventArgs e) {
+            Process.Start("https://drive.google.com/file/d/1tjbKhGSRluXk6oF9qKBEbckW6Ac1kjFi/view?usp=sharing");
+        }
     }
 }

@@ -26,6 +26,24 @@ namespace LeagueManagerTests {
             _teamInfo.Players.Add(player);
         }
 
+        [TestCase(2, 1, 30)]
+        [TestCase(2, 2, 20)]
+        [TestCase(2, 3, 10)]
+        public void Total_Owed_Amount_Sums_Correctly(int week, int startWeek, int expectedAmount) {
+            _teamInfo.Players[0].WeekStarted = startWeek;
+            _dataAccessor.Expect(m => m.GetPlayer(Arg<int>.Is.Anything, Arg<int>.Is.Anything))
+                .Repeat.Once()
+                .Return(_teamInfo.Players[0]);
+            _dataAccessor.Expect(m => m.GetCostPerWeek(Arg<int>.Is.Anything))
+                .Repeat.Once()
+                .Return(10);
+
+            var results = _playerManager.GetTotalCostToDate(1, 1, week);
+
+            Assert.AreEqual(expectedAmount, results);
+            _dataAccessor.VerifyAllExpectations();
+        }
+
         [TestCase(0)]
         [TestCase(10)]
         public void Update_Player_Amount_Paid(int week) {
