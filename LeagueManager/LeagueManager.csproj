@@ -59,6 +59,7 @@
     <Compile Include="Interfaces\IPlayerManager.cs" />
     <Compile Include="Interfaces\ITeamManager.cs" />
     <Compile Include="Managers\LeagueManager.cs" />
+    <Compile Include="Managers\SharedManagerFunctions.cs" />
     <Compile Include="Models\AutoNum.cs" />
     <Compile Include="DataControl\DataAccessor.cs" />
     <Compile Include="DataControl\DataManager.cs" />

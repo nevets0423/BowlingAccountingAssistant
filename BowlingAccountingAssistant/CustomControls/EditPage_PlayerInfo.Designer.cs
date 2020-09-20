@@ -51,10 +51,20 @@
             // WeekStarted_numericUpDown
             // 
             this.WeekStarted_numericUpDown.Location = new System.Drawing.Point(232, 4);
-            this.WeekStarted_numericUpDown.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.WeekStarted_numericUpDown.Margin = new System.Windows.Forms.Padding(4);
+            this.WeekStarted_numericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.WeekStarted_numericUpDown.Name = "WeekStarted_numericUpDown";
             this.WeekStarted_numericUpDown.Size = new System.Drawing.Size(44, 22);
             this.WeekStarted_numericUpDown.TabIndex = 2;
+            this.WeekStarted_numericUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.WeekStarted_numericUpDown.ValueChanged += new System.EventHandler(this.WeekStarted_numericUpDown_ValueChanged);
             // 
             // EditPage_PlayerInfo

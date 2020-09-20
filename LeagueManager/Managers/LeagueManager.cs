@@ -4,14 +4,11 @@ using LeagueManager.Interfaces;
 using System.Linq;
 
 namespace LeagueManager {
-    public class LeagueManager : ILeagueManager {
-        private IDataAccessor _dataAccessor;
+    public class LeagueManager : SharedManagerFunctions, ILeagueManager {
 
         public LeagueManager() : this(new DataAccessor()) { }
 
-        public LeagueManager(IDataAccessor dataAccessor) {
-            _dataAccessor = dataAccessor;
-        }
+        public LeagueManager(IDataAccessor dataAccessor) : base(dataAccessor) { }
 
         public int CreateLeague() {
             return _dataAccessor.CreateNewLeague();
@@ -43,9 +40,7 @@ namespace LeagueManager {
 
             foreach (var team in teams) {
                 foreach (var player in team.Players) {
-                    if (player.WeekStarted <= week+1) {
-                        totalPaid += player.AmountPaidEachWeek.Take(week + 1).Sum();
-                    }
+                    totalPaid += AmountPaidByPlayerToDate(player.Id, team.Id, week);
                 }
             }
 

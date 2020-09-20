@@ -35,6 +35,9 @@ namespace LeagueManagerTests {
             _dataAccessor.Expect(m => m.GetAllTeams(Arg<int>.Is.Equal(0)))
                 .Repeat.Once()
                 .Return(new List<TeamInfo>() { _teamInfo });
+            _dataAccessor.Expect(m => m.GetPlayer(Arg<int>.Is.Anything, Arg<int>.Is.Equal(0)))
+               .Repeat.AtLeastOnce()
+               .Return(_teamInfo.Players.First());
 
             var results = _leagueManager.TotalAmountPaidToDate(0, week);
 
@@ -104,6 +107,9 @@ namespace LeagueManagerTests {
             _dataAccessor.Expect(m => m.ActivePlayersForWeek(Arg<int>.Is.Equal(league.Id), Arg<int>.Is.Anything))
                .Repeat.AtLeastOnce()
                .Return(activePlayers);
+            _dataAccessor.Expect(m => m.GetPlayer(Arg<int>.Is.Anything, Arg<int>.Is.Equal(0)))
+               .Repeat.AtLeastOnce()
+               .Return(_teamInfo.Players.First());
 
             var results = _leagueManager.PaidToLanes(league.Id, week);
 
@@ -130,6 +136,9 @@ namespace LeagueManagerTests {
             _dataAccessor.Expect(m => m.ActivePlayersForWeek(Arg<int>.Is.Equal(league.Id), Arg<int>.Is.Anything))
                .Repeat.AtLeastOnce()
                .Return(activePlayers);
+            _dataAccessor.Expect(m => m.GetPlayer(Arg<int>.Is.Anything, Arg<int>.Is.Equal(0)))
+               .Repeat.Twice()
+               .Return(_teamInfo.Players.First());
 
             var results = _leagueManager.PrizeMoney(league.Id, week);
 
