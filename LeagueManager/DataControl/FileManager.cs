@@ -28,6 +28,12 @@ namespace LeagueManager.DataControl {
             File.WriteAllText(path, dataInJsonFormat);
         }
 
+        public static void SaveFile(SaveObject dataToSave, string path) {
+            var dataInJsonFormat = JsonConvert.SerializeObject(dataToSave);
+
+            File.WriteAllText(path, dataInJsonFormat);
+        }
+
         public static void Touch() {
             TouchFolder();
             var path = GetPath();
@@ -51,6 +57,15 @@ namespace LeagueManager.DataControl {
             }
 
             return path;
+        }
+
+        internal static SaveObject LoadFromBackup(string path) {
+            var savedInformation = File.ReadAllText(path);
+            if (string.IsNullOrWhiteSpace(savedInformation)) {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<SaveObject>(savedInformation);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace LeagueManager.DataControl {
 
                 if(savedData == null) {
                     Default();
+                    BL_Logger.Logger.NoDataFoundInFile();
                     return;
                 }
 
@@ -41,6 +42,46 @@ namespace LeagueManager.DataControl {
                 };
 
                 FileManager.SaveFile(dataToSave);
+            } catch (Exception e) {
+                BL_Logger.Logger.ErrorDuringSave(e);
+                throw e;
+            }
+            BL_Logger.Logger.SaveSuccessful();
+        }
+
+        internal static string LoadFromBackup(string path) {
+            BL_Logger.Logger.AttemptingToLoadFromBackup();
+            try {
+                Loaded = true;
+
+                var savedData = FileManager.LoadFromBackup(path);
+
+                if (savedData == null) {
+                    BL_Logger.Logger.NoDataFoundInFile();
+                    return "No data found in file.  Current Save will not be changed.";
+                }
+
+                Leagues = savedData.Leagues;
+                Teams = savedData.Teams;
+                AutoNumbers = savedData.AutoNum;
+            } catch (Exception e) {
+                BL_Logger.Logger.ErrorDuringLoad(e);
+                return "An error occured while loading. Current Save will not be changed.";
+            }
+            BL_Logger.Logger.LoadSuccessful();
+            return string.Empty;
+        }
+
+        public static void SaveData(string path) {
+            BL_Logger.Logger.AttemptingToSave();
+            try {
+                var dataToSave = new SaveObject() {
+                    AutoNum = AutoNumbers,
+                    Leagues = Leagues,
+                    Teams = Teams
+                };
+
+                FileManager.SaveFile(dataToSave, path);
             } catch (Exception e) {
                 BL_Logger.Logger.ErrorDuringSave(e);
                 throw e;

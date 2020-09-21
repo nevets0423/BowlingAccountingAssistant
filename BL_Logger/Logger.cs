@@ -43,8 +43,16 @@ namespace BL_Logger {
             LogMessage($"Error Occured During Export. {e.Message}", Severity.Error);
         }
 
+        public static void AttemptingToLoadFromBackup() {
+            LogMessage($"Attempting to load from backup file.", Severity.Info);
+        }
+
         public static void ExportSuccessful() {
             LogMessage("Export successful.", Severity.Info);
+        }
+
+        public static void NoDataFoundInFile() {
+            LogMessage($"No data found in file.", Severity.Info);
         }
     }
 }

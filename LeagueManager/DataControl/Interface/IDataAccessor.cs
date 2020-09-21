@@ -16,6 +16,8 @@ namespace LeagueManager.DataControl {
         void RemovePlayer(PlayerInfo player);
         void RemoveTeam(TeamInfo team);
         void Save();
+        void Save(string path);
+        string LoadBackup(string path);
         void UpdateLeagueInfo(LeagueInfo updatedLeague);
         void UpdatePlayerInfo(PlayerInfo updatedPlayer);
         int PlayersOnLeague(int leagueId);

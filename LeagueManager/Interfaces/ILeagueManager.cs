@@ -7,6 +7,8 @@ namespace LeagueManager.Interfaces {
         List<LeagueInfo> GetLeagues();
         void RemoveLeague(LeagueInfo league);
         void Save();
+        void Save(string path);
+        string LoadBackup(string path);
         void UpdateLeague(LeagueInfo league);
         List<TeamInfo> GetAllTeams(int leagueId);
         decimal TotalAmountPaidToDate(int leagueId, int week);

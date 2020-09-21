@@ -37,6 +37,14 @@ namespace LeagueManager.DataControl {
             DataManager.SaveData();
         }
 
+        public void Save(string path) {
+            DataManager.SaveData(path);
+        }
+
+        public string LoadBackup(string path) {
+            return DataManager.LoadFromBackup(path);
+        }
+
         public decimal GetCostPerWeek(int teamId) {
             var leagueId = DataManager.Teams.Find(t => t.Id == teamId).LeagueId;
             var league = DataManager.Leagues.Find(l => l.Id == leagueId);

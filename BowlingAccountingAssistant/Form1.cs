@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using LeagueManager;
@@ -28,6 +29,13 @@ namespace BowlingAccountingAssistant {
             };
             _saveTimer.Tick += SaveData;
             _saveTimer.Enabled = true;
+
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            DateTime buildDate = new DateTime(2000, 1, 1)
+                                    .AddDays(version.Build).AddSeconds(version.Revision * 2);
+            string displayableVersion = $"{version} ({buildDate.ToString("MM/dd/yyyy")})";
+
+            version_label.Text = $"Version {displayableVersion}";
         }
         
         private void League_comboBox_SelectedValueChanged(object sender, EventArgs e) {
@@ -135,6 +143,7 @@ namespace BowlingAccountingAssistant {
         private void SaveData() {
             try {
                 _leagueManager.Save();
+                UpdateLastSave();
             } catch {
                 MessageBox.Show("An Error occured while saving.\n Data may be lost if program is not restarted.");
             }
@@ -148,7 +157,7 @@ namespace BowlingAccountingAssistant {
             }
             try {
                 var excelExporter = new ExcelDocumentExporter();
-                var path = GetFilePath();
+                var path = GetSaveFilePath("Export To Excel", "Excel Files (*.xlsx)|*.xlsx");
                 if(path == null) {
                     return;
                 }
@@ -161,12 +170,12 @@ namespace BowlingAccountingAssistant {
             }
         }
 
-        private string GetFilePath() {
+        private string GetSaveFilePath(string title, string filter) {
             var saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = @"C:\";
-            saveFileDialog.Title = "Export To Excel";
+            saveFileDialog.Title = title;
             saveFileDialog.CheckFileExists = false;
-            saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx";
+            saveFileDialog.Filter = filter;
             saveFileDialog.SupportMultiDottedExtensions = false;
             
             if (saveFileDialog.ShowDialog() == DialogResult.OK) {
@@ -176,8 +185,60 @@ namespace BowlingAccountingAssistant {
             return null;
         }
 
+        private string GetLoadFilePath(string title, string filter) {
+            var loadFileDialog = new OpenFileDialog();
+            loadFileDialog.InitialDirectory = @"C:\";
+            loadFileDialog.Title = title;
+            loadFileDialog.CheckFileExists = false;
+            loadFileDialog.Filter = filter;
+            loadFileDialog.SupportMultiDottedExtensions = false;
+
+            if (loadFileDialog.ShowDialog() == DialogResult.OK) {
+                return loadFileDialog.FileName;
+            }
+
+            return null;
+        }
+
         private void DownLoadInstallerToolStripMenuItem_Click(object sender, EventArgs e) {
             Process.Start("https://drive.google.com/file/d/1tjbKhGSRluXk6oF9qKBEbckW6Ac1kjFi/view?usp=sharing");
+        }
+
+        private void SaveBackupToolStripMenuItem_Click(object sender, EventArgs e) {
+            try {
+                var path = GetSaveFilePath("Create Backup", "Backup File (*.sav)|*.sav");
+                if (path == null) {
+                    return;
+                }
+
+                _leagueManager.Save(path);
+            } catch {
+                MessageBox.Show("An Error occured while saving.\n Data may be lost if program is not restarted.");
+            }
+        }
+
+        private void RestoreFromBackupToolStripMenuItem_Click(object sender, EventArgs e) {
+            var message = $"Restoring from backup will replace the current save. {Environment.NewLine}" +
+                "Do you wish to continue?.";
+            try {
+                if (MessageBox.Show(message, "Restore Backup", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+                    var path = GetLoadFilePath("Load Backup", "Backup File (*.sav)|*.sav");
+                    if (path == null) {
+                        return;
+                    }
+                    var errorMessage = _leagueManager.LoadBackup(path);
+
+                    if (!string.IsNullOrWhiteSpace(errorMessage)) {
+                        MessageBox.Show(errorMessage, "Error while loading.");
+                    }
+                }
+            } catch {
+                MessageBox.Show("An Error occured while saving.\n Data may be lost if program is not restarted.");
+            }
+        }
+
+        private void UpdateLastSave() {
+            lastSave_label.Text = $"LastSave: {DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("en-us"))}";
         }
     }
 }

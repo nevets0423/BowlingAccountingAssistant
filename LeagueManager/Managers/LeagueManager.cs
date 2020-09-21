@@ -78,6 +78,14 @@ namespace LeagueManager {
             _dataAccessor.Save();
         }
 
+        public void Save(string path) {
+            _dataAccessor.Save(path);
+        }
+
+        public string LoadBackup(string path) {
+            return _dataAccessor.LoadBackup(path);
+        }
+
         public decimal AmountPaidToday(int leagueId, int week) {
             var teams = _dataAccessor.GetAllTeams(leagueId);
 
