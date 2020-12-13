@@ -207,6 +207,7 @@ namespace BowlingAccountingAssistant {
 
         private void DownLoadInstallerToolStripMenuItem_Click(object sender, EventArgs e) {
             Process.Start("https://drive.google.com/file/d/1tjbKhGSRluXk6oF9qKBEbckW6Ac1kjFi/view?usp=sharing");
+            Process.Start("https://docs.google.com/document/d/1dLQssLsoRAdScB5nkyStJpeurp6D4aeL1caWJ4hQpYM/edit?usp=sharing");
         }
 
         private void SaveBackupToolStripMenuItem_Click(object sender, EventArgs e) {
