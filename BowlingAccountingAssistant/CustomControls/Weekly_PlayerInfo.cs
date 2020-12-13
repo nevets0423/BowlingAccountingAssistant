@@ -22,7 +22,7 @@ namespace BowlingAccountingAssistant {
             _playerInfo = playerInfo;
             _week = week;
 
-            paid_textBox.Enabled = _playerInfo.WeekStarted <= _week + 1;
+            paid_textBox.Enabled = _playerInfo.ActiveForWeek(_week);
             name_textBox.Text = _playerInfo.Name;
             UpdateAmounts();
         }

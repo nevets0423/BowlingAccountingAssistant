@@ -5,5 +5,6 @@ namespace LeagueManager {
         public List<LeagueInfo> Leagues;
         public List<TeamInfo> Teams;
         public AutoNum AutoNum;
+        public MigrationInfo MigrationInfo;
     }
 }

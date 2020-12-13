@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using LeagueManager;
+using LeagueManager.DataControl;
 using LeagueManager.Interfaces;
 
 namespace BowlingAccountingAssistant {
@@ -17,7 +18,10 @@ namespace BowlingAccountingAssistant {
         private int _timerInterval = 300000;//5 min
 
         public Form1() {
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            new DataMigration().Execute(version);
             InitializeComponent();
+
             _leagueManager = new LeagueManager.LeagueManager();
             _tabPages = new List<TabPage>();
             League_comboBox.SelectedValueChanged += editPage_EditeAllTeams1.LeagueChanged;
@@ -30,7 +34,6 @@ namespace BowlingAccountingAssistant {
             _saveTimer.Tick += SaveData;
             _saveTimer.Enabled = true;
 
-            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             DateTime buildDate = new DateTime(2000, 1, 1)
                                     .AddDays(version.Build).AddSeconds(version.Revision * 2);
             string displayableVersion = $"{version} ({buildDate.ToString("MM/dd/yyyy")})";

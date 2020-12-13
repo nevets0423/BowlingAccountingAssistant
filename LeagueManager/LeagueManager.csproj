@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataControl\DataMigration.cs" />
     <Compile Include="DataControl\Interface\IDataAccessor.cs" />
     <Compile Include="ExcelDocumentExporter.cs" />
     <Compile Include="ExtensionMethods.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="DataControl\DataAccessor.cs" />
     <Compile Include="DataControl\DataManager.cs" />
     <Compile Include="Models\LeagueInfo.cs" />
+    <Compile Include="Models\MigrationInfo.cs" />
     <Compile Include="Models\TeamInfo.cs" />
     <Compile Include="Models\PlayerInfo.cs" />
     <Compile Include="Managers\PlayerManager.cs" />

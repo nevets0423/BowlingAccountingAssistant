@@ -26,11 +26,13 @@ namespace LeagueManagerTests {
             _teamInfo.Players.Add(player);
         }
 
-        [TestCase(2, 1, 30)]
-        [TestCase(2, 2, 20)]
-        [TestCase(2, 3, 10)]
-        public void Total_Owed_Amount_Sums_Correctly(int week, int startWeek, int expectedAmount) {
+        [TestCase(2, 1, 4, 30)]
+        [TestCase(2, 2, 4, 20)]
+        [TestCase(2, 3, 4, 10)]
+        [TestCase(3, 1, 2, 20)]
+        public void Total_Owed_Amount_Sums_Correctly(int week, int startWeek, int endWeek, int expectedAmount) {
             _teamInfo.Players[0].WeekStarted = startWeek;
+            _teamInfo.Players[0].WeekEnded = endWeek;
             _dataAccessor.Expect(m => m.GetPlayer(Arg<int>.Is.Anything, Arg<int>.Is.Anything))
                 .Repeat.Once()
                 .Return(_teamInfo.Players[0]);

@@ -8,7 +8,11 @@ namespace LeagueManager {
         public string Name;
         public decimal PaidToDate;
         public int WeekStarted;
+        public int WeekEnded;
         public List<decimal> AmountPaidEachWeek;
+        public bool ActiveForWeek(int week) { 
+            return (WeekStarted - 1 <= week) && (WeekEnded > week);
+        }
 
         public object Clone() {
             return new PlayerInfo()
@@ -18,6 +22,7 @@ namespace LeagueManager {
                 Name = (string)this.Name.Clone(),
                 PaidToDate = this.PaidToDate,
                 WeekStarted = this.WeekStarted,
+                WeekEnded = this.WeekEnded,
                 AmountPaidEachWeek = (List<decimal>)this.AmountPaidEachWeek.Copy()
             };
         }

@@ -19,6 +19,9 @@ namespace BowlingAccountingAssistant {
 
             Name_textBox.Text = _playerinfo.Name;
             WeekStarted_numericUpDown.Value = (_playerinfo.WeekStarted == 0) ? 1 : _playerinfo.WeekStarted;
+            var leagueLength = _playerManager.GetLeagueLength(_playerinfo.TeamId);
+            EndWeek_numericUpDown.Value = (_playerinfo.WeekEnded == 0) ?  leagueLength : _playerinfo.WeekEnded;
+            EndWeek_numericUpDown.Maximum = leagueLength;
             loading = false;
 
             if(_playerinfo.WeekStarted == 0) {
@@ -31,6 +34,7 @@ namespace BowlingAccountingAssistant {
             get {
                 _playerinfo.Name = Name_textBox.Text;
                 _playerinfo.WeekStarted = (int)WeekStarted_numericUpDown.Value;
+                _playerinfo.WeekEnded = (int)EndWeek_numericUpDown.Value;
                 return _playerinfo;
             }
         }
@@ -43,7 +47,7 @@ namespace BowlingAccountingAssistant {
             UpdatePlayerInfo();
         }
 
-        private void WeekStarted_numericUpDown_ValueChanged(object sender, EventArgs e) {
+        private void numericUpDown_ValueChanged(object sender, EventArgs e) {
             UpdatePlayerInfo();
         }
 
@@ -53,6 +57,7 @@ namespace BowlingAccountingAssistant {
             }
             _playerinfo.Name = Name_textBox.Text;
             _playerinfo.WeekStarted = (int)WeekStarted_numericUpDown.Value;
+            _playerinfo.WeekEnded = (int)EndWeek_numericUpDown.Value;
             _playerManager.UpdatePlayerInfo(_playerinfo);
         }
     }

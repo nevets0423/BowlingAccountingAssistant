@@ -32,7 +32,8 @@ namespace LeagueManagerTests.Test_Helpers {
                     25,
                     15
                 },
-                WeekStarted = 0
+                WeekStarted = 0,
+                WeekEnded = 4
             };
         }
     }

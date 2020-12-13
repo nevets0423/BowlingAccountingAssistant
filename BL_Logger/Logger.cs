@@ -11,8 +11,16 @@ namespace BL_Logger {
             File.AppendAllText($"{path}\\{ DateTime.Now.ToString("yyyy-MM-dd") }_log.txt", $"{DateTime.Now} -- {severity} // {message} {Environment.NewLine}");
         }
 
+        public static void NoMigrationNeeded() {
+            LogMessage("No Migration Needed.", Severity.Info);
+        }
+
         public static void AttemptingToSave() {
             LogMessage("Attempting To Save", Severity.Info);
+        }
+
+        public static void StartingDataMigration(Version currentVersion, Version lastRunOnVersion, int lastRunMigration) {
+            LogMessage($"Starting To Migrate from {lastRunOnVersion}--{lastRunMigration} to {currentVersion}.", Severity.Info);
         }
 
         public static void SaveSuccessful() {
@@ -27,6 +35,10 @@ namespace BL_Logger {
             LogMessage("Attempting To load saved leagues", Severity.Info);
         }
 
+        public static void RunningMigration(string migrationName) {
+            LogMessage($"Running migration: {migrationName}.", Severity.Info);
+        }
+
         public static void ErrorDuringLoad(Exception e) {
             LogMessage($"Error Loading Save Data.{e.Message}", Severity.Critical);
         }
@@ -37,6 +49,14 @@ namespace BL_Logger {
 
         public static void AttemptingToExportToExcel() {
             LogMessage("Attempting to Export To excel.", Severity.Info);
+        }
+
+        public static void DataMigrationCompleted() {
+            LogMessage("Data Migration Complete.", Severity.Info);
+        }
+
+        public static void ErrorDuringMigration(Exception e) {
+            LogMessage($"Error During Migration. {e.Message}", Severity.Error);
         }
 
         public static void ErrorDuringExport(Exception e) {

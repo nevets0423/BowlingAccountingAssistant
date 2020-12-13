@@ -30,12 +30,23 @@ namespace LeagueManager {
             return _dataAccessor.GetAllPlayers(teamId);
         }
 
+        public decimal GetLeagueLength(int teamId) {
+            var team = _dataAccessor.GetTeam(teamId);
+            return _dataAccessor.GetLeague(team.LeagueId).NumberOfWeeks;
+        }
+
         public decimal GetTotalCostToDate(int teamId, int playerId, int week) {
-            var startWeek = _dataAccessor.GetPlayer(playerId, teamId).WeekStarted-1;
+            var player = _dataAccessor.GetPlayer(playerId, teamId);
+            var startWeek = player.WeekStarted - 1;
+            var endWeek = player.WeekEnded;
             var weeksActive = (week+1) - startWeek;
             if(weeksActive < 0) {
                 weeksActive = 0;
             }
+            if (weeksActive > endWeek) {
+                weeksActive = endWeek;
+            }
+
             return _dataAccessor.GetCostPerWeek(teamId) * weeksActive;
         }
 

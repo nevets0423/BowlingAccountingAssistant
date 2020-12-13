@@ -22,6 +22,5 @@ namespace LeagueManager.DataControl {
         void UpdatePlayerInfo(PlayerInfo updatedPlayer);
         int PlayersOnLeague(int leagueId);
         int ActivePlayersForWeek(int leagueId, int week);
-        bool PlayerActiveForWeek(int Week, int playerId, int teamId);
     }
 }

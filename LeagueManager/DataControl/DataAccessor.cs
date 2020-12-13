@@ -87,14 +87,16 @@ namespace LeagueManager.DataControl {
         public int AddNewPlayer(int teamId) {
             var playerId = DataManager.AutoNumbers.PlayerId;
             var team = GetUpdateableTeam(teamId);
+            var league = GetLeague(team.LeagueId);
 
-            team.Players.Add(new PlayerInfo(){
+            team.Players.Add(new PlayerInfo() {
                 Id = playerId,
                 TeamId = teamId,
                 AmountPaidEachWeek = new List<decimal>(),
                 Name = string.Empty,
                 PaidToDate = 0,
-                WeekStarted = 1
+                WeekStarted = 1,
+                WeekEnded = (int)league.NumberOfWeeks
             });
             return playerId;
         }
@@ -107,6 +109,7 @@ namespace LeagueManager.DataControl {
             player.Name = updatedPlayer.Name;
             player.PaidToDate = updatedPlayer.PaidToDate;
             player.WeekStarted = updatedPlayer.WeekStarted;
+            player.WeekEnded = updatedPlayer.WeekEnded;
         }
 
         public TeamInfo GetTeam(int teamId) {
@@ -144,12 +147,8 @@ namespace LeagueManager.DataControl {
 
         public int ActivePlayersForWeek(int leagueId, int week) {
             var players = 0;
-            GetAllTeams(leagueId).ForEach(t => players += (t.Players.Where(p => p.WeekStarted-1 <= week)).Count());
+            GetAllTeams(leagueId).ForEach(t => players += (t.Players.Where(p => p.ActiveForWeek(week))).Count());
             return players;
-        }
-
-        public bool PlayerActiveForWeek(int Week, int playerId, int teamId) {
-            return GetPlayer(playerId, teamId).WeekStarted <= Week;
         }
     }
 }
