@@ -16,10 +16,11 @@ namespace BowlingAccountingAssistant {
         private bool _refreshOnTabChange = false;
         private Timer _saveTimer;
         private int _timerInterval = 300000;//5 min
+        private Version _version;
 
         public Form1() {
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            new DataMigration().Execute(version);
+            _version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            new DataMigration().Execute(_version);
             InitializeComponent();
 
             _leagueManager = new LeagueManager.LeagueManager();
@@ -35,8 +36,8 @@ namespace BowlingAccountingAssistant {
             _saveTimer.Enabled = true;
 
             DateTime buildDate = new DateTime(2000, 1, 1)
-                                    .AddDays(version.Build).AddSeconds(version.Revision * 2);
-            string displayableVersion = $"{version} ({buildDate.ToString("MM/dd/yyyy")})";
+                                    .AddDays(_version.Build).AddSeconds(_version.Revision * 2);
+            string displayableVersion = $"{_version} ({buildDate.ToString("MM/dd/yyyy")})";
 
             version_label.Text = $"Version {displayableVersion}";
         }
@@ -237,6 +238,8 @@ namespace BowlingAccountingAssistant {
                     if (!string.IsNullOrWhiteSpace(errorMessage)) {
                         MessageBox.Show(errorMessage, "Error while loading.");
                     }
+
+                    new DataMigration().Execute(_version);
                 }
             } catch {
                 MessageBox.Show("An Error occured while saving.\n Data may be lost if program is not restarted.");
