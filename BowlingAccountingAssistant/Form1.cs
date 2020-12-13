@@ -91,8 +91,8 @@ namespace BowlingAccountingAssistant {
             var newViewAllTeams = new Weekly_ViewAllTeams(leagueInfo, index);
             newViewAllTeams.Location = new System.Drawing.Point(3, 3);
             newViewAllTeams.Name = $"{text}_viewAllTeams";
-            newViewAllTeams.Size = new System.Drawing.Size(1624, 647);
             newViewAllTeams.RequestRefresh += NewViewAllTeams_RequestRefresh;
+            newViewAllTeams.Size = ExampleTab.Size;
 
             var newTab = new TabPage();
             newTab.Location = ExampleTab.Location;
@@ -101,6 +101,8 @@ namespace BowlingAccountingAssistant {
             newTab.Padding = ExampleTab.Padding;
             newTab.Size = ExampleTab.Size;
             newTab.UseVisualStyleBackColor = true;
+            newTab.AutoScroll = true;
+            newTab.BorderStyle = BorderStyle.Fixed3D;
             newTab.Controls.Add(newViewAllTeams);
 
             return newTab;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace LeagueManager {
-    public class PlayerInfo : ICloneable{
+    public class PlayerInfo : ICloneable {
         public int Id;
         public int TeamId;
         public string Name;

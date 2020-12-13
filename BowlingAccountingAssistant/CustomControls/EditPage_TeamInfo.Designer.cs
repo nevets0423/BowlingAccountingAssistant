@@ -28,6 +28,7 @@
             this.Remove_button = new System.Windows.Forms.Button();
             this.delete_checkBox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // player_flowLayoutPanel
@@ -36,7 +37,7 @@
             this.player_flowLayoutPanel.Location = new System.Drawing.Point(3, 32);
             this.player_flowLayoutPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.player_flowLayoutPanel.Name = "player_flowLayoutPanel";
-            this.player_flowLayoutPanel.Size = new System.Drawing.Size(321, 160);
+            this.player_flowLayoutPanel.Size = new System.Drawing.Size(360, 160);
             this.player_flowLayoutPanel.TabIndex = 0;
             // 
             // Add_button
@@ -64,7 +65,7 @@
             // delete_checkBox
             // 
             this.delete_checkBox.AutoSize = true;
-            this.delete_checkBox.Location = new System.Drawing.Point(287, 6);
+            this.delete_checkBox.Location = new System.Drawing.Point(339, 5);
             this.delete_checkBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.delete_checkBox.Name = "delete_checkBox";
             this.delete_checkBox.Size = new System.Drawing.Size(18, 17);
@@ -81,11 +82,22 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Start";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(288, 5);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(33, 17);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "End";
+            // 
             // EditPage_TeamInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.delete_checkBox);
             this.Controls.Add(this.Remove_button);
@@ -93,7 +105,7 @@
             this.Controls.Add(this.player_flowLayoutPanel);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "EditPage_TeamInfo";
-            this.Size = new System.Drawing.Size(327, 194);
+            this.Size = new System.Drawing.Size(365, 194);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -106,5 +118,6 @@
         private System.Windows.Forms.Button Remove_button;
         private System.Windows.Forms.CheckBox delete_checkBox;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }

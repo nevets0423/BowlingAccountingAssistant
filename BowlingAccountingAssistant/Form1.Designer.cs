@@ -38,15 +38,20 @@
             this.week_tabControl = new System.Windows.Forms.TabControl();
             this.ExampleTab = new System.Windows.Forms.TabPage();
             this.team_tabPage = new System.Windows.Forms.TabPage();
+            this.editPage_EditeAllTeams1 = new BowlingAccountingAssistant.EditPage_EditeAllTeams();
             this.newLeague_label = new System.Windows.Forms.Label();
             this.lastSave_label = new System.Windows.Forms.Label();
             this.version_label = new System.Windows.Forms.Label();
-            this.editPage_EditeAllTeams1 = new BowlingAccountingAssistant.EditPage_EditeAllTeams();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.week_tabPage.SuspendLayout();
             this.week_tabControl.SuspendLayout();
             this.team_tabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -56,7 +61,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1857, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1857, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -70,7 +75,7 @@
             this.saveBackupToolStripMenuItem,
             this.restoreFromBackupToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newLeagueToolStripMenuItem
@@ -118,7 +123,7 @@
             // League_comboBox
             // 
             this.League_comboBox.FormattingEnabled = true;
-            this.League_comboBox.Location = new System.Drawing.Point(12, 31);
+            this.League_comboBox.Location = new System.Drawing.Point(3, 3);
             this.League_comboBox.Name = "League_comboBox";
             this.League_comboBox.Size = new System.Drawing.Size(257, 24);
             this.League_comboBox.TabIndex = 1;
@@ -127,20 +132,22 @@
             // 
             this.tabControl1.Controls.Add(this.week_tabPage);
             this.tabControl1.Controls.Add(this.team_tabPage);
-            this.tabControl1.Location = new System.Drawing.Point(12, 61);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1840, 802);
+            this.tabControl1.Size = new System.Drawing.Size(1857, 824);
             this.tabControl1.TabIndex = 2;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
             // week_tabPage
             // 
+            this.week_tabPage.AutoScroll = true;
             this.week_tabPage.Controls.Add(this.week_tabControl);
             this.week_tabPage.Location = new System.Drawing.Point(4, 25);
             this.week_tabPage.Name = "week_tabPage";
             this.week_tabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.week_tabPage.Size = new System.Drawing.Size(1832, 773);
+            this.week_tabPage.Size = new System.Drawing.Size(1849, 795);
             this.week_tabPage.TabIndex = 0;
             this.week_tabPage.Text = "Weeks";
             this.week_tabPage.UseVisualStyleBackColor = true;
@@ -154,7 +161,7 @@
             this.week_tabControl.Name = "week_tabControl";
             this.week_tabControl.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.week_tabControl.SelectedIndex = 0;
-            this.week_tabControl.Size = new System.Drawing.Size(1826, 767);
+            this.week_tabControl.Size = new System.Drawing.Size(1843, 789);
             this.week_tabControl.TabIndex = 0;
             this.week_tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.week_tabControl_Selected);
             // 
@@ -162,26 +169,36 @@
             // 
             this.ExampleTab.Location = new System.Drawing.Point(4, 25);
             this.ExampleTab.Name = "ExampleTab";
-            this.ExampleTab.Size = new System.Drawing.Size(1818, 738);
+            this.ExampleTab.Size = new System.Drawing.Size(1835, 760);
             this.ExampleTab.TabIndex = 0;
             this.ExampleTab.Text = "Week 1";
             this.ExampleTab.UseVisualStyleBackColor = true;
             // 
             // team_tabPage
             // 
+            this.team_tabPage.AutoScroll = true;
             this.team_tabPage.Controls.Add(this.editPage_EditeAllTeams1);
             this.team_tabPage.Location = new System.Drawing.Point(4, 25);
             this.team_tabPage.Name = "team_tabPage";
             this.team_tabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.team_tabPage.Size = new System.Drawing.Size(1832, 773);
+            this.team_tabPage.Size = new System.Drawing.Size(1849, 795);
             this.team_tabPage.TabIndex = 1;
             this.team_tabPage.Text = "Teams";
             this.team_tabPage.UseVisualStyleBackColor = true;
             // 
+            // editPage_EditeAllTeams1
+            // 
+            this.editPage_EditeAllTeams1.AutoScroll = true;
+            this.editPage_EditeAllTeams1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.editPage_EditeAllTeams1.Location = new System.Drawing.Point(3, 3);
+            this.editPage_EditeAllTeams1.Name = "editPage_EditeAllTeams1";
+            this.editPage_EditeAllTeams1.Size = new System.Drawing.Size(1843, 789);
+            this.editPage_EditeAllTeams1.TabIndex = 0;
+            // 
             // newLeague_label
             // 
             this.newLeague_label.AutoSize = true;
-            this.newLeague_label.Location = new System.Drawing.Point(293, 37);
+            this.newLeague_label.Location = new System.Drawing.Point(284, 9);
             this.newLeague_label.Name = "newLeague_label";
             this.newLeague_label.Size = new System.Drawing.Size(371, 17);
             this.newLeague_label.TabIndex = 3;
@@ -191,7 +208,7 @@
             // 
             this.lastSave_label.AutoSize = true;
             this.lastSave_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lastSave_label.Location = new System.Drawing.Point(847, 37);
+            this.lastSave_label.Location = new System.Drawing.Point(714, 9);
             this.lastSave_label.Name = "lastSave_label";
             this.lastSave_label.Size = new System.Drawing.Size(111, 17);
             this.lastSave_label.TabIndex = 4;
@@ -200,30 +217,42 @@
             // version_label
             // 
             this.version_label.AutoSize = true;
-            this.version_label.Location = new System.Drawing.Point(16, 866);
+            this.version_label.Dock = System.Windows.Forms.DockStyle.Right;
+            this.version_label.Location = new System.Drawing.Point(1838, 0);
             this.version_label.Name = "version_label";
-            this.version_label.Size = new System.Drawing.Size(17, 17);
+            this.version_label.Padding = new System.Windows.Forms.Padding(0, 8, 2, 0);
+            this.version_label.Size = new System.Drawing.Size(19, 25);
             this.version_label.TabIndex = 5;
             this.version_label.Text = "V";
             // 
-            // editPage_EditeAllTeams1
+            // splitContainer1
             // 
-            this.editPage_EditeAllTeams1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.editPage_EditeAllTeams1.Location = new System.Drawing.Point(3, 3);
-            this.editPage_EditeAllTeams1.Name = "editPage_EditeAllTeams1";
-            this.editPage_EditeAllTeams1.Size = new System.Drawing.Size(1826, 767);
-            this.editPage_EditeAllTeams1.TabIndex = 0;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.version_label);
+            this.splitContainer1.Panel1.Controls.Add(this.League_comboBox);
+            this.splitContainer1.Panel1.Controls.Add(this.newLeague_label);
+            this.splitContainer1.Panel1.Controls.Add(this.lastSave_label);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
+            this.splitContainer1.Size = new System.Drawing.Size(1857, 864);
+            this.splitContainer1.SplitterDistance = 39;
+            this.splitContainer1.SplitterWidth = 1;
+            this.splitContainer1.TabIndex = 6;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1857, 892);
-            this.Controls.Add(this.version_label);
-            this.Controls.Add(this.lastSave_label);
-            this.Controls.Add(this.newLeague_label);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.League_comboBox);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -237,6 +266,11 @@
             this.week_tabPage.ResumeLayout(false);
             this.week_tabControl.ResumeLayout(false);
             this.team_tabPage.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -262,6 +296,7 @@
         private System.Windows.Forms.ToolStripMenuItem restoreFromBackupToolStripMenuItem;
         private System.Windows.Forms.Label lastSave_label;
         private System.Windows.Forms.Label version_label;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 
