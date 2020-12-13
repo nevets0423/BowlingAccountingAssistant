@@ -61,7 +61,7 @@ namespace LeagueManager {
                 var headerRow = _teamRowStart;
                 var headerColumn = 1;
                 var activePlayersForWeek = 0;
-                teams.ForEach(t => t.Players.ForEach(p => activePlayersForWeek += (p.WeekStarted <= week+1) ? 1:0));
+                teams.ForEach(t => t.Players.ForEach(p => activePlayersForWeek += (p.ActiveForWeek(week)) ? 1:0));
 
                 WeekHeader(workSheet, week, teams.Count, playersPerTeam, activePlayersForWeek);
 
@@ -76,16 +76,18 @@ namespace LeagueManager {
                     var playerNames = new List<string[]>();
                     var playerValues = new List<decimal>();
                     var weekActive = new List<int>();
+                    var lastWeekActive = new List<int>();
                     for (int j = 0; j < teams[i].Players.Count; j++) {
                         var player = teams[i].Players[j];
                         playerNames.Add(new string[] {
-                                (player.WeekStarted <= week+1) ? player.Name : string.Empty
+                                (player.ActiveForWeek(week)) ? player.Name : string.Empty
                             });
                         weekActive.Add(player.WeekStarted);
+                        lastWeekActive.Add(player.WeekEnded);
                         playerValues.Add((player.AmountPaidEachWeek.Count > week) ? player.AmountPaidEachWeek[week] : 0m);
                     }
 
-                    PlayerLines(workSheet, headerRow + 2, headerColumn, playerNames, playerValues, weekActive, week);
+                    PlayerLines(workSheet, headerRow + 1, headerColumn, playerNames, playerValues, weekActive, lastWeekActive, week);
 
                     headerColumn += _teamHeaders.Length + _teamHorizontalSpacer;
                 }
@@ -172,7 +174,7 @@ namespace LeagueManager {
             cells.Style.Border.Bottom.Color.SetColor(Color.Black);
         }
 
-        private void PlayerLines(ExcelWorksheet workSheet, int row, int column, List<string[]> playerNames, List<decimal> PaidAmounts, List<int> weekActive, int week) {
+        private void PlayerLines(ExcelWorksheet workSheet, int row, int column, List<string[]> playerNames, List<decimal> PaidAmounts, List<int> weekActive, List<int> lastWeekActive, int week) {
             var numberOfRows = _teamHeaders.Length;
             var numberOfPlayers = playerNames.Count;
 
@@ -194,12 +196,12 @@ namespace LeagueManager {
              * - Fourth Cell after the name is the difference
              */
             for (int i = 0; i < PaidAmounts.Count; i++) {
-                if (weekActive[i] > week+1) {
+                if (weekActive[i] > week+1 || lastWeekActive[i] <= week) {
                     continue;
                 }
                 workSheet.Cells[row + i, column + 1].Value = PaidAmounts[i];
 
-                if (week == 0 || weekActive[i] == week) {
+                if (week == 0 || weekActive[i] == week+1) {
                     workSheet.Cells[row + i, column + 2].Formula = $"{workSheet.Cells[row + i, column + 1].Address}";
                     workSheet.Cells[row + i, column + 3].Formula = $"'{_leagueInfoPage}'!{_costPerWeek}";
                 } else {
