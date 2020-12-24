@@ -46,6 +46,9 @@ namespace LeagueManager {
             if (weeksActive > endWeek) {
                 weeksActive = endWeek;
             }
+            if (weeksActive > (endWeek - startWeek)) {
+                weeksActive = (endWeek - startWeek);
+            }
 
             return _dataAccessor.GetCostPerWeek(teamId) * weeksActive;
         }

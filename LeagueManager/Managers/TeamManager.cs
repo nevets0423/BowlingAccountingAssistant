@@ -1,7 +1,6 @@
 ﻿using LeagueManager.DataControl;
 using LeagueManager.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LeagueManager {
     public class TeamManager : ITeamManager {

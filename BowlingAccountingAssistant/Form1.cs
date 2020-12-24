@@ -95,7 +95,7 @@ namespace BowlingAccountingAssistant {
             newViewAllTeams.Location = new System.Drawing.Point(3, 3);
             newViewAllTeams.Name = $"{text}_viewAllTeams";
             newViewAllTeams.RequestRefresh += NewViewAllTeams_RequestRefresh;
-            newViewAllTeams.Size = ExampleTab.Size;
+            newViewAllTeams.Dock = DockStyle.Fill;
 
             var newTab = new TabPage();
             newTab.Location = ExampleTab.Location;
@@ -236,6 +236,9 @@ namespace BowlingAccountingAssistant {
 
                     if (!string.IsNullOrWhiteSpace(errorMessage)) {
                         MessageBox.Show(errorMessage, "Error while loading.");
+                    }
+                    else {
+                        UpdateLeagueDropDown();
                     }
                 }
             } catch {

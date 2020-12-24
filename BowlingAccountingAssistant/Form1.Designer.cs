@@ -125,7 +125,7 @@
             // 
             this.League_comboBox.FormattingEnabled = true;
             this.League_comboBox.Location = new System.Drawing.Point(2, 2);
-            this.League_comboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.League_comboBox.Margin = new System.Windows.Forms.Padding(2);
             this.League_comboBox.Name = "League_comboBox";
             this.League_comboBox.Size = new System.Drawing.Size(194, 21);
             this.League_comboBox.TabIndex = 1;
@@ -136,7 +136,7 @@
             this.tabControl1.Controls.Add(this.team_tabPage);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1393, 669);
@@ -148,9 +148,9 @@
             this.week_tabPage.AutoScroll = true;
             this.week_tabPage.Controls.Add(this.week_tabControl);
             this.week_tabPage.Location = new System.Drawing.Point(4, 22);
-            this.week_tabPage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.week_tabPage.Margin = new System.Windows.Forms.Padding(2);
             this.week_tabPage.Name = "week_tabPage";
-            this.week_tabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.week_tabPage.Padding = new System.Windows.Forms.Padding(2);
             this.week_tabPage.Size = new System.Drawing.Size(1385, 643);
             this.week_tabPage.TabIndex = 0;
             this.week_tabPage.Text = "Weeks";
@@ -161,7 +161,7 @@
             this.week_tabControl.Controls.Add(this.ExampleTab);
             this.week_tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.week_tabControl.Location = new System.Drawing.Point(2, 2);
-            this.week_tabControl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.week_tabControl.Margin = new System.Windows.Forms.Padding(2);
             this.week_tabControl.Multiline = true;
             this.week_tabControl.Name = "week_tabControl";
             this.week_tabControl.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -173,7 +173,7 @@
             // ExampleTab
             // 
             this.ExampleTab.Location = new System.Drawing.Point(4, 22);
-            this.ExampleTab.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ExampleTab.Margin = new System.Windows.Forms.Padding(2);
             this.ExampleTab.Name = "ExampleTab";
             this.ExampleTab.Size = new System.Drawing.Size(1373, 613);
             this.ExampleTab.TabIndex = 0;
@@ -185,10 +185,10 @@
             this.team_tabPage.AutoScroll = true;
             this.team_tabPage.Controls.Add(this.editPage_EditeAllTeams1);
             this.team_tabPage.Location = new System.Drawing.Point(4, 22);
-            this.team_tabPage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.team_tabPage.Margin = new System.Windows.Forms.Padding(2);
             this.team_tabPage.Name = "team_tabPage";
-            this.team_tabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.team_tabPage.Size = new System.Drawing.Size(1385, 644);
+            this.team_tabPage.Padding = new System.Windows.Forms.Padding(2);
+            this.team_tabPage.Size = new System.Drawing.Size(1385, 643);
             this.team_tabPage.TabIndex = 1;
             this.team_tabPage.Text = "Teams";
             this.team_tabPage.UseVisualStyleBackColor = true;
@@ -200,7 +200,7 @@
             this.editPage_EditeAllTeams1.Location = new System.Drawing.Point(2, 2);
             this.editPage_EditeAllTeams1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.editPage_EditeAllTeams1.Name = "editPage_EditeAllTeams1";
-            this.editPage_EditeAllTeams1.Size = new System.Drawing.Size(1381, 640);
+            this.editPage_EditeAllTeams1.Size = new System.Drawing.Size(1381, 639);
             this.editPage_EditeAllTeams1.TabIndex = 0;
             // 
             // newLeague_label
@@ -240,7 +240,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 24);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -268,7 +268,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Bowler Buddy";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

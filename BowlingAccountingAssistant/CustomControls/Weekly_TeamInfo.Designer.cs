@@ -34,60 +34,67 @@
             // player_flowLayoutPanel
             // 
             this.player_flowLayoutPanel.AutoScroll = true;
-            this.player_flowLayoutPanel.Location = new System.Drawing.Point(3, 30);
+            this.player_flowLayoutPanel.Location = new System.Drawing.Point(2, 24);
+            this.player_flowLayoutPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.player_flowLayoutPanel.Name = "player_flowLayoutPanel";
-            this.player_flowLayoutPanel.Size = new System.Drawing.Size(571, 151);
+            this.player_flowLayoutPanel.Size = new System.Drawing.Size(428, 123);
             this.player_flowLayoutPanel.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 10);
+            this.label1.Location = new System.Drawing.Point(2, 8);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 17);
+            this.label1.Size = new System.Drawing.Size(67, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Player Name";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(160, 10);
+            this.label2.Location = new System.Drawing.Point(120, 8);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 17);
+            this.label2.Size = new System.Drawing.Size(28, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Paid";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(257, 10);
+            this.label3.Location = new System.Drawing.Point(193, 8);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 17);
+            this.label3.Size = new System.Drawing.Size(70, 13);
             this.label3.TabIndex = 3;
             this.label3.Text = "Paid To Date";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(354, 10);
+            this.label4.Location = new System.Drawing.Point(266, 8);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 17);
+            this.label4.Size = new System.Drawing.Size(71, 13);
             this.label4.TabIndex = 4;
             this.label4.Text = "Owe To Date";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(451, 10);
+            this.label5.Location = new System.Drawing.Point(338, 8);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(73, 17);
+            this.label5.Size = new System.Drawing.Size(56, 13);
             this.label5.TabIndex = 5;
             this.label5.Text = "Difference";
             // 
             // Weekly_TeamInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -95,8 +102,9 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.player_flowLayoutPanel);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Weekly_TeamInfo";
-            this.Size = new System.Drawing.Size(575, 185);
+            this.Size = new System.Drawing.Size(431, 150);
             this.ResumeLayout(false);
             this.PerformLayout();
 

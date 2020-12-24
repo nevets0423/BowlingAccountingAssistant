@@ -30,6 +30,9 @@ namespace LeagueManagerTests {
         [TestCase(2, 2, 4, 20)]
         [TestCase(2, 3, 4, 10)]
         [TestCase(3, 1, 2, 20)]
+        [TestCase(4, 3, 5, 30)]
+        [TestCase(5, 3, 5, 30)]
+        [TestCase(6, 3, 5, 30)]
         public void Total_Owed_Amount_Sums_Correctly(int week, int startWeek, int endWeek, int expectedAmount) {
             _teamInfo.Players[0].WeekStarted = startWeek;
             _teamInfo.Players[0].WeekEnded = endWeek;
