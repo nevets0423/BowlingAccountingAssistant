@@ -61,8 +61,8 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1393, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1857, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -76,58 +76,58 @@
             this.saveBackupToolStripMenuItem,
             this.restoreFromBackupToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newLeagueToolStripMenuItem
             // 
             this.newLeagueToolStripMenuItem.Name = "newLeagueToolStripMenuItem";
-            this.newLeagueToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.newLeagueToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.newLeagueToolStripMenuItem.Text = "New League";
             this.newLeagueToolStripMenuItem.Click += new System.EventHandler(this.newLeagueToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveData);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
             // downLoadInstallerToolStripMenuItem
             // 
             this.downLoadInstallerToolStripMenuItem.Name = "downLoadInstallerToolStripMenuItem";
-            this.downLoadInstallerToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.downLoadInstallerToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.downLoadInstallerToolStripMenuItem.Text = "DownLoad Installer";
             this.downLoadInstallerToolStripMenuItem.Click += new System.EventHandler(this.DownLoadInstallerToolStripMenuItem_Click);
             // 
             // saveBackupToolStripMenuItem
             // 
             this.saveBackupToolStripMenuItem.Name = "saveBackupToolStripMenuItem";
-            this.saveBackupToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.saveBackupToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.saveBackupToolStripMenuItem.Text = "Save Backup";
             this.saveBackupToolStripMenuItem.Click += new System.EventHandler(this.SaveBackupToolStripMenuItem_Click);
             // 
             // restoreFromBackupToolStripMenuItem
             // 
             this.restoreFromBackupToolStripMenuItem.Name = "restoreFromBackupToolStripMenuItem";
-            this.restoreFromBackupToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.restoreFromBackupToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.restoreFromBackupToolStripMenuItem.Text = "Restore From Backup";
             this.restoreFromBackupToolStripMenuItem.Click += new System.EventHandler(this.RestoreFromBackupToolStripMenuItem_Click);
             // 
             // League_comboBox
             // 
             this.League_comboBox.FormattingEnabled = true;
-            this.League_comboBox.Location = new System.Drawing.Point(2, 2);
-            this.League_comboBox.Margin = new System.Windows.Forms.Padding(2);
+            this.League_comboBox.Location = new System.Drawing.Point(3, 2);
+            this.League_comboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.League_comboBox.Name = "League_comboBox";
-            this.League_comboBox.Size = new System.Drawing.Size(194, 21);
+            this.League_comboBox.Size = new System.Drawing.Size(257, 24);
             this.League_comboBox.TabIndex = 1;
             // 
             // tabControl1
@@ -136,10 +136,10 @@
             this.tabControl1.Controls.Add(this.team_tabPage);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1393, 669);
+            this.tabControl1.Size = new System.Drawing.Size(1857, 825);
             this.tabControl1.TabIndex = 2;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -147,11 +147,11 @@
             // 
             this.week_tabPage.AutoScroll = true;
             this.week_tabPage.Controls.Add(this.week_tabControl);
-            this.week_tabPage.Location = new System.Drawing.Point(4, 22);
-            this.week_tabPage.Margin = new System.Windows.Forms.Padding(2);
+            this.week_tabPage.Location = new System.Drawing.Point(4, 25);
+            this.week_tabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.week_tabPage.Name = "week_tabPage";
-            this.week_tabPage.Padding = new System.Windows.Forms.Padding(2);
-            this.week_tabPage.Size = new System.Drawing.Size(1385, 643);
+            this.week_tabPage.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.week_tabPage.Size = new System.Drawing.Size(1849, 796);
             this.week_tabPage.TabIndex = 0;
             this.week_tabPage.Text = "Weeks";
             this.week_tabPage.UseVisualStyleBackColor = true;
@@ -160,22 +160,22 @@
             // 
             this.week_tabControl.Controls.Add(this.ExampleTab);
             this.week_tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.week_tabControl.Location = new System.Drawing.Point(2, 2);
-            this.week_tabControl.Margin = new System.Windows.Forms.Padding(2);
+            this.week_tabControl.Location = new System.Drawing.Point(3, 2);
+            this.week_tabControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.week_tabControl.Multiline = true;
             this.week_tabControl.Name = "week_tabControl";
             this.week_tabControl.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.week_tabControl.SelectedIndex = 0;
-            this.week_tabControl.Size = new System.Drawing.Size(1381, 639);
+            this.week_tabControl.Size = new System.Drawing.Size(1843, 792);
             this.week_tabControl.TabIndex = 0;
             this.week_tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.week_tabControl_Selected);
             // 
             // ExampleTab
             // 
-            this.ExampleTab.Location = new System.Drawing.Point(4, 22);
-            this.ExampleTab.Margin = new System.Windows.Forms.Padding(2);
+            this.ExampleTab.Location = new System.Drawing.Point(4, 25);
+            this.ExampleTab.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ExampleTab.Name = "ExampleTab";
-            this.ExampleTab.Size = new System.Drawing.Size(1373, 613);
+            this.ExampleTab.Size = new System.Drawing.Size(1835, 763);
             this.ExampleTab.TabIndex = 0;
             this.ExampleTab.Text = "Week 1";
             this.ExampleTab.UseVisualStyleBackColor = true;
@@ -184,11 +184,11 @@
             // 
             this.team_tabPage.AutoScroll = true;
             this.team_tabPage.Controls.Add(this.editPage_EditeAllTeams1);
-            this.team_tabPage.Location = new System.Drawing.Point(4, 22);
-            this.team_tabPage.Margin = new System.Windows.Forms.Padding(2);
+            this.team_tabPage.Location = new System.Drawing.Point(4, 25);
+            this.team_tabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.team_tabPage.Name = "team_tabPage";
-            this.team_tabPage.Padding = new System.Windows.Forms.Padding(2);
-            this.team_tabPage.Size = new System.Drawing.Size(1385, 643);
+            this.team_tabPage.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.team_tabPage.Size = new System.Drawing.Size(1849, 794);
             this.team_tabPage.TabIndex = 1;
             this.team_tabPage.Text = "Teams";
             this.team_tabPage.UseVisualStyleBackColor = true;
@@ -197,19 +197,18 @@
             // 
             this.editPage_EditeAllTeams1.AutoScroll = true;
             this.editPage_EditeAllTeams1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.editPage_EditeAllTeams1.Location = new System.Drawing.Point(2, 2);
-            this.editPage_EditeAllTeams1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.editPage_EditeAllTeams1.Location = new System.Drawing.Point(3, 2);
+            this.editPage_EditeAllTeams1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.editPage_EditeAllTeams1.Name = "editPage_EditeAllTeams1";
-            this.editPage_EditeAllTeams1.Size = new System.Drawing.Size(1381, 639);
+            this.editPage_EditeAllTeams1.Size = new System.Drawing.Size(1843, 790);
             this.editPage_EditeAllTeams1.TabIndex = 0;
             // 
             // newLeague_label
             // 
             this.newLeague_label.AutoSize = true;
-            this.newLeague_label.Location = new System.Drawing.Point(213, 7);
-            this.newLeague_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.newLeague_label.Location = new System.Drawing.Point(284, 9);
             this.newLeague_label.Name = "newLeague_label";
-            this.newLeague_label.Size = new System.Drawing.Size(281, 13);
+            this.newLeague_label.Size = new System.Drawing.Size(371, 17);
             this.newLeague_label.TabIndex = 3;
             this.newLeague_label.Text = "Please Create a leauge by clicking File Then New League";
             // 
@@ -217,10 +216,9 @@
             // 
             this.lastSave_label.AutoSize = true;
             this.lastSave_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lastSave_label.Location = new System.Drawing.Point(536, 7);
-            this.lastSave_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lastSave_label.Location = new System.Drawing.Point(715, 9);
             this.lastSave_label.Name = "lastSave_label";
-            this.lastSave_label.Size = new System.Drawing.Size(91, 13);
+            this.lastSave_label.Size = new System.Drawing.Size(111, 17);
             this.lastSave_label.TabIndex = 4;
             this.lastSave_label.Text = "LastSave: N/A";
             // 
@@ -228,19 +226,18 @@
             // 
             this.version_label.AutoSize = true;
             this.version_label.Dock = System.Windows.Forms.DockStyle.Right;
-            this.version_label.Location = new System.Drawing.Point(1377, 0);
-            this.version_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.version_label.Location = new System.Drawing.Point(1837, 0);
             this.version_label.Name = "version_label";
-            this.version_label.Padding = new System.Windows.Forms.Padding(0, 6, 2, 0);
-            this.version_label.Size = new System.Drawing.Size(16, 19);
+            this.version_label.Padding = new System.Windows.Forms.Padding(0, 7, 3, 0);
+            this.version_label.Size = new System.Drawing.Size(20, 24);
             this.version_label.TabIndex = 5;
             this.version_label.Text = "V";
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -254,21 +251,21 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(1393, 701);
-            this.splitContainer1.SplitterDistance = 31;
+            this.splitContainer1.Size = new System.Drawing.Size(1857, 864);
+            this.splitContainer1.SplitterDistance = 38;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 6;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1393, 725);
+            this.ClientSize = new System.Drawing.Size(1857, 892);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "Bowler Buddy";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

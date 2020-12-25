@@ -22,13 +22,17 @@ namespace BowlingAccountingAssistant {
         }
 
         private void delete_button_Click(object sender, EventArgs e) {
-            foreach(var team in _currentTeams) {
+            var teamsToDelete = new List<EditPage_TeamInfo>();
+            foreach (var team in _currentTeams) {
                 if (team.MarkedForDelete) {
-                    _teamManager.RemoveTeam(team.TeamInfo);
+                    teamsToDelete.Add(team);
                 }
             }
-
-            ShowCurrentTeams();
+            foreach (var team in teamsToDelete) {
+                _teamManager.RemoveTeam(team.TeamInfo);
+                Team_flowLayoutPanel.Controls.Remove(team);
+                _currentTeams.Remove(team);
+            }
         }
 
         internal void LeagueChanged(object sender, EventArgs e) {

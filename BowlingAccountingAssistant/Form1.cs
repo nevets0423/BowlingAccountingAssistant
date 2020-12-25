@@ -45,6 +45,7 @@ namespace BowlingAccountingAssistant {
         private void League_comboBox_SelectedValueChanged(object sender, EventArgs e) {
             newLeague_label.Hide();
             CreateTabForEachWeek();
+            GenerateTeamViewForWeek(0);
         }
 
         public LeagueInfo GetCurrentLeague() {
@@ -83,7 +84,7 @@ namespace BowlingAccountingAssistant {
             }
 
             for(int i = 0; i < league.NumberOfWeeks; i++) {
-                var tab = CreateTab($"Week {i+1}", i, league);
+                var tab = CreateTab($"Week {i+1}", league);
                 _tabPages.Add(tab);
                 week_tabControl.Controls.Add(tab);
             }
@@ -91,13 +92,7 @@ namespace BowlingAccountingAssistant {
             week_tabControl.Show();
         }
 
-        private TabPage CreateTab(string text, int index, LeagueInfo leagueInfo) {
-            var newViewAllTeams = new Weekly_ViewAllTeams(leagueInfo, index);
-            newViewAllTeams.Location = new System.Drawing.Point(3, 3);
-            newViewAllTeams.Name = $"{text}_viewAllTeams";
-            newViewAllTeams.RequestRefresh += NewViewAllTeams_RequestRefresh;
-            newViewAllTeams.Dock = DockStyle.Fill;
-
+        private TabPage CreateTab(string text, LeagueInfo leagueInfo) {
             var newTab = new TabPage();
             newTab.Location = ExampleTab.Location;
             newTab.Name = text;
@@ -107,9 +102,18 @@ namespace BowlingAccountingAssistant {
             newTab.UseVisualStyleBackColor = true;
             newTab.AutoScroll = true;
             newTab.BorderStyle = BorderStyle.Fixed3D;
-            newTab.Controls.Add(newViewAllTeams);
 
             return newTab;
+        }
+
+        private Weekly_ViewAllTeams CreateTeamView(string text, int index, LeagueInfo leagueInfo) {
+            var newViewAllTeams = new Weekly_ViewAllTeams(leagueInfo, index);
+            newViewAllTeams.Location = new System.Drawing.Point(3, 3);
+            newViewAllTeams.Name = $"{text}_viewAllTeams";
+            newViewAllTeams.RequestRefresh += NewViewAllTeams_RequestRefresh;
+            newViewAllTeams.Dock = DockStyle.Fill;
+
+            return newViewAllTeams;
         }
 
         private void NewViewAllTeams_RequestRefresh(object sender, EventArgs e) {
@@ -122,20 +126,35 @@ namespace BowlingAccountingAssistant {
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e) {
-            if (tabControl1.SelectedTab.Name == "week_tabPage") {
+            if (tabControl1.SelectedTab.Name == "week_tabPage" && week_tabControl.Controls.Count < 0) {
                 CreateTabForEachWeek();
+                var selectedTabIndex = (week_tabControl.SelectedIndex < 0) ? 0 : week_tabControl.SelectedIndex;
+                GenerateTeamViewForWeek(selectedTabIndex);
             }
         }
 
         private void week_tabControl_Selected(object sender, TabControlEventArgs e) {
+            var selectedIndex = week_tabControl.SelectedIndex;
             if (_refreshOnTabChange) {
-                var selectedIndex = week_tabControl.SelectedIndex;
                 _refreshOnTabChange = false;
                 week_tabControl.Hide();
                 CreateTabForEachWeek();
                 week_tabControl.SelectedIndex = selectedIndex;
                 week_tabControl.Show();
             }
+            if (selectedIndex >= 0) {
+                GenerateTeamViewForWeek(selectedIndex);
+            }
+        }
+
+        private void GenerateTeamViewForWeek(int index) {
+            var tab = week_tabControl.Controls[index];
+            if (tab.Controls.Count > 0) {
+                return;
+            }
+            var teamView = CreateTeamView(tab.Name, index, GetCurrentLeague());
+            tab.Controls.Add(teamView);
+
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
