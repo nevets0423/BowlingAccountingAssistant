@@ -7,12 +7,14 @@ namespace BowlingAccountingAssistant {
     public partial class EditPage_PlayerInfo : UserControl {
         private PlayerInfo _playerinfo;
         private IPlayerManager _playerManager;
-        private bool loading;
+        private bool _loading;
+        private bool _refreshRequested = false;
+        public event EventHandler RequestRefresh;
 
         public EditPage_PlayerInfo() : this(new PlayerInfo()) { }
 
         public EditPage_PlayerInfo(PlayerInfo playerInfo) {
-            loading = true;
+            _loading = true;
             InitializeComponent();
             _playerManager = new PlayerManager();
             _playerinfo = playerInfo;
@@ -22,13 +24,15 @@ namespace BowlingAccountingAssistant {
             var leagueLength = _playerManager.GetLeagueLength(_playerinfo.TeamId);
             EndWeek_numericUpDown.Value = (_playerinfo.WeekEnded == 0) ?  leagueLength : _playerinfo.WeekEnded;
             EndWeek_numericUpDown.Maximum = leagueLength;
-            loading = false;
+            _loading = false;
 
             if(_playerinfo.WeekStarted == 0) {
                 UpdatePlayerInfo();
             }
         }
-        
+        public void IsInVeiw() {
+            _refreshRequested = false;
+        }
 
         public PlayerInfo PlayerInfo{
             get {
@@ -52,13 +56,22 @@ namespace BowlingAccountingAssistant {
         }
 
         private void UpdatePlayerInfo() {
-            if (loading) {
+            if (_loading) {
                 return;
             }
             _playerinfo.Name = Name_textBox.Text;
             _playerinfo.WeekStarted = (int)WeekStarted_numericUpDown.Value;
             _playerinfo.WeekEnded = (int)EndWeek_numericUpDown.Value;
             _playerManager.UpdatePlayerInfo(_playerinfo);
+           OnRefreshRequested();
+    }
+
+        private void OnRefreshRequested() {
+            if (_refreshRequested) {
+                return;
+            }
+            RequestRefresh?.Invoke(this, EventArgs.Empty);
+            _refreshRequested = true;
         }
     }
 }

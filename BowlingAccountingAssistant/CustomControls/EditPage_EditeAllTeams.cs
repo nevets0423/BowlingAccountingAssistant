@@ -9,6 +9,8 @@ namespace BowlingAccountingAssistant {
         private ITeamManager _teamManager;
         private LeagueInfo _currentLeague;
         private List<EditPage_TeamInfo> _currentTeams;
+        private bool _refreshRequested = false;
+        public event EventHandler RequestRefresh;
 
         public EditPage_EditeAllTeams() {
             InitializeComponent();
@@ -16,9 +18,15 @@ namespace BowlingAccountingAssistant {
             _currentTeams = new List<EditPage_TeamInfo>();
         }
 
+        public void IsCurrentTab() {
+            _refreshRequested = false;
+            _currentTeams.ForEach(t => t.IsInVeiw());
+        }
+
         private void Add_button_Click(object sender, EventArgs e) {
             var id = _teamManager.CreateNewTeam(_currentLeague.Id);
             AddTeam(_teamManager.GetTeam(id));
+            OnRefreshRequested();
         }
 
         private void delete_button_Click(object sender, EventArgs e) {
@@ -33,6 +41,7 @@ namespace BowlingAccountingAssistant {
                 Team_flowLayoutPanel.Controls.Remove(team);
                 _currentTeams.Remove(team);
             }
+            OnRefreshRequested();
         }
 
         internal void LeagueChanged(object sender, EventArgs e) {
@@ -72,6 +81,19 @@ namespace BowlingAccountingAssistant {
             var editTeamPage = new EditPage_TeamInfo(team);
             _currentTeams.Add(editTeamPage);
             Team_flowLayoutPanel.Controls.Add(editTeamPage);
+            editTeamPage.RequestRefresh += EditTeamPage_RequestRefresh;
+        }
+
+        private void EditTeamPage_RequestRefresh(object sender, EventArgs e) {
+            OnRefreshRequested();
+        }
+
+        private void OnRefreshRequested() {
+            if (_refreshRequested) {
+                return;
+            }
+            RequestRefresh?.Invoke(this, EventArgs.Empty);
+            _refreshRequested = true;
         }
     }
 }

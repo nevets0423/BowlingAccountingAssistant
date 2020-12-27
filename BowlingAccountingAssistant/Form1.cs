@@ -26,6 +26,7 @@ namespace BowlingAccountingAssistant {
             _leagueManager = new LeagueManager.LeagueManager();
             _tabPages = new List<TabPage>();
             League_comboBox.SelectedValueChanged += editPage_EditeAllTeams1.LeagueChanged;
+            editPage_EditeAllTeams1.RequestRefresh += RequestRefresh;
             League_comboBox.SelectedValueChanged += League_comboBox_SelectedValueChanged;
             UpdateLeagueDropDown();
 
@@ -110,13 +111,13 @@ namespace BowlingAccountingAssistant {
             var newViewAllTeams = new Weekly_ViewAllTeams(leagueInfo, index);
             newViewAllTeams.Location = new System.Drawing.Point(3, 3);
             newViewAllTeams.Name = $"{text}_viewAllTeams";
-            newViewAllTeams.RequestRefresh += NewViewAllTeams_RequestRefresh;
+            newViewAllTeams.RequestRefresh += RequestRefresh;
             newViewAllTeams.Dock = DockStyle.Fill;
 
             return newViewAllTeams;
         }
 
-        private void NewViewAllTeams_RequestRefresh(object sender, EventArgs e) {
+        private void RequestRefresh(object sender, EventArgs e) {
             _refreshOnTabChange = true;
         }
 
@@ -130,7 +131,14 @@ namespace BowlingAccountingAssistant {
                 CreateTabForEachWeek();
                 var selectedTabIndex = (week_tabControl.SelectedIndex < 0) ? 0 : week_tabControl.SelectedIndex;
                 GenerateTeamViewForWeek(selectedTabIndex);
+            }else if(tabControl1.SelectedTab.Name == "week_tabPage") {
+                week_tabControl_Selected(sender, e);
             }
+            else if(tabControl1.SelectedTab.Name == "team_tabPage") {
+                editPage_EditeAllTeams1.IsCurrentTab();
+            }
+
+
         }
 
         private void week_tabControl_Selected(object sender, TabControlEventArgs e) {

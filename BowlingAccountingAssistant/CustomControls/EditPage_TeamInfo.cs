@@ -1,5 +1,6 @@
 ﻿using LeagueManager;
 using LeagueManager.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -8,6 +9,9 @@ namespace BowlingAccountingAssistant {
         private TeamInfo _teamInfo;
         private List<EditPage_PlayerInfo> _players;
         private IPlayerManager _playerManager;
+        public event EventHandler RequestRefresh;
+        private bool _refreshRequested = false;
+        private bool _loading = true;
 
         public EditPage_TeamInfo() : this(new TeamInfo()) { }
 
@@ -18,6 +22,7 @@ namespace BowlingAccountingAssistant {
 
             _teamInfo = teamInfo;
             UpdatePlayers();
+            _loading = false;
         }
 
         private void UpdatePlayers() {
@@ -27,6 +32,14 @@ namespace BowlingAccountingAssistant {
             foreach(var player in _teamInfo.Players) {
                 CreatePlayerEditPage(player);
             }
+            if (!_loading) {
+                OnRefreshRequested();
+            }
+        }
+
+        public void IsInVeiw() {
+            _refreshRequested = false;
+            _players.ForEach(p => p.IsInVeiw());
         }
 
         public bool MarkedForDelete{
@@ -47,6 +60,11 @@ namespace BowlingAccountingAssistant {
             var playerEditPage = new EditPage_PlayerInfo(playerinfo);
             _players.Add(playerEditPage);
             player_flowLayoutPanel.Controls.Add(playerEditPage);
+            playerEditPage.RequestRefresh += PlayerEditPage_RequestRefresh;
+        }
+
+        private void PlayerEditPage_RequestRefresh(object sender, EventArgs e) {
+            OnRefreshRequested();
         }
 
         private void ClearPlayers() {
@@ -62,6 +80,14 @@ namespace BowlingAccountingAssistant {
             }
 
             UpdatePlayers();
+        }
+
+        private void OnRefreshRequested() {
+            if (_refreshRequested) {
+                return;
+            }
+            RequestRefresh?.Invoke(this, EventArgs.Empty);
+            _refreshRequested = true;
         }
     }
 }
