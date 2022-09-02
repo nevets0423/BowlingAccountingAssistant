@@ -1,6 +1,6 @@
 {
   "name": "bowling-buddy",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "src/main.js",
   "scripts": {
     "ng": "ng",
