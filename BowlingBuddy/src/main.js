@@ -38,7 +38,12 @@ app.on('activate', function () {
 });
 
 ipcMain.on("GetPath",(event, args) => {
-  event.reply("GetPath-reply", {path: app.getPath(args)});
+  try{
+    event.reply("GetPath-reply", {path:app.getPath(args), error: false});
+  }
+  catch(error){
+    event.reply("GetPath-reply", {error: true, errorMessage:error});
+  }
 });
 
 ipcMain.on("GetAllFiles", (event, args) => {
