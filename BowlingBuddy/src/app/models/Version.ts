@@ -1,9 +1,9 @@
 import packageJson from '../../../package.json';
 
 export class Version {
-    private _major: number = 0;
-    private _minor: number = 0;
-    private _revision: number = 0;
+    private _major: number = -1;
+    private _minor: number = -1;
+    private _revision: number = -1;
 
     public static GetCurrentVersion(): string {
         return packageJson.version;

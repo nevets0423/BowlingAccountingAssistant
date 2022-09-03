@@ -76,12 +76,7 @@ ipcMain.on("SaveFile", (event, args) => {
       fs.mkdirSync(folderPath);
     }
   
-    if (fs.existsSync(pathToFile)) {
-      fs.appendFileSync(pathToFile, data+"\n");
-      return;
-    } 
     fs.writeFileSync(pathToFile, data+"\n");
-
     event.reply("SaveFile-reply", {error: false, errorMessage: null});
   }
   catch (error) {

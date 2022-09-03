@@ -75,4 +75,19 @@ export class BehaviorSubjectArray<T>{
         this._behaviorSubject.next(items);
         return value;
     }
+
+    clear(): void{
+        this._behaviorSubject.next([]);
+    }
+
+    remove(match: (value: T) => boolean){
+        let items = this._behaviorSubject.value;
+        for(let i = 0; i < items.length; i++){
+            if(match(items[i])){
+                items.splice(i, 1);
+                this._behaviorSubject.next(items);
+                return;
+            }
+        }
+    }  
 }

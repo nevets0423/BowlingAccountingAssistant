@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ElectronService } from 'ngx-electron';
 
-import { FileManagerService } from './file-manager.service';
+import { FileManagerService } from '../file-manager.service';
 
 describe('FileManagerService', () => {
   let service: FileManagerService;
