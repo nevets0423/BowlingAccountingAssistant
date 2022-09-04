@@ -90,4 +90,15 @@ export class BehaviorSubjectArray<T>{
             }
         }
     }  
+
+    find(match: (value: T) => boolean): T | undefined{
+        let items = this._behaviorSubject.value;
+        for(let i = 0; i < items.length; i++){
+            if(match(items[i])){
+                return items[i];
+            }
+        }
+
+        return undefined;
+    }
 }
