@@ -201,6 +201,38 @@ export class DataManagerService {
     return id;
   }
 
+  GetPlayers(): PlayerInfo[] {
+    return this._players.value;
+  }
+
+  GetTeams(): TeamInfo[] {
+    return this._teams.value;
+  }
+
+  GetPlayerByID(id: number) : PlayerInfo {
+    let player = this._players.find((player: PlayerInfo) => {
+      return player.ID == id;
+    });
+
+    if(!player){
+      throw new Error("Player not found.")
+    }
+
+    return player;
+  }
+
+  GetTeamByID(id: number) : TeamInfo {
+    let team = this._teams.find((team: TeamInfo) => {
+      return team.ID == id;
+    });
+
+    if(!team){
+      throw new Error("Team not found.");
+    }
+
+    return team;
+  }
+
   UpdatePlayer(value: PlayerInfo, match: (value: PlayerInfo) => boolean){
     this._players.replace(value, match);
   }
