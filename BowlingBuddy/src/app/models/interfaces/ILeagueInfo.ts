@@ -1,4 +1,4 @@
-export interface LeagueInfo{
+export interface ILeagueInfo{
     ID: number;
     Name: string;
     LaneFee: number;

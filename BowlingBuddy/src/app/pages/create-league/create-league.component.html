@@ -1,4 +1,4 @@
-<form [formGroup]="leagueForm" *ngIf="loading">
+<form [formGroup]="leagueForm" (ngSubmit)="CreateLeague()">
     <div>
         <label> Name: <input formControlName="name" placeholder="League Name"> </label>
         <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="alert">

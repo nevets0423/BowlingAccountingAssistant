@@ -3,12 +3,13 @@ import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { AutoNum } from '../models/AutoNum';
 import { BehaviorSubjectArray } from '../models/BehaviorSubjectArray';
-import { DataSaveObject } from '../models/DataSaveObject';
-import { LeagueFile } from '../models/LeagueFile';
-import { LeagueInfo } from '../models/LeagueInfo';
-import { MigrationInfo } from '../models/MigrationInfo';
-import { PlayerInfo } from '../models/PlayerInfo';
-import { TeamInfo } from '../models/TeamInfo';
+import { IAutoNum } from '../models/interfaces/IAutoNum';
+import { IDataSaveObject } from '../models/interfaces/IDataSaveObject';
+import { ILeagueFile } from '../models/interfaces/ILeagueFile';
+import { ILeagueInfo } from '../models/interfaces/ILeagueInfo';
+import { IMigrationInfo } from '../models/interfaces/IMigrationInfo';
+import { IPlayerInfo } from '../models/interfaces/IPlayerInfo';
+import { ITeamInfo } from '../models/interfaces/ITeamInfo';
 import { Version } from '../models/Version';
 import { FileManagerService } from './file-manager.service';
 
@@ -25,13 +26,13 @@ export class DataManagerService {
   private _error: boolean = false;
   private _saving: boolean = false;
   private _errorMessage: string = "";
-  private _leagueInfo: BehaviorSubject<LeagueInfo|null> = new BehaviorSubject<LeagueInfo|null>(null);
-  private _leagues: BehaviorSubjectArray<LeagueFile> = new BehaviorSubjectArray<LeagueFile>([]);
-  private _teams: BehaviorSubjectArray<TeamInfo> = new BehaviorSubjectArray<TeamInfo>([]);
-  private _players: BehaviorSubjectArray<PlayerInfo> = new BehaviorSubjectArray<PlayerInfo>([]);
+  private _leagueInfo: BehaviorSubject<ILeagueInfo|null> = new BehaviorSubject<ILeagueInfo|null>(null);
+  private _leagues: BehaviorSubjectArray<ILeagueFile> = new BehaviorSubjectArray<ILeagueFile>([]);
+  private _teams: BehaviorSubjectArray<ITeamInfo> = new BehaviorSubjectArray<ITeamInfo>([]);
+  private _players: BehaviorSubjectArray<IPlayerInfo> = new BehaviorSubjectArray<IPlayerInfo>([]);
   private _ready: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private _autoNumbers: AutoNum = new AutoNum();
-  private _migrationInfo: MigrationInfo = {LastMigrationRun: -1, LastRunOnVersion: new Version()};
+  private _autoNumbers: AutoNum = new AutoNum({LeagueId: 0, PlayerId: 0, TeamId: 0} as IAutoNum);
+  private _migrationInfo: IMigrationInfo = {LastMigrationRun: -1, LastRunOnVersion: new Version({Major: 0, Minor: 0, Revision: 0}), LastRunOnVersionInterface: {Major: 0, Minor: 0, Revision: 0}};
 
   constructor(private _fileManager: FileManagerService) { 
     _fileManager.GetPath("documents", (value: string) => { 
@@ -68,19 +69,19 @@ export class DataManagerService {
     return this._errorMessage;
   }
 
-  get Leagues(): Observable<LeagueFile[]>{
+  get Leagues(): Observable<ILeagueFile[]>{
     return this._leagues.asObservable();
   }
 
-  get LeagueInfo(): Observable<LeagueInfo|null>{
+  get LeagueInfo(): Observable<ILeagueInfo|null>{
     return this._leagueInfo.asObservable();
   }
 
-  get Teams(): Observable<TeamInfo[]>{
+  get Teams(): Observable<ITeamInfo[]>{
     return this._teams.asObservable();
   }
 
-  get Players(): Observable<PlayerInfo[]>{
+  get Players(): Observable<IPlayerInfo[]>{
     return this._players.asObservable();
   }
 
@@ -88,6 +89,10 @@ export class DataManagerService {
     this._loadingLeauges = true;
     this._leagues.clear();
     this._fileManager.GetAllFiles(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName), (fileNames: string[]) => {
+      if(fileNames.length == 0){
+        this._leagues.clear();
+      }
+
       fileNames.forEach(fileName => {
         if(!fileName.endsWith('.sav')){
           return;//Continue in this context
@@ -96,7 +101,7 @@ export class DataManagerService {
         this._leagues.push({
           FileName: fileName,
           DisplayName: fileName.replace(".sav", "")
-        } as LeagueFile);
+        } as ILeagueFile);
       });
 
       this._loadingLeauges = false;
@@ -112,7 +117,7 @@ export class DataManagerService {
           console.error("File was empty.", content);
           throw new Error("File was empty.");
         }
-        let dataSaveObject: DataSaveObject = JSON.parse(content);
+        let dataSaveObject: IDataSaveObject = JSON.parse(content);
 
         if(!dataSaveObject){
           console.error("Failed to load content from league.", content);
@@ -122,8 +127,9 @@ export class DataManagerService {
         this._leagueInfo.next(dataSaveObject.LeagueInfo);
         this._teams.next(dataSaveObject.TeamInfos);
         this._players.next(dataSaveObject.PlayerInfos);
-        this._autoNumbers = dataSaveObject.AutoNumber;
+        this._autoNumbers = new AutoNum(dataSaveObject.AutoNumber);
         this._migrationInfo = dataSaveObject.MirgrationInfo;
+        this._migrationInfo.LastRunOnVersion = new Version(this._migrationInfo.LastRunOnVersionInterface);
         this._loadedLeagueFileName = fileName;
       }
       catch(error){
@@ -134,20 +140,21 @@ export class DataManagerService {
     }, (value: any) => this.HandleError(value));
   }
 
-  CreateLeague(value: LeagueInfo){
+  CreateLeague(value: ILeagueInfo){
     let id = this._autoNumbers.LeagueID;
     value.ID = id;
     let newFileName = value.Name + ".sav";
-    let version = new Version();
+    let version = new Version({Major: 0, Minor: 0, Revision: 0});
     version.Full = Version.GetCurrentVersion();
 
-    let mirgrationInfo: MigrationInfo = {
+    let mirgrationInfo: IMigrationInfo = {
       LastMigrationRun: 0,
-      LastRunOnVersion: version
+      LastRunOnVersion: version,
+      LastRunOnVersionInterface: version.toInterface()
     }; 
 
-    let dataSaveObject: DataSaveObject = {
-      AutoNumber: this._autoNumbers,
+    let dataSaveObject: IDataSaveObject = {
+      AutoNumber: this._autoNumbers.ToInterface(),
       LeagueInfo: value,
       PlayerInfos: [],
       TeamInfos: [],
@@ -159,7 +166,7 @@ export class DataManagerService {
       this._leagues.push({
         DisplayName: value.Name,
         FileName: newFileName
-      } as LeagueFile);
+      } as ILeagueFile);
     }, (value: any) => this.HandleError(value));
   }
 
@@ -170,8 +177,8 @@ export class DataManagerService {
     }
 
     this._saving = true;
-    let dataSaveObject: DataSaveObject = {
-      AutoNumber: this._autoNumbers,
+    let dataSaveObject: IDataSaveObject = {
+      AutoNumber: this._autoNumbers.ToInterface(),
       LeagueInfo: this._leagueInfo.value,
       PlayerInfos: this._players.value,
       TeamInfos: this._teams.value,
@@ -185,7 +192,7 @@ export class DataManagerService {
       }, (value: any) => this.HandleError(value));
   }
 
-  AddPlayer(value: PlayerInfo): number{
+  AddPlayer(value: IPlayerInfo): number{
     let id = this._autoNumbers.PlayerID;
     value.ID = id;
     this._players.push(value);
@@ -193,7 +200,7 @@ export class DataManagerService {
     return id;
   }
 
-  AddTeam(value: TeamInfo): number{
+  AddTeam(value: ITeamInfo): number{
     let id = this._autoNumbers.TeamID;
     value.ID = id;
     this._teams.push(value);
@@ -201,16 +208,16 @@ export class DataManagerService {
     return id;
   }
 
-  GetPlayers(): PlayerInfo[] {
+  GetPlayers(): IPlayerInfo[] {
     return this._players.value;
   }
 
-  GetTeams(): TeamInfo[] {
+  GetTeams(): ITeamInfo[] {
     return this._teams.value;
   }
 
-  GetPlayerByID(id: number) : PlayerInfo {
-    let player = this._players.find((player: PlayerInfo) => {
+  GetPlayerByID(id: number) : IPlayerInfo {
+    let player = this._players.find((player: IPlayerInfo) => {
       return player.ID == id;
     });
 
@@ -221,8 +228,8 @@ export class DataManagerService {
     return player;
   }
 
-  GetTeamByID(id: number) : TeamInfo {
-    let team = this._teams.find((team: TeamInfo) => {
+  GetTeamByID(id: number) : ITeamInfo {
+    let team = this._teams.find((team: ITeamInfo) => {
       return team.ID == id;
     });
 
@@ -233,23 +240,23 @@ export class DataManagerService {
     return team;
   }
 
-  UpdatePlayer(value: PlayerInfo, match: (value: PlayerInfo) => boolean){
+  UpdatePlayer(value: IPlayerInfo, match: (value: IPlayerInfo) => boolean){
     this._players.replace(value, match);
   }
 
-  UpdateTeam(value: TeamInfo, match: (value: TeamInfo) => boolean){
+  UpdateTeam(value: ITeamInfo, match: (value: ITeamInfo) => boolean){
     this._teams.replace(value, match);
   }
 
-  UpdateLeague(value: LeagueInfo){
+  UpdateLeague(value: ILeagueInfo){
     this._leagueInfo.next(value);
   }
 
-  DeletePlayer(match: (value: PlayerInfo) => boolean){
+  DeletePlayer(match: (value: IPlayerInfo) => boolean){
     this._players.remove(match);
   }
 
-  DeleteTeam(match: (value: TeamInfo) => boolean){
+  DeleteTeam(match: (value: ITeamInfo) => boolean){
     this._teams.remove(match);
   }
 

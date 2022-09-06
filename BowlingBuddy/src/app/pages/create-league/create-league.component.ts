@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter, skip, take } from 'rxjs';
-import { LeagueFile } from 'src/app/models/LeagueFile';
-import { LeagueInfo } from '../../models/LeagueInfo';
+import { ILeagueFile } from 'src/app/models/interfaces/ILeagueFile';
+import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
 import { DataManagerService } from '../../services/data-manager.service';
 
 @Component({
@@ -11,18 +11,10 @@ import { DataManagerService } from '../../services/data-manager.service';
   styleUrls: ['./create-league.component.scss']
 })
 export class CreateLeagueComponent implements OnInit {
-  league: LeagueInfo = {
-    ID: 0,
-    LaneFee: 0,
-    Name: '',
-    NumberOfWeeks: 0,
-    PrizeAmountPerWeek: 0
-  };
-
   leagueForm!: FormGroup;
   loading: boolean = false;
 
-  private _existingFiles: LeagueFile[] = [];
+  private _existingFiles: ILeagueFile[] = [];
 
   constructor(private _dataManager: DataManagerService, private _formBuilder: FormBuilder) { }
 
@@ -93,11 +85,15 @@ export class CreateLeagueComponent implements OnInit {
   }
 
   CreateLeague(){
-    this.league.LaneFee = Number(this.league.LaneFee);
-    this.league.NumberOfWeeks = Number(this.league.NumberOfWeeks);
-    this.league.PrizeAmountPerWeek = Number(this.league.PrizeAmountPerWeek);
+    let league = {
+      ID: 0,
+      LaneFee: Number(this.fee?.value),
+      Name: this.name?.value,
+      NumberOfWeeks: Number(this.weeks?.value),
+      PrizeAmountPerWeek: Number(this.prize?.value)
+    } as ILeagueInfo;
     
-    this._dataManager.CreateLeague(this.league);
+    this._dataManager.CreateLeague(league);
   }
 
   //#region Validation

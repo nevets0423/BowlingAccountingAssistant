@@ -1,4 +1,4 @@
-export interface TeamInfo{
+export interface ITeamInfo{
     ID: number;
     LeagueID: number;
 }

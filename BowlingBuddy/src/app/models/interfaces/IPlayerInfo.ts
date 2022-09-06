@@ -1,4 +1,4 @@
-export interface PlayerInfo{
+export interface IPlayerInfo{
     ID: number;
     TeamID: number;
     Name: string;

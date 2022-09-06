@@ -3,10 +3,10 @@ import { skip, take } from 'rxjs';
 
 import { DataManagerService } from '../data-manager.service';
 import { FileManagerService } from '../file-manager.service';
-import { LeagueFile } from '../../models/LeagueFile';
-import { LeagueInfo } from 'src/app/models/LeagueInfo';
-import { PlayerInfo } from 'src/app/models/PlayerInfo';
-import { TeamInfo } from 'src/app/models/TeamInfo';
+import { ILeagueFile } from '../../models/interfaces/ILeagueFile';
+import { ILeagueInfo } from 'src/app/models/interfaces/ILeagueInfo';
+import { IPlayerInfo } from 'src/app/models/interfaces/IPlayerInfo';
+import { ITeamInfo } from 'src/app/models/interfaces/ITeamInfo';
 
 describe('DataManagerService', () => {
   let service: DataManagerService;
@@ -54,7 +54,7 @@ describe('DataManagerService', () => {
       });
   
       //skips: defualt null, clear, push file 1
-      service.Leagues.pipe(skip(3), take(1)).subscribe((value: LeagueFile[]) => {
+      service.Leagues.pipe(skip(3), take(1)).subscribe((value: ILeagueFile[]) => {
         expect(value.length).toBe(2);
         expect(value[0].DisplayName).toBe('file1');
         expect(value[0].FileName).toBe('file1.sav');
@@ -69,7 +69,7 @@ describe('DataManagerService', () => {
       });
   
       //skips: defualt null, clear, push file 1
-      service.Leagues.pipe(skip(3), take(1)).subscribe((value: LeagueFile[]) => {
+      service.Leagues.pipe(skip(3), take(1)).subscribe((value: ILeagueFile[]) => {
         expect(value.length).toBe(2);
       });
   
@@ -130,7 +130,7 @@ describe('DataManagerService', () => {
         next(JsonSaveString());
       });
   
-      service.LeagueInfo.pipe(skip(1), take(1)).subscribe((value: LeagueInfo | null) => {
+      service.LeagueInfo.pipe(skip(1), take(1)).subscribe((value: ILeagueInfo | null) => {
         expect(value?.ID).toBe(0);
         expect(value?.LaneFee).toBe(2);
         expect(value?.Name).toBe("hello");
@@ -140,7 +140,7 @@ describe('DataManagerService', () => {
         expect(service.MigrationLastRunOnVersion).toBe("3.4.5");
       });
   
-      service.Players.pipe(skip(1), take(1)).subscribe((players: PlayerInfo[]) => {
+      service.Players.pipe(skip(1), take(1)).subscribe((players: IPlayerInfo[]) => {
         expect(players.length).toBe(1);
         expect(players[0].ID).toBe(0);
         expect(players[0].Name).toBe("steve");
@@ -153,7 +153,7 @@ describe('DataManagerService', () => {
         expect(players[0].AmountPaidEachWeek[1]).toBe(13);
       });
   
-      service.Teams.pipe(skip(1), take(1)).subscribe((teams: TeamInfo[]) => {
+      service.Teams.pipe(skip(1), take(1)).subscribe((teams: ITeamInfo[]) => {
         expect(teams.length).toBe(1);
         expect(teams[0].ID).toBe(0);
         expect(teams[0].LeagueID).toBe(1);
@@ -174,7 +174,7 @@ describe('DataManagerService', () => {
         Name: "TheBestLeague",
         NumberOfWeeks: 3,
         PrizeAmountPerWeek: 5
-      } as LeagueInfo);
+      } as ILeagueInfo);
     });
   });
 });

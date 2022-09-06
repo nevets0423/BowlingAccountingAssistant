@@ -1,9 +1,16 @@
 import packageJson from '../../../package.json';
+import { IVersion } from './interfaces/IVersion';
 
 export class Version {
     private _major: number = -1;
     private _minor: number = -1;
     private _revision: number = -1;
+
+    constructor(version: IVersion){
+        this._major = version.Major;
+        this._minor = version.Minor;
+        this._revision = version.Revision;
+    }
 
     public static GetCurrentVersion(): string {
         return packageJson.version;
@@ -73,5 +80,13 @@ export class Version {
         }
 
         return 0;
+    }
+
+    toInterface(): IVersion{
+        return {
+            Major: this._major,
+            Minor: this._minor,
+            Revision: this._revision
+        } as IVersion;
     }
 }
