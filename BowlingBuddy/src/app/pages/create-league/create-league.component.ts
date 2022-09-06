@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { filter, take } from 'rxjs';
+import { filter, skip, take } from 'rxjs';
 import { LeagueFile } from 'src/app/models/LeagueFile';
 import { LeagueInfo } from '../../models/LeagueInfo';
 import { DataManagerService } from '../../services/data-manager.service';
@@ -60,7 +60,7 @@ export class CreateLeagueComponent implements OnInit {
     });
 
     this._dataManager.OnReady.pipe(filter(value => value), take(1)).subscribe(() => {
-      this._dataManager.Leagues.pipe(filter(value => value != null && value.length > 0)).subscribe(leagueFiles => {
+      this._dataManager.Leagues.pipe(filter(value => value != null), skip(1)).subscribe(leagueFiles => {
         this._existingFiles = leagueFiles;
         this.loading = false;
       });
