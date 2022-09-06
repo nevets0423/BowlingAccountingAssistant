@@ -44,11 +44,11 @@ export class DataManagerService {
     return this._migrationInfo.LastRunOnVersion.Full;
   }
 
-  get OnReady(): Observable<Boolean> {
+  get OnReady(): Observable<boolean> {
     return this._ready.asObservable();
   }
 
-  get Saving(): Boolean{
+  get Saving(): boolean{
     return this._saving;
   }
 

@@ -10,7 +10,8 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation : false
     }
   })
   
@@ -20,7 +21,7 @@ function createWindow () {
     )
   );
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
@@ -67,19 +68,20 @@ ipcMain.on("ReadFile", (event, args) => {
 });
 
 ipcMain.on("SaveFile", (event, args) => {
-  var folerPath = args[0];
+  var folderPath = args[0];
   var pathToFile = folderPath + "\\" + args[1];
   var data = args[2];
 
   try{
-    if (!fs.existsSync(folerPath)) {
-      fs.mkdirSync(folderPath);
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true });
     }
   
     fs.writeFileSync(pathToFile, data+"\n");
     event.reply("SaveFile-reply", {error: false, errorMessage: null});
   }
   catch (error) {
+    console.error('ERROR', error);
     event.reply("SaveFile-reply", {error: true, errorMessage: error});
   }
 });

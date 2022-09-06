@@ -53,9 +53,9 @@ export class FileManagerService {
       return;
     }
 
-    var folderPath = path.replace(fileName, "");
+    var folderPath = path.replace(fileName, "").slice(0, -1);
 
-    this._electronService.ipcRenderer.send('SaveFile', folderPath, fileName, content);
+    this._electronService.ipcRenderer.send('SaveFile', [folderPath, fileName, content]);
     this._electronService.ipcRenderer.on('SaveFile-reply', (event, results: any) => {
       if(results.error){
         error?.(results.errorMessage);
