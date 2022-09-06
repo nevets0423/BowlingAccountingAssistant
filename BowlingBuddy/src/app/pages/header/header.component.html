@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill">
+    <mat-label>Select a League</mat-label>
+    <mat-select [(ngModel)]="selectedLeague" (selectionChange)="onSelectionChanged()">
+        <mat-option *ngFor="let league of leagueFiles" [value]="league?.FileName">{{league?.DisplayName}}</mat-option>
+    </mat-select>
+</mat-form-field>

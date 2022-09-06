@@ -7,12 +7,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CreateLeagueComponent } from './pages/create-league/create-league.component';
 import { ManageTeamsComponent } from './pages/manage-teams/manage-teams.component';
+import { MatSelectModule } from '@angular/material/select'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HeaderComponent } from './pages/header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateLeagueComponent,
-    ManageTeamsComponent
+    ManageTeamsComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -20,6 +24,8 @@ import { ManageTeamsComponent } from './pages/manage-teams/manage-teams.componen
     FormsModule,
     ReactiveFormsModule,
     NgxElectronModule,
+    MatSelectModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
