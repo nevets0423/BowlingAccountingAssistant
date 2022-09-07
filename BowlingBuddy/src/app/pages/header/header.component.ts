@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { filter, skip, take } from 'rxjs';
-import { LeagueFile } from 'src/app/models/LeagueFile';
-import { DataManagerService } from 'src/app/services/data-manager.service';
+import { ILeagueFile } from '../../models/interfaces/ILeagueFile';
+import { DataManagerService } from '../../services/data-manager.service';
 
 @Component({
   selector: 'app-header',
@@ -9,7 +9,7 @@ import { DataManagerService } from 'src/app/services/data-manager.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  leagueFiles: LeagueFile[] = [];
+  leagueFiles: ILeagueFile[] = [];
   selectedLeague: string = "";
   loading: boolean = true;
 

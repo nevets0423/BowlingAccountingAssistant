@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter, skip, take } from 'rxjs';
-import { ILeagueFile } from 'src/app/models/interfaces/ILeagueFile';
+import { ILeagueFile } from '../../models/interfaces/ILeagueFile';
 import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
 import { DataManagerService } from '../../services/data-manager.service';
 
