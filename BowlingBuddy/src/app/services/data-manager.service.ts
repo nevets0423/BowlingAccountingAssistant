@@ -9,7 +9,7 @@ import { ILeagueFile } from '../models/interfaces/ILeagueFile';
 import { ILeagueInfo } from '../models/interfaces/ILeagueInfo';
 import { IMigrationInfo } from '../models/interfaces/IMigrationInfo';
 import { IPlayerInfo } from '../models/interfaces/IPlayerInfo';
-import { ITeamInfo } from '../models/interfaces/ITeamInfo';
+import { ITeamInfoDTO } from '../models/interfaces/ITeamInfoDTO';
 import { Version } from '../models/Version';
 import { FileManagerService } from './file-manager.service';
 
@@ -29,7 +29,7 @@ export class DataManagerService {
   private _dirty: boolean = false;
   private _leagueInfo: BehaviorSubject<ILeagueInfo|null> = new BehaviorSubject<ILeagueInfo|null>(null);
   private _leagues: BehaviorSubjectArray<ILeagueFile> = new BehaviorSubjectArray<ILeagueFile>([]);
-  private _teams: BehaviorSubjectArray<ITeamInfo> = new BehaviorSubjectArray<ITeamInfo>([]);
+  private _teams: BehaviorSubjectArray<ITeamInfoDTO> = new BehaviorSubjectArray<ITeamInfoDTO>([]);
   private _players: BehaviorSubjectArray<IPlayerInfo> = new BehaviorSubjectArray<IPlayerInfo>([]);
   private _ready: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _autoNumbers: AutoNum = new AutoNum({LeagueId: 0, PlayerId: 0, TeamId: 0} as IAutoNum);
@@ -78,7 +78,7 @@ export class DataManagerService {
     return this._leagueInfo.asObservable();
   }
 
-  get Teams(): Observable<ITeamInfo[]>{
+  get Teams(): Observable<ITeamInfoDTO[]>{
     return this._teams.asObservable();
   }
 
@@ -90,7 +90,7 @@ export class DataManagerService {
     this._loadingLeauges = true;
     this._leagues.clear();
     this._fileManager.GetAllFiles(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName), (fileNames: string[]) => {
-      if(fileNames.length == 0){
+      if(fileNames.length > 0){
         this._leagues.clear();
       }
 
@@ -203,7 +203,7 @@ export class DataManagerService {
     return id;
   }
 
-  AddTeam(value: ITeamInfo): number{
+  AddTeam(value: ITeamInfoDTO): number{
     let id = this._autoNumbers.TeamID;
     value.ID = id;
     this._teams.push(value);
@@ -216,7 +216,7 @@ export class DataManagerService {
     return this._players.value;
   }
 
-  GetTeams(): ITeamInfo[] {
+  GetTeams(): ITeamInfoDTO[] {
     return this._teams.value;
   }
 
@@ -232,8 +232,8 @@ export class DataManagerService {
     return player;
   }
 
-  GetTeamByID(id: number) : ITeamInfo {
-    let team = this._teams.find((team: ITeamInfo) => {
+  GetTeamByID(id: number) : ITeamInfoDTO {
+    let team = this._teams.find((team: ITeamInfoDTO) => {
       return team.ID == id;
     });
 
@@ -251,8 +251,8 @@ export class DataManagerService {
     this._dirty = true;
   }
 
-  UpdateTeam(team: ITeamInfo){
-    this._teams.replace(team, (value: ITeamInfo) => {
+  UpdateTeam(team: ITeamInfoDTO){
+    this._teams.replace(team, (value: ITeamInfoDTO) => {
       return value.ID == team.ID;
     });
     this._dirty = true;
@@ -270,9 +270,12 @@ export class DataManagerService {
     this._dirty = true;
   }
 
-  DeleteTeam(team: ITeamInfo){
-    this._teams.remove((value: ITeamInfo) => {
+  DeleteTeam(team: ITeamInfoDTO){
+    this._teams.remove((value: ITeamInfoDTO) => {
       return value.ID == team.ID;
+    });
+    this._players.remove((player: IPlayerInfo) => {
+      return player.TeamID == team.ID;
     });
     this._dirty = true;
   }

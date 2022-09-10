@@ -2,11 +2,11 @@ import { IAutoNum } from "./IAutoNum";
 import { ILeagueInfo } from "./ILeagueInfo";
 import { IMigrationInfo } from "./IMigrationInfo";
 import { IPlayerInfo } from "./IPlayerInfo";
-import { ITeamInfo } from "./ITeamInfo";
+import { ITeamInfoDTO } from "./ITeamInfoDTO";
 
 export interface IDataSaveObject{
     LeagueInfo: ILeagueInfo;
-    TeamInfos: ITeamInfo[];
+    TeamInfos: ITeamInfoDTO[];
     PlayerInfos: IPlayerInfo[];
     AutoNumber: IAutoNum;
     MirgrationInfo: IMigrationInfo;

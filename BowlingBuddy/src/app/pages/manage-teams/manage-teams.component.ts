@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { ITeamInfoManager } from 'src/app/models/interfaces/ITeamInfoManager';
 import { CheckBoxCellRendererComponent } from '../../grid-render-components/check-box-cell-renderer/check-box-cell-renderer.component';
 import { NumericInputCellRendererComponent } from '../../grid-render-components/numeric-input-cell-renderer/numeric-input-cell-renderer.component';
 import { TextInputCellRendererComponent } from '../../grid-render-components/text-input-cell-renderer/text-input-cell-renderer.component';
 import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
 import { IPlayerInfo } from '../../models/interfaces/IPlayerInfo';
-import { ITeamInfo } from '../../models/interfaces/ITeamInfo';
+import { ITeamInfoDTO } from '../../models/interfaces/ITeamInfoDTO';
 import { DataManagerService } from '../../services/data-manager.service';
 
 @Component({
@@ -14,10 +15,10 @@ import { DataManagerService } from '../../services/data-manager.service';
 })
 export class ManageTeamsComponent implements OnInit {
   private _leagueInfo: ILeagueInfo| null = null;
-  private _teams: ITeamInfo[] = [];
+  private _teams: ITeamInfoManager[] = [];
   private _players: IPlayerInfo[] = [];
 
-  get Teams(): ITeamInfo[] {
+  get Teams(): ITeamInfoManager[] {
     return this._teams;
   }
 
@@ -71,6 +72,7 @@ export class ManageTeamsComponent implements OnInit {
   constructor(private _dataManager: DataManagerService) { }
 
   ngOnInit(): void {
+    this._gridApis.clear();
     this._dataManager.LeagueInfo.subscribe(leagueInfo => {
       this._leagueInfo = leagueInfo;
       let cellRendererParams = this.columnDefs[this.columnDefs.findIndex(c => c.field == 'WeekEnded')].cellRendererParams;
@@ -79,12 +81,15 @@ export class ManageTeamsComponent implements OnInit {
       }
     });
     this._dataManager.Teams.subscribe(teams => {
-      this._teams = teams;
+      this._teams = teams.map(team => { return {ID:team.ID, LeagueID:team.LeagueID, Checked:false } as ITeamInfoManager});
     });
     this._dataManager.Players.subscribe(players => {
       this._players = players;
       this._teams.forEach(team => {
-        this._gridApis.get(team.ID).setRowData(this.PlayersForTeam(team.ID));
+        let api = this._gridApis.get(team.ID);
+        if(api && !api.destroyCalled){
+          api.setRowData(this.PlayersForTeam(team.ID));
+        }
       });
     });
   }
@@ -97,7 +102,7 @@ export class ManageTeamsComponent implements OnInit {
     this._dataManager.AddTeam({
       ID: 0,
       LeagueID: this._leagueInfo?.ID
-    } as ITeamInfo);
+    } as ITeamInfoDTO);
   }
 
   CreateNewPlayer(teamID: number){
@@ -112,6 +117,14 @@ export class ManageTeamsComponent implements OnInit {
     } as IPlayerInfo);
   }
 
+  DeleteTeams(){
+    this._teams.forEach((team: ITeamInfoManager) => {
+      if(team.Checked){
+        this._dataManager.DeleteTeam(team);
+      }
+    });
+  }
+
   DeletePlayers(teamID: number){
     this._gridApis.get(teamID).forEachNodeAfterFilterAndSort((rowNode: any, index: number) => {
       if(!rowNode.data["checked"] || false){
@@ -122,11 +135,9 @@ export class ManageTeamsComponent implements OnInit {
   }
 
   onGridReady(params: any, teamID: number) {
-    if(!this._gridApis.has(teamID)){
-      this._gridApis.set(teamID, params.api);
-    }
-    this._gridApis.get(teamID).sizeColumnsToFit();
-    this._gridApis.get(teamID).setRowData(this.PlayersForTeam(teamID));
+    this._gridApis.set(teamID, params.api);
+    params.api.setRowData(this.PlayersForTeam(teamID));
+    params.api.sizeColumnsToFit();
   }
 
   onPlayerUpdated(params: any){

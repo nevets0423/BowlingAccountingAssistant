@@ -6,7 +6,7 @@ import { FileManagerService } from '../file-manager.service';
 import { ILeagueFile } from '../../models/interfaces/ILeagueFile';
 import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
 import { IPlayerInfo } from '../../models/interfaces/IPlayerInfo';
-import { ITeamInfo } from '../../models/interfaces/ITeamInfo';
+import { ITeamInfoDTO } from '../../models/interfaces/ITeamInfoDTO';
 
 describe('DataManagerService', () => {
   let service: DataManagerService;
@@ -153,7 +153,7 @@ describe('DataManagerService', () => {
         expect(players[0].AmountPaidEachWeek[1]).toBe(13);
       });
   
-      service.Teams.pipe(skip(1), take(1)).subscribe((teams: ITeamInfo[]) => {
+      service.Teams.pipe(skip(1), take(1)).subscribe((teams: ITeamInfoDTO[]) => {
         expect(teams.length).toBe(1);
         expect(teams[0].ID).toBe(0);
         expect(teams[0].LeagueID).toBe(1);

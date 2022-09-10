@@ -1,9 +1,11 @@
 <button (click)="CreateNewTeam()">New Team</button>
+<button (click)="DeleteTeams()">Delete Teams</button>
 
 <div class="box is-fluid columns is-multiline is-centered">
     <div *ngFor="let team of Teams" class="column is-narrow">
         <button (click)="CreateNewPlayer(team.ID)">New Player</button>
         <button (click)="DeletePlayers(team.ID)">Delete Players</button>
+        <input type="checkbox" [(ngModel)]="team.Checked">
         <ag-grid-angular
             style="height: 180px; width: 580px;"
             class="ag-theme-balham"
