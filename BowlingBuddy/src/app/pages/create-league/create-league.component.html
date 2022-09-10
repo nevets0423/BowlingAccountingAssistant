@@ -6,7 +6,7 @@
             <div *ngIf="name?.errors?.['minlength']">Name must be at least 4 characters long.</div>
             <div *ngIf="name?.errors?.['maxlength']">Name must be at less than 100 characters long.</div>
             <div *ngIf="name?.errors?.['notUnique']">Name already exists.</div>
-            <div *ngIf="name?.errors?.['specialCharactors']">Can not contain special charactors.</div>
+            <div *ngIf="name?.errors?.['specialCharactors']">Name can not contain special charactors.</div>
         </div>
     </div>
     <div>
@@ -46,6 +46,6 @@
         Total Cost <input type="text" id="totalCost" name="totalCost" class="form-control" disabled="true" [ngModel]="TotalCost" [ngModelOptions]="{standalone: true}">
     </div>
     <button type="submit" [disabled]="leagueForm.invalid">Create</button>
-  </form>
+</form>
   
   

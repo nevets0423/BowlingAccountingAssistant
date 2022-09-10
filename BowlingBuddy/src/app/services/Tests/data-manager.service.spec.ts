@@ -4,9 +4,9 @@ import { skip, take } from 'rxjs';
 import { DataManagerService } from '../data-manager.service';
 import { FileManagerService } from '../file-manager.service';
 import { ILeagueFile } from '../../models/interfaces/ILeagueFile';
-import { ILeagueInfo } from 'src/app/models/interfaces/ILeagueInfo';
-import { IPlayerInfo } from 'src/app/models/interfaces/IPlayerInfo';
-import { ITeamInfo } from 'src/app/models/interfaces/ITeamInfo';
+import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
+import { IPlayerInfo } from '../../models/interfaces/IPlayerInfo';
+import { ITeamInfo } from '../../models/interfaces/ITeamInfo';
 
 describe('DataManagerService', () => {
   let service: DataManagerService;

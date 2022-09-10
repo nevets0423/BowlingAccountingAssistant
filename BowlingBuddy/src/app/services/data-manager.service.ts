@@ -26,6 +26,7 @@ export class DataManagerService {
   private _error: boolean = false;
   private _saving: boolean = false;
   private _errorMessage: string = "";
+  private _dirty: boolean = false;
   private _leagueInfo: BehaviorSubject<ILeagueInfo|null> = new BehaviorSubject<ILeagueInfo|null>(null);
   private _leagues: BehaviorSubjectArray<ILeagueFile> = new BehaviorSubjectArray<ILeagueFile>([]);
   private _teams: BehaviorSubjectArray<ITeamInfo> = new BehaviorSubjectArray<ITeamInfo>([]);
@@ -188,6 +189,7 @@ export class DataManagerService {
     this._fileManager.WriteToFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, this._loadedLeagueFileName), JSON.stringify(dataSaveObject), 
       (content: string) => {
         console.log("League Saved", dataSaveObject);
+        this._dirty = false;
         this._saving = false;
       }, (value: any) => this.HandleError(value));
   }
@@ -197,6 +199,7 @@ export class DataManagerService {
     value.ID = id;
     this._players.push(value);
 
+    this._dirty = true;
     return id;
   }
 
@@ -205,6 +208,7 @@ export class DataManagerService {
     value.ID = id;
     this._teams.push(value);
 
+    this._dirty = true;
     return id;
   }
 
@@ -240,24 +244,37 @@ export class DataManagerService {
     return team;
   }
 
-  UpdatePlayer(value: IPlayerInfo, match: (value: IPlayerInfo) => boolean){
-    this._players.replace(value, match);
+  UpdatePlayer(player: IPlayerInfo){
+    this._players.replace(player, (value: IPlayerInfo) => {
+      return value.ID == player.ID;
+    });
+    this._dirty = true;
   }
 
-  UpdateTeam(value: ITeamInfo, match: (value: ITeamInfo) => boolean){
-    this._teams.replace(value, match);
+  UpdateTeam(team: ITeamInfo){
+    this._teams.replace(team, (value: ITeamInfo) => {
+      return value.ID == team.ID;
+    });
+    this._dirty = true;
   }
 
   UpdateLeague(value: ILeagueInfo){
     this._leagueInfo.next(value);
+    this._dirty = true;
   }
 
-  DeletePlayer(match: (value: IPlayerInfo) => boolean){
-    this._players.remove(match);
+  DeletePlayer(player: IPlayerInfo){
+    this._players.remove((value: IPlayerInfo) => {
+      return value.ID == player.ID;
+    });
+    this._dirty = true;
   }
 
-  DeleteTeam(match: (value: ITeamInfo) => boolean){
-    this._teams.remove(match);
+  DeleteTeam(team: ITeamInfo){
+    this._teams.remove((value: ITeamInfo) => {
+      return value.ID == team.ID;
+    });
+    this._dirty = true;
   }
 
   private ClearError(){

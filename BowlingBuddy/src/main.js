@@ -7,13 +7,14 @@ let mainWindow
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    show: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation : false
     }
-  })
+  });
+  mainWindow.maximize();
+  mainWindow.show();
   
   mainWindow.loadURL(
     path.resolve(
@@ -21,7 +22,7 @@ function createWindow () {
     )
   );
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null

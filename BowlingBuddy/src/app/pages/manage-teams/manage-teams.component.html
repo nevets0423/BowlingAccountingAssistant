@@ -1,0 +1,15 @@
+<button (click)="CreateNewTeam()">New Team</button>
+
+<div class="box is-fluid columns is-multiline is-centered">
+    <div *ngFor="let team of Teams" class="column is-narrow">
+        <button (click)="CreateNewPlayer(team.ID)">New Player</button>
+        <button (click)="DeletePlayers(team.ID)">Delete Players</button>
+        <ag-grid-angular
+            style="height: 180px; width: 580px;"
+            class="ag-theme-balham"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            (gridReady)="onGridReady($event, team.ID)">
+        </ag-grid-angular>
+    </div>
+</div>
