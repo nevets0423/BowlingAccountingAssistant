@@ -38,6 +38,7 @@ export class ManageTeamsComponent implements OnInit {
     },
     {headerName: 'Name', 
       field: 'Name', 
+      width: 125,
       cellRenderer: TextInputCellRendererComponent,
       cellRendererParams: {
         onChange: this.onPlayerUpdated.bind(this)
