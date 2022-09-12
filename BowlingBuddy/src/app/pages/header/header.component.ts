@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, skip, take } from 'rxjs';
+import { filter, of, skip, take } from 'rxjs';
 import { ILeagueFile } from '../../models/interfaces/ILeagueFile';
 import { DataManagerService } from '../../services/data-manager.service';
 
@@ -14,6 +14,22 @@ export class HeaderComponent implements OnInit {
   loading: boolean = true;
 
   constructor(private _dataManager: DataManagerService) { }
+
+  get LoadingLeagues(){
+    return this._dataManager.LoadingLeagues;
+  }
+
+  get LoadingLeagueInfo(){
+    return this._dataManager.LoadingLeagueInfo;
+  }
+
+  get Dirty(){
+    return this._dataManager.Dirty;
+  }
+
+  get Saving(){
+    return this._dataManager.Saving;
+  }
 
   ngOnInit(): void {
     this._dataManager.OnReady.pipe(filter(value => value), take(1)).subscribe(() => {

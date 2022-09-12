@@ -1,6 +1,17 @@
-<mat-form-field appearance="fill">
-    <mat-label>Select a League</mat-label>
-    <mat-select [(ngModel)]="selectedLeague" (selectionChange)="onSelectionChanged()">
-        <mat-option *ngFor="let league of leagueFiles" [value]="league?.FileName">{{league?.DisplayName}}</mat-option>
-    </mat-select>
-</mat-form-field>
+<div>
+    <mat-form-field appearance="fill">
+        <mat-label>Select a League</mat-label>
+        <mat-select [(ngModel)]="selectedLeague" (selectionChange)="onSelectionChanged()">
+            <mat-option *ngFor="let league of leagueFiles" [value]="league?.FileName">{{league?.DisplayName}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+
+    <div>
+        <td *ngIf="!(Dirty | async) && !(Saving | async)">&#10004;</td>
+        <td *ngIf="(Dirty | async) && !(Saving | async)">-</td>
+        <div *ngIf="(Saving | async)" [ngClass]="{'is-active': (Saving | async)}" class="loader-wrapper">
+            <div class="loader is-loading"></div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Observable } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subscription, Observable, timer } from 'rxjs';
 import { AutoNum } from '../models/AutoNum';
 import { BehaviorSubjectArray } from '../models/BehaviorSubjectArray';
 import { IAutoNum } from '../models/interfaces/IAutoNum';
@@ -16,17 +15,17 @@ import { FileManagerService } from './file-manager.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DataManagerService {
+export class DataManagerService implements OnDestroy {
   private _pathToDocuments: string = "";
   private _mainFolderName: string = "BowlerBuddy";
   private _leagueFolderName: string = "Leagues";
   private _loadedLeagueFileName: string = "";
-  private _loadingLeauges: boolean = false;
-  private _loadingLeaugeInfo: boolean = false;
-  private _error: boolean = false;
-  private _saving: boolean = false;
+  private _loadingLeauges: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _loadingLeaugeInfo: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _error: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _saving: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _errorMessage: string = "";
-  private _dirty: boolean = false;
+  private _dirty: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _leagueInfo: BehaviorSubject<ILeagueInfo|null> = new BehaviorSubject<ILeagueInfo|null>(null);
   private _leagues: BehaviorSubjectArray<ILeagueFile> = new BehaviorSubjectArray<ILeagueFile>([]);
   private _teams: BehaviorSubjectArray<ITeamInfoDTO> = new BehaviorSubjectArray<ITeamInfoDTO>([]);
@@ -34,12 +33,25 @@ export class DataManagerService {
   private _ready: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _autoNumbers: AutoNum = new AutoNum({LeagueId: 0, PlayerId: 0, TeamId: 0} as IAutoNum);
   private _migrationInfo: IMigrationInfo = {LastMigrationRun: -1, LastRunOnVersion: new Version({Major: 0, Minor: 0, Revision: 0}), LastRunOnVersionInterface: {Major: 0, Minor: 0, Revision: 0}};
+  private static _timer: NodeJS.Timer|undefined = undefined;
 
   constructor(private _fileManager: FileManagerService) { 
     _fileManager.GetPath("documents", (value: string) => { 
       this._pathToDocuments = value;
       this._ready.next(true);
     }, (value: any) => this.HandleError(value));
+
+    if(DataManagerService._timer){
+      clearTimeout(DataManagerService._timer);
+    }
+
+    DataManagerService._timer = setInterval(() => {
+      this.Save();
+    }, 10 * 1000);
+  }
+
+  ngOnDestroy() {
+    clearTimeout(DataManagerService._timer);
   }
 
   get MigrationLastRunOnVersion(){
@@ -50,20 +62,24 @@ export class DataManagerService {
     return this._ready.asObservable();
   }
 
-  get Saving(): boolean{
-    return this._saving;
+  get Saving(): Observable<boolean>{
+    return this._saving.asObservable();
   }
 
-  get LoadingLeagues(): boolean{
-    return this._loadingLeauges;
+  get Dirty(): Observable<boolean>{
+    return this._dirty.asObservable();
   }
 
-  get LoadingLeagueInfo(): boolean{
-    return this._loadingLeaugeInfo;
+  get LoadingLeagues(): Observable<boolean>{
+    return this._loadingLeauges.asObservable();
   }
 
-  get Error(): boolean{
-    return this._error;
+  get LoadingLeagueInfo(): Observable<boolean>{
+    return this._loadingLeaugeInfo.asObservable();
+  }
+
+  get Error(): Observable<boolean>{
+    return this._error.asObservable();
   }
 
   get ErrorMessage(): string{
@@ -87,7 +103,7 @@ export class DataManagerService {
   }
 
   LoadLeagues(){
-    this._loadingLeauges = true;
+    this._loadingLeauges.next(true);
     this._leagues.clear();
     this._fileManager.GetAllFiles(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName), (fileNames: string[]) => {
       if(fileNames.length > 0){
@@ -105,13 +121,14 @@ export class DataManagerService {
         } as ILeagueFile);
       });
 
-      this._loadingLeauges = false;
+      this._loadingLeauges.next(false);
     }, (value: any) => this.HandleError(value));
   }
 
   LoadLeague(fileName: string){
-    this._loadingLeaugeInfo = true;
+    this._loadingLeaugeInfo.next(true);
     this.ClearError();
+    this.Save();
     this._fileManager.ReadFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName), (content: string) => {
       try{
         if(!content){
@@ -137,7 +154,7 @@ export class DataManagerService {
         console.error("Failed to load content from league.", content);
         this.HandleError(error);
       }
-      this._loadingLeaugeInfo = false;
+      this._loadingLeaugeInfo.next(false);
     }, (value: any) => this.HandleError(value));
   }
 
@@ -172,12 +189,19 @@ export class DataManagerService {
   }
 
   Save(){
+    if(!this._dirty.value){
+      console.log('nothing dirty');
+      return;
+    }
+
     if(this._leagueInfo.value == null){
+      console.log('no league');
       this.HandleError("Failed to save. No League currently open.");
       return;
     }
 
-    this._saving = true;
+    console.log('saving');
+    this._saving.next(true);
     let dataSaveObject: IDataSaveObject = {
       AutoNumber: this._autoNumbers.ToInterface(),
       LeagueInfo: this._leagueInfo.value,
@@ -189,8 +213,8 @@ export class DataManagerService {
     this._fileManager.WriteToFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, this._loadedLeagueFileName), JSON.stringify(dataSaveObject), 
       (content: string) => {
         console.log("League Saved", dataSaveObject);
-        this._dirty = false;
-        this._saving = false;
+        this._saving.next(false);
+        this._dirty.next(false);
       }, (value: any) => this.HandleError(value));
   }
 
@@ -199,7 +223,7 @@ export class DataManagerService {
     value.ID = id;
     this._players.push(value);
 
-    this._dirty = true;
+    this._dirty.next(true);
     return id;
   }
 
@@ -208,7 +232,7 @@ export class DataManagerService {
     value.ID = id;
     this._teams.push(value);
 
-    this._dirty = true;
+    this._dirty.next(true);
     return id;
   }
 
@@ -248,26 +272,26 @@ export class DataManagerService {
     this._players.replace(player, (value: IPlayerInfo) => {
       return value.ID == player.ID;
     });
-    this._dirty = true;
+    this._dirty.next(true);
   }
 
   UpdateTeam(team: ITeamInfoDTO){
     this._teams.replace(team, (value: ITeamInfoDTO) => {
       return value.ID == team.ID;
     });
-    this._dirty = true;
+    this._dirty.next(true);
   }
 
   UpdateLeague(value: ILeagueInfo){
     this._leagueInfo.next(value);
-    this._dirty = true;
+    this._dirty.next(true);
   }
 
   DeletePlayer(player: IPlayerInfo){
     this._players.remove((value: IPlayerInfo) => {
       return value.ID == player.ID;
     });
-    this._dirty = true;
+    this._dirty.next(true);
   }
 
   DeleteTeam(team: ITeamInfoDTO){
@@ -277,18 +301,18 @@ export class DataManagerService {
     this._players.remove((player: IPlayerInfo) => {
       return player.TeamID == team.ID;
     });
-    this._dirty = true;
+    this._dirty.next(true);
   }
 
   private ClearError(){
-    this._error = false;
+    this._error.next(false);
     this._errorMessage = "";
   }
 
   private HandleError(value: any): void{
-    this._error = true;
-    this._loadingLeaugeInfo = false;
-    this._loadingLeauges = false;
+    this._error.next(true);
+    this._loadingLeaugeInfo.next(false);
+    this._loadingLeauges.next(false);
     this._errorMessage = value;
   }
 

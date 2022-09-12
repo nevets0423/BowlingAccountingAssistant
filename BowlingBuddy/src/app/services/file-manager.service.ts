@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 
 @Injectable({
@@ -6,38 +6,44 @@ import { ElectronService } from 'ngx-electron';
 })
 export class FileManagerService {
 
-  constructor(private _electronService: ElectronService) { }
+  constructor(private _electronService: ElectronService, private _zone: NgZone) { }
 
   GetPath(name: string, next: (value: string) => void, error: { (value: any) : void } | null = null){
     this._electronService.ipcRenderer.send('GetPath', name);
     this._electronService.ipcRenderer.on('GetPath-reply', (event, results: any) => {
-      if(results.error){
-        error?.(results.errorMessage);
-        return;
-      }
-      next(results.path);
+      this._zone.run(() => {
+        if(results.error){
+          error?.(results.errorMessage);
+          return;
+        }
+        next(results.path);
+      });
     });
   }
 
   GetAllFiles(path: string, next: (value: string[]) => void, error: { (value: any) : void } | null = null){
     this._electronService.ipcRenderer.send('GetAllFiles', path);
     this._electronService.ipcRenderer.on('GetAllFiles-reply', (event, results: any) => {
-      if(results.error){
-        error?.(results.errorMessage);
-        return;
-      }
-      next(results.files);
+      this._zone.run(() => {
+        if(results.error){
+          error?.(results.errorMessage);
+          return;
+        }
+        next(results.files);
+      });
     });
   }
 
   ReadFile(path: string, next: (value: string) => void, error: { (value: any) : void } | null = null){
     this._electronService.ipcRenderer.send('ReadFile', path);
     this._electronService.ipcRenderer.on('ReadFile-reply', (event, results: any) => {
-      if(results.error){
-        error?.(results.errorMessage);
-        return;
-      }
-      next(results.fileContent);
+      this._zone.run(() => {
+        if(results.error){
+          error?.(results.errorMessage);
+          return;
+        }
+        next(results.fileContent);
+      });
     });
   }
 
@@ -57,11 +63,13 @@ export class FileManagerService {
 
     this._electronService.ipcRenderer.send('SaveFile', [folderPath, fileName, content]);
     this._electronService.ipcRenderer.on('SaveFile-reply', (event, results: any) => {
-      if(results.error){
-        error?.(results.errorMessage);
-        return;
-      }
-      next(results.fileContent);
+      this._zone.run(() => {
+        if(results.error){
+          error?.(results.errorMessage);
+          return;
+        }
+        next(results.fileContent);
+      });
     });
   }
 }
