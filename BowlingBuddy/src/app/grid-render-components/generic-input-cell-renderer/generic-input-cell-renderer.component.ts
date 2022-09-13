@@ -7,7 +7,7 @@ import { InputCellRedererParameters } from './input-cell-rederer-parameters';
 @Component({
   selector: 'app-generic-input-cell-renderer',
   template: `
-    <input type="number" step="1" [min]="min" [max]="max" [(ngModel)]="value" (ngModelChange)="onChange(value)" [style.width.px]="width" [readonly]="readOnly">
+    {{label}}<input type="number" step="1" [min]="min" [max]="max" [(ngModel)]="value" (ngModelChange)="onChange(value)" [style.width.px]="width" [readonly]="readOnly">
   `,
   styles: [
   ]
@@ -23,6 +23,7 @@ export class GenericInputCellRendererComponent implements ICellRendererAngularCo
   public min: number = Number.NEGATIVE_INFINITY;
   public max: number = Number.POSITIVE_INFINITY;
   public readOnly: boolean = false;
+  public label: string = '';
 
   constructor() { }
 
@@ -46,6 +47,8 @@ export class GenericInputCellRendererComponent implements ICellRendererAngularCo
     if(this._subscribtion){
       this._subscribtion.unsubscribe();
     }
+
+    this.label = this._redererParameters?.label || this.label;
 
     this._subscribtion = this._debounceAbleValue.pipe(skip(1), debounceTime(800)).subscribe((value: number) => { 
       this._params?.api.refreshCells();

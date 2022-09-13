@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ITeamInfoDTO } from '../../models/interfaces/ITeamInfoDTO';
 import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
 import { IPlayerInfo } from '../../models/interfaces/IPlayerInfo';
@@ -12,7 +12,7 @@ import { ICellRendererParams } from 'ag-grid-community';
   templateUrl: './week-display.component.html',
   styleUrls: ['./week-display.component.scss']
 })
-export class WeekDisplayComponent implements OnInit {
+export class WeekDisplayComponent implements OnInit, OnChanges {
   @Input() week: number|undefined;
   private _leagueInfo: ILeagueInfo| null = null;
   private _teams: ITeamInfoDTO[] = [];
@@ -38,20 +38,7 @@ export class WeekDisplayComponent implements OnInit {
       headerName: 'Name', 
       field: 'Name', 
       width: 125,
-      cellStyle: (params: any) => {
-        let player: IPlayerInfo = params.data;
-        if(!player || player.AmountPaidEachWeek.length <= this.Week){
-          return {backgroundColor: 'firebrick'};
-        }
-        let amountOwed = (this._leagueInfo?.LaneFee || 0) + (this._leagueInfo?.PrizeAmountPerWeek || 0);
-        if(player.AmountPaidEachWeek[this.Week] > 0 && player.AmountPaidEachWeek[this.Week] < amountOwed){
-          return {backgroundColor: 'gold'};
-        }
-        if(player.AmountPaidEachWeek[this.Week] < amountOwed){
-          return {backgroundColor: 'firebrick'};
-        }
-        return null;
-      }
+      cellStyle: this.NameCellStyle.bind(this)
     },
     {
       headerName: 'Paid', 
@@ -62,6 +49,7 @@ export class WeekDisplayComponent implements OnInit {
         width: 50,
         getMax: undefined,
         getMin: undefined,
+        label: '$',
         getValue: (params: ICellRendererParams<IPlayerInfo, any>) => { return ((params.data?.AmountPaidEachWeek?.length || 0) > this.Week) ? params.data?.AmountPaidEachWeek[this.Week] : 0; },
         onChange: this.onPlayerUpdated.bind(this),
         readonly: false,
@@ -77,6 +65,7 @@ export class WeekDisplayComponent implements OnInit {
         width: 70,
         getMax: undefined,
         getMin: undefined,
+        label: '$',
         getValue: this.PlayerPaidToDate.bind(this),
         onChange: undefined,
         readonly: true,
@@ -92,6 +81,7 @@ export class WeekDisplayComponent implements OnInit {
         width: 70,
         getMax: undefined,
         getMin: undefined,
+        label: '$',
         getValue: this.PlayerOwes.bind(this),
         onChange: undefined,
         readonly: true,
@@ -107,7 +97,8 @@ export class WeekDisplayComponent implements OnInit {
         width: 70,
         getMax: undefined,
         getMin: undefined,
-        getValue: (params: ICellRendererParams<any, any>) => { return params.data.paidToDate - params.data.oweToDate; },
+        label: '$',
+        getValue: (params: ICellRendererParams<any, any>) => { return this.PlayerPaidToDate(params) - this.PlayerOwes(params); },
         onChange: undefined,
         readonly: true,
         updateData: undefined
@@ -162,7 +153,7 @@ export class WeekDisplayComponent implements OnInit {
     let leaguePaidToDate = this.LeaguePaidToDate;
     
     return (leaguePaidToDate - leagueOwedToLanes < 0) ? 0 : (leaguePaidToDate - leagueOwedToLanes);
-}
+  }
 
   ngOnInit(): void {
     if(this.week == undefined){
@@ -186,6 +177,13 @@ export class WeekDisplayComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this._gridApis.forEach((value,key) =>{
+      value.setRowData(this.PlayersForTeam(key));
+      value.refreshCells();
+    });
+  }
+
   onGridReady(params: any, teamID: number) {
     this._gridApis.set(teamID, params.api);
     params.api.setRowData(this.PlayersForTeam(teamID));
@@ -195,6 +193,23 @@ export class WeekDisplayComponent implements OnInit {
   onPlayerUpdated(value: number, rowData: any){
     console.log("player updated", rowData);
     this._dataManager.UpdatePlayer(rowData);
+  }
+
+  private NameCellStyle(params: any): any{
+    let player: IPlayerInfo = params.data;
+    let difference = this.PlayerPaidToDate(params) - this.PlayerOwes(params);
+    if(difference < 0 && player.AmountPaidEachWeek.length <= this.Week){
+      return {backgroundColor: 'firebrick'};
+    }
+  
+    let amountOwed = (this._leagueInfo?.LaneFee || 0) + (this._leagueInfo?.PrizeAmountPerWeek || 0);
+    if(difference < 0 && player.AmountPaidEachWeek[this.Week] > 0 && player.AmountPaidEachWeek[this.Week] < amountOwed){
+      return {backgroundColor: 'gold'};
+    }
+    if(difference < 0 && player.AmountPaidEachWeek[this.Week] < amountOwed){
+      return {backgroundColor: 'firebrick'};
+    }
+    return null;
   }
 
   private updatePlayerPaidAmountGridData(value: number, data: IPlayerInfo){
@@ -211,6 +226,9 @@ export class WeekDisplayComponent implements OnInit {
   }
 
   private PlayerPaidToDate(params: ICellRendererParams<IPlayerInfo, any>): number{
+    if(params.data?.AmountPaidEachWeek.length == 0){
+      return 0;
+    }
     return params.data?.AmountPaidEachWeek.reduce((totalValue, currentValue, index) => totalValue += (index <= this.Week) ? currentValue : 0) || 0;
   }
 

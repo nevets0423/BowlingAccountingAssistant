@@ -13,8 +13,10 @@ import { CheckBoxCellRendererComponent } from './grid-render-components/check-bo
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NumericInputCellRendererComponent } from './grid-render-components/numeric-input-cell-renderer/numeric-input-cell-renderer.component';
 import { TextInputCellRendererComponent } from './grid-render-components/text-input-cell-renderer/text-input-cell-renderer.component';
+import { WeekDisplayComponent } from './pages/week-display/week-display.component';
+import { WeeklyTabsComponent } from './pages/weekly-tabs/weekly-tabs.component';
+import { GenericInputCellRendererComponent } from './grid-render-components/generic-input-cell-renderer/generic-input-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -23,8 +25,10 @@ import { TextInputCellRendererComponent } from './grid-render-components/text-in
     ManageTeamsComponent,
     HeaderComponent,
     CheckBoxCellRendererComponent,
-    NumericInputCellRendererComponent,
-    TextInputCellRendererComponent
+    TextInputCellRendererComponent,
+    WeekDisplayComponent,
+    WeeklyTabsComponent,
+    GenericInputCellRendererComponent
   ],
   imports:[
     BrowserModule,

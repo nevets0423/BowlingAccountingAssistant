@@ -1,0 +1,11 @@
+<div class="tabs is-centered">
+    <ul>
+        <li *ngFor="let week of weeks" class="is-active" [ngClass]="{'is-active': activeWeek == week}" (click)="onClick(week)">
+            <a>
+                <span>Week {{week + 1}}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<app-week-display [week]="activeWeek"></app-week-display>
