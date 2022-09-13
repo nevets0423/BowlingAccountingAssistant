@@ -31,6 +31,9 @@ export class GenericInputCellRendererComponent implements ICellRendererAngularCo
     this._redererParameters = params.colDef?.cellRendererParams;
 
     this.value = this._redererParameters?.getValue(params) || this.value;
+    if(this._params.colDef?.field){
+      this._params.data[this._params.colDef?.field] = this.value;
+    }
     this.width = this._redererParameters?.width || this.width;
     if(this._redererParameters?.getMin){
       this.min = this._redererParameters.getMin(params);
