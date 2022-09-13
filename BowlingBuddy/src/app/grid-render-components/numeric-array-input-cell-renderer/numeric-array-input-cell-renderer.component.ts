@@ -1,36 +1,37 @@
-import { Component } from '@angular/core';
-import { ICellRendererAngularComp } from 'ag-grid-angular';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { skip } from 'rxjs/internal/operators/skip';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject, debounceTime, skip, Subscription } from 'rxjs';
 import { GridComponentDebounceTime } from '../grid-component-debounce-time';
 
 @Component({
-  selector: 'app-numeric-input-cell-renderer',
+  selector: 'app-numeric-array-input-cell-renderer',
   template: `
-    <input type="number" name="points" step="1" [min]="min" [max]="max" [(ngModel)]="value" (ngModelChange)="onChange(value)" [style.width.px]="width">
+    <input type="number" name="points" step="1" [min]="0" [(ngModel)]="value" (ngModelChange)="onChange(value)" [style.width.px]="width">
   `,
   styles: [
   ]
 })
-export class NumericInputCellRendererComponent implements ICellRendererAngularComp {
+export class NumericArrayInputCellRendererComponent implements OnInit {
   private _params: any;
   private _debounceAbleValue: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   private _subscribtion: Subscription|undefined = undefined;
+  private _index: number = 0;
   public width: number = 100;
   public value: number = 0;
-  public min: number = 0;
-  public max: number = 100;
 
   constructor(private _debounceTime: GridComponentDebounceTime){}
+
+  ngOnInit(): void {
+  }
 
   agInit(params: any): void {
     this._params = params;
     this.width = this._params.width || 100;
-    this.min = (this._params?.min != undefined) ? this._params?.min : this._params.data[this._params.minColumnName] ||  0;
-    this.max = this._params?.max || this._params.data[this._params.maxColumnName] ||  100;
-    this.value = this._params.data[this._params.column.colId] || 0;
+    this._index = this._params.index || 0;
+    this.value = this._params.data[this._params.column.colId].length < this._index ? 0 : this._params.data[this._params.column.colId][this._index];
+    if(this.value == undefined){
+      this.value = 0
+    }
+
     this._debounceAbleValue.next(this.value);
 
     if(this._subscribtion){
@@ -48,17 +49,15 @@ export class NumericInputCellRendererComponent implements ICellRendererAngularCo
   }
 
   onChange(value: number){
-    if(value > this.max){
-      this.value = this.max;
-      value = this.max;
+    if(value < 0){
+      value = 0;
     }
 
-    if(value < this.min){
-      this.value = this.min;
-      value = this.min;
+    while(this._params.node.data[this._params.column.colId].length < this._index + 1){
+      this._params.node.data[this._params.column.colId].push(0);
     }
 
-    this._params.node.data[this._params.column.colId] = value;
+    this._params.node.data[this._params.column.colId][this._index] = value;
     this._debounceAbleValue.next(value);
   }
 
@@ -74,4 +73,5 @@ export class NumericInputCellRendererComponent implements ICellRendererAngularCo
       }
     }
   }
+
 }

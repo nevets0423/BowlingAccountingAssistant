@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { BehaviorSubject, debounceTime, skip, Subscription } from 'rxjs';
+import { GridComponentDebounceTime } from '../grid-component-debounce-time';
 
 @Component({
   selector: 'app-text-input-cell-renderer',
@@ -27,7 +28,7 @@ export class TextInputCellRendererComponent implements ICellRendererAngularComp 
   private _subscribtion: Subscription|undefined = undefined;
   nameForm!: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private _formBuilder: FormBuilder, private _debounceTime: GridComponentDebounceTime) { }
 
   get name(){
     return this.nameForm.get('name');
@@ -51,7 +52,7 @@ export class TextInputCellRendererComponent implements ICellRendererAngularComp 
       this._subscribtion.unsubscribe();
     }
 
-    this._subscribtion = this._debounceAbleValue.pipe(skip(1), debounceTime(500)).subscribe((value: string) => { 
+    this._subscribtion = this._debounceAbleValue.pipe(skip(1), debounceTime(this._debounceTime.MilliSeconds)).subscribe((value: string) => { 
       this.CallOnChanged(value);
     });
   }
