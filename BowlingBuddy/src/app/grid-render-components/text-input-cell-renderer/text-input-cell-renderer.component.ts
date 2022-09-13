@@ -83,15 +83,8 @@ export class TextInputCellRendererComponent implements ICellRendererAngularComp 
   }
 
   private CallOnChanged(value: string){
-    if (this._params.onChange instanceof Function) {
-      const params = {
-        value: value,
-        rowData: this._params.node.data
-      }
-
-      if(this._params['onChange']){
-        this._params.onChange(params);
-      }
+    if (this._params.colDef.cellRendererParams.onChange instanceof Function) {
+      this._params.colDef.cellRendererParams.onChange(value, this._params?.node.data);
     }
   }
 
