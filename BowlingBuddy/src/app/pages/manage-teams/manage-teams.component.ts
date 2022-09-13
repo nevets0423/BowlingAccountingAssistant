@@ -28,7 +28,6 @@ export class ManageTeamsComponent implements OnInit {
     filter: true
   };
 
-  public rowData: any[] = [];
   public columnDefs = [
     {headerName: '', 
       field: 'checked',
@@ -95,10 +94,6 @@ export class ManageTeamsComponent implements OnInit {
     });
   }
 
-  PlayersForTeam(teamID: number): IPlayerInfo[]{
-    return this._players.filter(player => player.TeamID == teamID);
-  }
-
   CreateNewTeam(){
     this._dataManager.AddTeam({
       ID: 0,
@@ -143,5 +138,9 @@ export class ManageTeamsComponent implements OnInit {
 
   onPlayerUpdated(params: any){
     this._dataManager.UpdatePlayer(params.rowData);
+  }
+
+  private PlayersForTeam(teamID: number): IPlayerInfo[]{
+    return this._players.filter(player => player.TeamID == teamID);
   }
 }
