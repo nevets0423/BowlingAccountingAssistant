@@ -3,7 +3,9 @@ import { ITeamInfoDTO } from '../../models/interfaces/ITeamInfoDTO';
 import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
 import { IPlayerInfo } from '../../models/interfaces/IPlayerInfo';
 import { DataManagerService } from '../../services/data-manager.service';
-import { NumericArrayInputCellRendererComponent } from '../../grid-render-components/numeric-array-input-cell-renderer/numeric-array-input-cell-renderer.component';
+import { GenericInputCellRendererComponent } from 'src/app/grid-render-components/generic-input-cell-renderer/generic-input-cell-renderer.component';
+import { InputCellRedererParameters } from 'src/app/grid-render-components/generic-input-cell-renderer/input-cell-rederer-parameters';
+import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-week-display',
@@ -54,13 +56,17 @@ export class WeekDisplayComponent implements OnInit {
     {
       headerName: 'Paid', 
       field: 'AmountPaidEachWeek', 
-      cellRenderer: NumericArrayInputCellRendererComponent,
       width: 60,
+      cellRenderer: GenericInputCellRendererComponent,
       cellRendererParams: {
         width: 50,
-        index: 0,
-        onChange: this.onPlayerUpdated.bind(this)
-      }
+        getMax: undefined,
+        getMin: undefined,
+        getValue: (params: ICellRendererParams<IPlayerInfo, any>) => { return ((params.data?.AmountPaidEachWeek?.length || 0) > this.Week) ? params.data?.AmountPaidEachWeek[this.Week] : 0; },
+        onChange: this.onPlayerUpdated.bind(this),
+        readonly: false,
+        updateData: this.updatePlayerPaidAmountGridData.bind(this)
+      } as InputCellRedererParameters
     }
   ];
 
@@ -113,11 +119,6 @@ export class WeekDisplayComponent implements OnInit {
       throw Error('Week is required.');
     }
 
-    let cellRendererParams = this.columnDefs[this.columnDefs.findIndex(c => c.field == 'AmountPaidEachWeek')].cellRendererParams;
-    if(cellRendererParams?.index != undefined){
-      cellRendererParams.index = this.Week;
-    }
-
     this._dataManager.LeagueInfo.subscribe(leagueInfo => {
       this._leagueInfo = leagueInfo;
     });
@@ -141,9 +142,18 @@ export class WeekDisplayComponent implements OnInit {
     params.api.sizeColumnsToFit();
   }
 
-  onPlayerUpdated(params: any){
-    console.log("player updated", params);
-    this._dataManager.UpdatePlayer(params.rowData);
+  onPlayerUpdated(value: number, rowData: any){
+    console.log("player updated", rowData);
+    this._dataManager.UpdatePlayer(rowData);
+  }
+
+  private updatePlayerPaidAmountGridData(value: number, data: IPlayerInfo){
+    while(data.AmountPaidEachWeek.length < this.Week + 1){
+      data.AmountPaidEachWeek.push(0);
+    }
+
+    data.AmountPaidEachWeek[this.Week] = value;
+    return data;
   }
 
   private PlayersForTeam(teamID: number): IPlayerInfo[]{

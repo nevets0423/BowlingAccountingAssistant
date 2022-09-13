@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ITeamInfoManager } from 'src/app/models/interfaces/ITeamInfoManager';
+import { ICellRendererParams } from 'ag-grid-community';
+import { GenericInputCellRendererComponent } from '../../grid-render-components/generic-input-cell-renderer/generic-input-cell-renderer.component';
+import { InputCellRedererParameters } from '../../grid-render-components/generic-input-cell-renderer/input-cell-rederer-parameters';
+import { ITeamInfoManager } from '../../models/interfaces/ITeamInfoManager';
 import { CheckBoxCellRendererComponent } from '../../grid-render-components/check-box-cell-renderer/check-box-cell-renderer.component';
-import { NumericInputCellRendererComponent } from '../../grid-render-components/numeric-input-cell-renderer/numeric-input-cell-renderer.component';
 import { TextInputCellRendererComponent } from '../../grid-render-components/text-input-cell-renderer/text-input-cell-renderer.component';
 import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
 import { IPlayerInfo } from '../../models/interfaces/IPlayerInfo';
@@ -45,27 +47,31 @@ export class ManageTeamsComponent implements OnInit {
     },
     {headerName: 'Start Week', 
       field: 'WeekStarted', 
-      cellRenderer: NumericInputCellRendererComponent,
       width: 60,
+      cellRenderer: GenericInputCellRendererComponent,
       cellRendererParams: {
         width: 50,
-        min: 0,
-        minColumnName: 'WeekStarted',
-        maxColumnName: 'WeekEnded',
-        onChange: this.onPlayerUpdated.bind(this)
-      }
+        getMax: (params: ICellRendererParams<IPlayerInfo, any>) => { return params.data?.WeekEnded; },
+        getMin: (params: ICellRendererParams<IPlayerInfo, any>) => { return 0; },
+        getValue: (params: ICellRendererParams<IPlayerInfo, any>) => { return params.data?.WeekStarted; },
+        onChange: this.onPlayerUpdated.bind(this),
+        readonly: false,
+        updateData: (value: number, data: IPlayerInfo) => { data.WeekStarted = value; return data;}
+      } as InputCellRedererParameters
     },
     {headerName: 'End Week', 
       field: 'WeekEnded', 
       width: 60,
-      cellRenderer: NumericInputCellRendererComponent,
+      cellRenderer: GenericInputCellRendererComponent,
       cellRendererParams: {
         width: 50,
-        max: this._leagueInfo?.NumberOfWeeks || 100,
-        minColumnName: 'WeekStarted',
-        maxColumnName: 'WeekEnded',
-        onChange: this.onPlayerUpdated.bind(this)
-      }
+        getMax: (params: ICellRendererParams<IPlayerInfo, any>) => { return this._leagueInfo?.NumberOfWeeks; },
+        getMin: (params: ICellRendererParams<IPlayerInfo, any>) => { return params.data?.WeekStarted; },
+        getValue: (params: ICellRendererParams<IPlayerInfo, any>) => { return params.data?.WeekEnded; },
+        onChange: this.onPlayerUpdated.bind(this),
+        readonly: false,
+        updateData: (value: number, data: IPlayerInfo) => { data.WeekEnded = value; return data;}
+      } as InputCellRedererParameters
     },
   ];
 
@@ -75,10 +81,6 @@ export class ManageTeamsComponent implements OnInit {
     this._gridApis.clear();
     this._dataManager.LeagueInfo.subscribe(leagueInfo => {
       this._leagueInfo = leagueInfo;
-      let cellRendererParams = this.columnDefs[this.columnDefs.findIndex(c => c.field == 'WeekEnded')].cellRendererParams;
-      if(cellRendererParams?.max){
-        cellRendererParams.max = this._leagueInfo?.NumberOfWeeks || 100;
-      }
     });
     this._dataManager.Teams.subscribe(teams => {
       this._teams = teams.map(team => { return {ID:team.ID, LeagueID:team.LeagueID, Checked:false } as ITeamInfoManager});
@@ -136,8 +138,8 @@ export class ManageTeamsComponent implements OnInit {
     params.api.sizeColumnsToFit();
   }
 
-  onPlayerUpdated(params: any){
-    this._dataManager.UpdatePlayer(params.rowData);
+  onPlayerUpdated(value: number, rowData: any){
+    this._dataManager.UpdatePlayer(rowData);
   }
 
   private PlayersForTeam(teamID: number): IPlayerInfo[]{
