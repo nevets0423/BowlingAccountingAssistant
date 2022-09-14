@@ -1,10 +1,11 @@
 import { AutoNum } from "../AutoNum";
+import { IAutoNum } from "../interfaces/IAutoNum";
 
 describe('AutoNum', () => {
     let autoNum: AutoNum;
 
     beforeEach(() => {
-        autoNum = new AutoNum();
+        autoNum = new AutoNum({LeagueId: 0, PlayerId: 0, TeamId: 0} as IAutoNum);
     });
 
     it('should increment team every time its called.', () => {

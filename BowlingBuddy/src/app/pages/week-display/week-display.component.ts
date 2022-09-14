@@ -119,7 +119,7 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
       .map((player:IPlayerInfo) => {
         return player.AmountPaidEachWeek?.[this.Week] || 0
       })
-      .reduce((totalValue, currentValue) => totalValue + currentValue);
+      .reduce((totalValue, currentValue) => totalValue + currentValue, 0);
   }
 
   get LeaguePaidToDate(): number{
@@ -127,7 +127,7 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
       .map((player:IPlayerInfo) => {
         return player.AmountPaidEachWeek.reduce((totalValue, currentValue, currentIndex) => totalValue + ((currentIndex <= this.Week) ? currentValue : 0), 0);
       })
-      .reduce((totalValue, currentValue) => totalValue + currentValue);
+      .reduce((totalValue, currentValue) => totalValue + currentValue, 0);
   }
 
   get LeaguePaidToLanes(): number{
@@ -156,10 +156,6 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if(this.week == undefined){
-      throw Error('Week is required.');
-    }
-
     this._dataManager.LeagueInfo.subscribe(leagueInfo => {
       this._leagueInfo = leagueInfo;
     });
@@ -226,10 +222,7 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
   }
 
   private PlayerPaidToDate(params: ICellRendererParams<IPlayerInfo, any>): number{
-    if(params.data?.AmountPaidEachWeek.length == 0){
-      return 0;
-    }
-    return params.data?.AmountPaidEachWeek.reduce((totalValue, currentValue, index) => totalValue += (index <= this.Week) ? currentValue : 0) || 0;
+    return params.data?.AmountPaidEachWeek.reduce((totalValue, currentValue, index) => totalValue += (index <= this.Week) ? currentValue : 0, 0) || 0;
   }
 
   private PlayerOwes(params: ICellRendererParams<IPlayerInfo, any>){

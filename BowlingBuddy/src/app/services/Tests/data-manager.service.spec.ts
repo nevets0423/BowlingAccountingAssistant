@@ -38,13 +38,22 @@ describe('DataManagerService', () => {
   describe('LoadLeagues', () => {
     it('should set loading through out loading leagues cycle', () => {
       _fileManager.GetAllFiles.and.callFake((path: string, next: (value: string[]) => void, error: { (value: any) : void } | null = null) => {
-        expect(service.LoadingLeagues).toBeTruthy();
         next([]);
       });
+
+      service.LoadingLeagues.pipe(skip(0), take(1)).subscribe(value => {
+        expect(value).toBeFalsy();
+      });
+
+      service.LoadingLeagues.pipe(skip(1), take(1)).subscribe(value => {
+        expect(value).toBeTruthy();
+      });
+
+      service.LoadingLeagues.pipe(skip(2), take(1)).subscribe(value => {
+        expect(value).toBeFalsy();
+      });
   
-      expect(service.LoadingLeagues).toBeFalsy();
       service.LoadLeagues();
-      expect(service.LoadingLeagues).toBeFalsy();
       expect(_fileManager.GetAllFiles).toHaveBeenCalled();
     });
 
@@ -54,7 +63,7 @@ describe('DataManagerService', () => {
       });
   
       //skips: defualt null, clear, push file 1
-      service.Leagues.pipe(skip(3), take(1)).subscribe((value: ILeagueFile[]) => {
+      service.Leagues.pipe(skip(4), take(1)).subscribe((value: ILeagueFile[]) => {
         expect(value.length).toBe(2);
         expect(value[0].DisplayName).toBe('file1');
         expect(value[0].FileName).toBe('file1.sav');
@@ -69,7 +78,7 @@ describe('DataManagerService', () => {
       });
   
       //skips: defualt null, clear, push file 1
-      service.Leagues.pipe(skip(3), take(1)).subscribe((value: ILeagueFile[]) => {
+      service.Leagues.pipe(skip(4), take(1)).subscribe((value: ILeagueFile[]) => {
         expect(value.length).toBe(2);
       });
   
@@ -81,11 +90,15 @@ describe('DataManagerService', () => {
         error?.("BOOM");
       });
 
-      service.LoadLeagues();
+      service.Error.pipe(skip(1), take(1)).subscribe(value => {
+        expect(value).toBeTrue();
+      });
+      service.LoadingLeagues.pipe(skip(2), take(1)).subscribe(value => {
+        expect(value).toBeFalse();
+      });
 
-      expect(service.Error).toBeTrue();
+      service.LoadLeagues();
       expect(service.ErrorMessage).toBe("BOOM");
-      expect(service.LoadingLeagues).toBeFalse();
     });
   });
 
@@ -95,11 +108,17 @@ describe('DataManagerService', () => {
         error?.("BOOM");
       });
 
+      service.Error.pipe(skip(2), take(1)).subscribe(value => {
+        expect(value).toBeTrue();
+      });
+
+      service.LoadingLeagues.pipe(skip(2), take(1)).subscribe(value => {
+        expect(value).toBeFalse();
+      });
+
       service.LoadLeague("LeagueName");
       
-      expect(service.Error).toBeTrue();
       expect(service.ErrorMessage).toBe("BOOM");
-      expect(service.LoadingLeagues).toBeFalse();
     });
 
     it('should set error if file was empty', () => {
@@ -107,10 +126,15 @@ describe('DataManagerService', () => {
         next("");
       });
 
+      service.LoadingLeagues.pipe(skip(1), take(1)).subscribe(value => {
+        expect(value).toBeFalse();
+      });
+
+      service.Error.pipe(skip(2), take(1)).subscribe(value => {
+        expect(value).toBeTrue();
+      });
+
       service.LoadLeague("LeagueName");
-      
-      expect(service.Error).toBeTrue();
-      expect(service.LoadingLeagues).toBeFalse();
     });
 
     it('should set error if file has bad data', () => {
@@ -118,10 +142,15 @@ describe('DataManagerService', () => {
         next("clearlyNotJson{]");
       });
 
+      service.Error.pipe(skip(2), take(1)).subscribe(value => {
+        expect(value).toBeTrue();
+      });
+
+      service.LoadingLeagues.pipe(skip(2), take(1)).subscribe(value => {
+        expect(value).toBeTrue();
+      });
+
       service.LoadLeague("LeagueName");
-      
-      expect(service.Error).toBeTrue();
-      expect(service.LoadingLeagues).toBeFalse();
     });
 
 
@@ -144,7 +173,6 @@ describe('DataManagerService', () => {
         expect(players.length).toBe(1);
         expect(players[0].ID).toBe(0);
         expect(players[0].Name).toBe("steve");
-        expect(players[0].PaidToDate).toBe(111);
         expect(players[0].TeamID).toBe(1);
         expect(players[0].WeekEnded).toBe(2);
         expect(players[0].WeekStarted).toBe(3);
@@ -164,8 +192,8 @@ describe('DataManagerService', () => {
   describe('Create League', () => {
     it('should send json to create new file', () =>{
       _fileManager.WriteToFile.and.callFake((path: string, content: string, next: (value: string) => void, error: { (value: any) : void } | null = null)=>{
-        expect(path).toBe("path\\BowlerBuddy\\Leagues\\TheBestLeague.sav");
-        expect(content).toBe("{\"AutoNumber\":{\"_playerId\":0,\"_teamId\":0,\"_leagueId\":1},\"LeagueInfo\":{\"ID\":0,\"LaneFee\":100,\"Name\":\"TheBestLeague\",\"NumberOfWeeks\":3,\"PrizeAmountPerWeek\":5},\"PlayerInfos\":[],\"TeamInfos\":[],\"MirgrationInfo\":{\"LastMigrationRun\":0,\"LastRunOnVersion\":{\"_major\":1,\"_minor\":0,\"_revision\":0}}}");
+        expect(path).toBe("path\\BowlerBuddy\\Leagues\\TheBestLeague.sav");                 
+        expect(content).toBe("{\"AutoNumber\":{\"PlayerId\":0,\"LeagueId\":1,\"TeamId\":0},\"LeagueInfo\":{\"ID\":0,\"LaneFee\":100,\"Name\":\"TheBestLeague\",\"NumberOfWeeks\":3,\"PrizeAmountPerWeek\":5},\"PlayerInfos\":[],\"TeamInfos\":[],\"MirgrationInfo\":{\"LastMigrationRun\":0,\"LastRunOnVersion\":{\"_major\":1,\"_minor\":0,\"_revision\":0},\"LastRunOnVersionInterface\":{\"Major\":1,\"Minor\":0,\"Revision\":0}}}");
       });
       
       service.CreateLeague({
@@ -198,7 +226,6 @@ function JsonSaveString(){
     "\"AmountPaidEachWeek\":[12, 11]," +
     "\"ID\":0," +
     "\"Name\":\"steve\"," +
-    "\"PaidToDate\":111," +
     "\"TeamID\":1," +
     "\"WeekEnded\":2," +
     "\"WeekStarted\":3" +

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
@@ -19,7 +19,7 @@ import { BehaviorSubject, debounceTime, skip, Subscription } from 'rxjs';
   styles: [
   ]
 })
-export class TextInputCellRendererComponent implements ICellRendererAngularComp {
+export class TextInputCellRendererComponent implements OnInit, ICellRendererAngularComp {
   private _params: any;
   private _isResized: boolean = false;
   private _debounceAbleValue: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -30,6 +30,18 @@ export class TextInputCellRendererComponent implements ICellRendererAngularComp 
 
   get name(){
     return this.nameForm.get('name');
+  }
+
+  ngOnInit(): void {
+    //just so the page can load when testing
+    this.nameForm = this._formBuilder.group({
+      name: ['', [
+        Validators.required, 
+        Validators.minLength(4), 
+        Validators.maxLength(30),
+        this._validationSpecialCharactors
+      ]]
+    });
   }
 
   agInit(params: ICellRendererParams<any, any>): void {
