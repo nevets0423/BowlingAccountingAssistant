@@ -21,6 +21,7 @@ export class WeeklyTabsComponent implements OnInit {
         return;
       }
 
+      this.weeks = [];
       for(let i = 0; i < leagueInfo.NumberOfWeeks; i++){
         this.weeks.push(i)
       }
