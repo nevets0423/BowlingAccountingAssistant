@@ -7,7 +7,7 @@ import { BehaviorSubject, debounceTime, skip, Subscription } from 'rxjs';
   selector: 'app-text-input-cell-renderer',
   template: `
     <form [formGroup]="nameForm">
-        <input formControlName="name" placeholder="League Name" (ngModelChange)="onChange(name?.value, name?.invalid || false)"> 
+        <input formControlName="name" placeholder="Player Name" (ngModelChange)="onChange(name?.value, name?.invalid || false)"> 
         <div *ngIf="name?.invalid" class="alert">
             <div *ngIf="name?.errors?.['required']">Name is required.</div>
             <div *ngIf="name?.errors?.['minlength']">Name must be at least 4 characters long.</div>
@@ -29,20 +29,10 @@ export class TextInputCellRendererComponent implements OnInit, ICellRendererAngu
   constructor(private _formBuilder: FormBuilder) { }
 
   get name(){
-    return this.nameForm.get('name');
+    return this.nameForm?.get('name');
   }
 
-  ngOnInit(): void {
-    //just so the page can load when testing
-    this.nameForm = this._formBuilder.group({
-      name: ['', [
-        Validators.required, 
-        Validators.minLength(4), 
-        Validators.maxLength(30),
-        this._validationSpecialCharactors
-      ]]
-    });
-  }
+  ngOnInit(): void {}
 
   agInit(params: ICellRendererParams<any, any>): void {
     this._params = params;

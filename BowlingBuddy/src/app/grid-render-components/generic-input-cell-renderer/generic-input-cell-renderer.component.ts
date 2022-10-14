@@ -32,9 +32,9 @@ export class GenericInputCellRendererComponent implements ICellRendererAngularCo
     this._redererParameters = params.colDef?.cellRendererParams;
 
     this.value = this._redererParameters?.getValue(params) || this.value;
-    if(this._params.colDef?.field){
-      this._params.data[this._params.colDef?.field] = this.value;
-    }
+ 
+    this.readOnly = this._redererParameters?.readonly || this.readOnly;
+    this.label = this._redererParameters?.label || this.label;
     this.width = this._redererParameters?.width || this.width;
     if(this._redererParameters?.getMin){
       this.min = this._redererParameters.getMin(params);
@@ -42,13 +42,10 @@ export class GenericInputCellRendererComponent implements ICellRendererAngularCo
     if(this._redererParameters?.getMax){
       this.max = this._redererParameters.getMax(params);
     }
-    this.readOnly = this._redererParameters?.readonly || this.readOnly;
 
     if(this._subscribtion){
       this._subscribtion.unsubscribe();
     }
-
-    this.label = this._redererParameters?.label || this.label;
 
     this._subscribtion = this._debounceAbleValue.pipe(skip(1), debounceTime(800)).subscribe((value: number) => { 
       this._params?.api.refreshCells();

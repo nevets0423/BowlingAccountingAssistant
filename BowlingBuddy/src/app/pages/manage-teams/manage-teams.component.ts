@@ -52,7 +52,7 @@ export class ManageTeamsComponent implements OnInit {
       cellRendererParams: {
         width: 50,
         getMax: (params: ICellRendererParams<IPlayerInfo, any>) => { return params.data?.WeekEnded; },
-        getMin: (params: ICellRendererParams<IPlayerInfo, any>) => { return 0; },
+        getMin: (params: ICellRendererParams<IPlayerInfo, any>) => { return 1; },
         getValue: (params: ICellRendererParams<IPlayerInfo, any>) => { return params.data?.WeekStarted; },
         onChange: this.onPlayerUpdated.bind(this),
         readonly: false,
@@ -111,7 +111,7 @@ export class ManageTeamsComponent implements OnInit {
       PaidToDate: 0,
       TeamID: teamID,
       WeekEnded: this._leagueInfo?.NumberOfWeeks,
-      WeekStarted: 0
+      WeekStarted: 1
     } as IPlayerInfo);
   }
 
