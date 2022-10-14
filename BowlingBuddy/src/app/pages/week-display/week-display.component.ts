@@ -29,8 +29,8 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
   private _gridApis: Map<number, any> = new Map<number, any>();
 
   public defaultColDef = {
-    sortable: false,
-    filter: true
+    sortable: true,
+    filter: false
   };
 
   public columnDefs = [
@@ -123,11 +123,14 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
   }
 
   get LeaguePaidToDate(): number{
-    return this._players.filter((player: IPlayerInfo) => this.IsPlayerActive(player, this.Week))
-      .map((player:IPlayerInfo) => {
-        return player.AmountPaidEachWeek.reduce((totalValue, currentValue, currentIndex) => totalValue + ((currentIndex <= this.Week) ? currentValue : 0), 0);
-      })
-      .reduce((totalValue, currentValue) => totalValue + currentValue, 0);
+    return [...Array(this.Week + 1).keys()].reduce((totalValue: number, currentWeek: number) => {
+      return totalValue + this._players.reduce((totalPlayerValue: number, player: IPlayerInfo) => {
+        if(!this.IsPlayerActive(player, currentWeek)){
+          return totalPlayerValue + 0;
+        }
+        return totalPlayerValue + (player.AmountPaidEachWeek.length <= currentWeek ? 0 : player.AmountPaidEachWeek[currentWeek]);
+      }, 0)
+    }, 0);
   }
 
   get LeaguePaidToLanes(): number{
@@ -222,7 +225,7 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
   }
 
   private PlayerPaidToDate(params: ICellRendererParams<IPlayerInfo, any>): number{
-    return params.data?.AmountPaidEachWeek.reduce((totalValue, currentValue, index) => totalValue += (index <= this.Week) ? currentValue : 0, 0) || 0;
+    return params.data?.AmountPaidEachWeek.reduce((totalValue, currentValue, index) => totalValue += (this.IsPlayerActive(params.data, index) && index <= this.Week) ? currentValue : 0, 0) || 0;
   }
 
   private PlayerOwes(params: ICellRendererParams<IPlayerInfo, any>){
@@ -240,7 +243,10 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
     return totalValue;
   }
 
-  private IsPlayerActive(player: IPlayerInfo, week: number){
-    return player.WeekStarted - 1 <= week && player.WeekEnded - 1 >= week;
+  private IsPlayerActive(player: IPlayerInfo | undefined, week: number){
+    if(!player){
+      return false;
+    }
+    return player.WeekStarted <= week && player.WeekEnded > week;
   }
 }
