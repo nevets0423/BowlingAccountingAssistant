@@ -20,7 +20,7 @@ export class DataManagerService implements OnDestroy {
   private _pathToDocuments: string = "";
   private _mainFolderName: string = "BowlerBuddy";
   private _leagueFolderName: string = "Leagues";
-  private _loadedLeagueFileName: string = "";
+  private _loadedLeagueFileName: BehaviorSubject<string> = new BehaviorSubject<string>("");
   private _loadingLeauges: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _loadingLeaugeInfo: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _error: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -108,6 +108,10 @@ export class DataManagerService implements OnDestroy {
     return this._players.asObservable();
   }
 
+  get LoadedLeagueFileName() : Observable<string>{
+    return this._loadedLeagueFileName.asObservable();
+  }
+
   GetLeagueOverviews(): Observable<ILeagueOverView[]>{
     let leagueOverviews: BehaviorSubjectArray<ILeagueOverView> = new BehaviorSubjectArray<ILeagueOverView>([]);
     
@@ -165,7 +169,7 @@ export class DataManagerService implements OnDestroy {
       this._autoNumbers = new AutoNum(dataSaveObject.AutoNumber);
       this._migrationInfo = dataSaveObject.MirgrationInfo;
       this._migrationInfo.LastRunOnVersion = new Version(this._migrationInfo.LastRunOnVersionInterface);
-      this._loadedLeagueFileName = fileName;
+      this._loadedLeagueFileName.next(fileName);
     }).catch((error) => {this.HandleError(error)});;
   }
 
@@ -223,7 +227,7 @@ export class DataManagerService implements OnDestroy {
       MirgrationInfo: this._migrationInfo
     };
 
-    this._fileManager.WriteToFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, this._loadedLeagueFileName), JSON.stringify(dataSaveObject), 
+    this._fileManager.WriteToFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, this._loadedLeagueFileName.value), JSON.stringify(dataSaveObject), 
       (content: string) => {
         console.log("League Saved", dataSaveObject);
         this._saving.next(false);

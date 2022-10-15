@@ -4,6 +4,7 @@ import { DataManagerService } from '../../services/data-manager.service';
 import { GridApi, ICellRendererParams } from 'ag-grid-community/main'
 import { ButtonCellRendereComponent as ButtonCellRendererComponent } from 'src/app/grid-render-components/button-cell-renderer/button-cell-renderer.component';
 import { buttonRendererParams } from 'src/app/grid-render-components/button-cell-renderer/button-renderer-params';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-manage-leagues',
@@ -27,7 +28,7 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
       cellRenderer: ButtonCellRendererComponent,
       cellRendererParams: {
         Name: "Open",
-        onClick: this.openLeague
+        onClick: this.openLeague.bind(this)
       } as buttonRendererParams
     },
     {
@@ -37,7 +38,7 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
       cellRenderer: ButtonCellRendererComponent,
       cellRendererParams: {
         Name: "Delete",
-        onClick: this.deleteLeague
+        onClick: this.deleteLeague.bind(this)
       } as buttonRendererParams
     },
     {
@@ -82,7 +83,7 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private _dataManager: DataManagerService) { }
+  constructor(private _dataManager: DataManagerService, private _router: Router) { }
 
   ngOnDestroy(): void {
     this._gridApi = null;
@@ -111,6 +112,8 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
 
   openLeague(params: ICellRendererParams<any, any> | undefined){
     console.log("open", params);
+    this._dataManager.LoadLeague(params?.value);
+    this._router.navigate(['/weekly-tabs']);
   }
 
   deleteLeague(params: ICellRendererParams<any, any> | undefined){

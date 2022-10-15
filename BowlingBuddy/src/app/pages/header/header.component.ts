@@ -59,6 +59,14 @@ export class HeaderComponent implements OnInit {
       this._router.navigate(['/manage-teams']);
     });
 
+    this._dataManager.LoadedLeagueFileName.subscribe(fileName => {
+      if(this.selectedLeague == fileName){
+        return;
+      }
+
+      this.selectedLeague = fileName;
+    });
+
     this._router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
       let navigationEnd = event as NavigationEnd;
       if(navigationEnd.url == '/manage-league'){
