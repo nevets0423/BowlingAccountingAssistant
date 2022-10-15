@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ButtonCellRendereComponent } from './button-cell-rendere.component';
+import { ButtonCellRendereComponent as ButtonCellRendererComponent } from './button-cell-rendere.component';
 
 describe('ButtonCellRendereComponent', () => {
-  let component: ButtonCellRendereComponent;
-  let fixture: ComponentFixture<ButtonCellRendereComponent>;
+  let component: ButtonCellRendererComponent;
+  let fixture: ComponentFixture<ButtonCellRendererComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ButtonCellRendereComponent ]
+      declarations: [ ButtonCellRendererComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ButtonCellRendereComponent);
+    fixture = TestBed.createComponent(ButtonCellRendererComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
