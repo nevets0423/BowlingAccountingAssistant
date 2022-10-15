@@ -127,12 +127,12 @@ export class DataManagerService implements OnDestroy {
             TotalCollected: leageSaveData.PlayerInfos.reduce((currentValue, currentPlayer) => currentValue += (currentPlayer.AmountPaidEachWeek.length == 0) ? 0 : currentPlayer.AmountPaidEachWeek.reduce((current, week) => current += week),0),
           } as ILeagueOverView;
 
-          leagueOverview.LaneFeesCollected = leagueOverview.WeeksRecored * leagueOverview.LaneFeePerWeek;
+          leagueOverview.LaneFeesCollected = (leagueOverview.WeeksRecored * leagueOverview.LaneFeePerWeek) * leagueOverview.Players;
           if(leagueOverview.LaneFeesCollected > leagueOverview.TotalCollected){
             leagueOverview.LaneFeesCollected = leagueOverview.TotalCollected;
           }
 
-          leagueOverview.PrizeAmountCollected = leagueOverview.LaneFeesCollected - leagueOverview.TotalCollected;
+          leagueOverview.PrizeAmountCollected = leagueOverview.TotalCollected - leagueOverview.LaneFeesCollected ;
           if(leagueOverview.PrizeAmountCollected < 0){
             leagueOverview.PrizeAmountCollected = 0;
           }
