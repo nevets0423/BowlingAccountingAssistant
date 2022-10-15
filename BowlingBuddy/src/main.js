@@ -2,6 +2,7 @@ const {app, BrowserWindow, ipcMain} = require('electron')
 const url = require("url");
 const path = require("path");
 const fs = require("fs");
+const REPLY = "-reply";
 
 let mainWindow
 
@@ -39,36 +40,40 @@ app.on('activate', function () {
   if (mainWindow === null) createWindow()
 });
 
-ipcMain.on("GetPath",(event, args) => {
+const GETPATH = "GetPath";
+ipcMain.on(GETPATH,(event, args) => {
   try{
-    event.reply("GetPath-reply", {path:app.getPath(args), error: false});
+    event.reply(GETPATH + REPLY, {content:app.getPath(args), error: false});
   }
   catch(error){
-    event.reply("GetPath-reply", {error: true, errorMessage:error});
+    event.reply(GETPATH + REPLY, {error: true, errorMessage:error});
   }
 });
 
-ipcMain.on("GetAllFiles", (event, args) => {
+const GETALLFILES = "GetAllFiles";
+ipcMain.on(GETALLFILES, (event, args) => {
   fs.readdir(args, (error, files) => {
     if(error){
-      event.reply("GetAllFiles-reply", {errorMessage:error, error: true});
+      event.reply(GETALLFILES + REPLY, {errorMessage:error, error: true});
       return;
     }
-    event.reply("GetAllFiles-reply", {files: files, error:false, errorMessage: null});
+    event.reply(GETALLFILES + REPLY, {content: files, error:false, errorMessage: null});
   });
 });
 
-ipcMain.on("ReadFile", (event, args) => {
+const READFILE = "ReadFile";
+ipcMain.on(READFILE, (event, args) => {
   if (!fs.existsSync(args)) {
-    event.reply("ReadFile-reply", {error: true, errorMessage: "File Not Found."});
+    event.reply(READFILE + REPLY, {error: true, errorMessage: "File Not Found."});
     return;
   }
 
   var data  = fs.readFileSync(args, 'utf8');
-  event.reply("ReadFile-reply", {fileContent: data, error: false, errorMessage: null});
+  event.reply(READFILE + REPLY, {content: data, error: false, errorMessage: null});
 });
 
-ipcMain.on("SaveFile", (event, args) => {
+const SAVEFILE = "SaveFile";
+ipcMain.on(SAVEFILE, (event, args) => {
   var folderPath = args[0];
   var pathToFile = folderPath + "\\" + args[1];
   var data = args[2];
@@ -79,10 +84,10 @@ ipcMain.on("SaveFile", (event, args) => {
     }
   
     fs.writeFileSync(pathToFile, data+"\n");
-    event.reply("SaveFile-reply", {error: false, errorMessage: null});
+    event.reply(SAVEFILE + REPLY, {error: false, errorMessage: null});
   }
   catch (error) {
     console.error('ERROR', error);
-    event.reply("SaveFile-reply", {error: true, errorMessage: error});
+    event.reply(SAVEFILE + REPLY, {error: true, errorMessage: error});
   }
 });

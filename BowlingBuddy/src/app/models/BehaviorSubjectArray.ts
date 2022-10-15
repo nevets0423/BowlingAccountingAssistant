@@ -101,4 +101,8 @@ export class BehaviorSubjectArray<T>{
 
         return undefined;
     }
+
+    error(error: any){
+        this._behaviorSubject.error(error);
+    }
 }

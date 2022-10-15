@@ -108,41 +108,41 @@ export class DataManagerService implements OnDestroy {
     return this._players.asObservable();
   }
 
-  GetLeagueOverviews(): Promise<ILeagueOverView[]>{
-    let leagueOverviews: ILeagueOverView[] = [];
-    return new Promise<ILeagueOverView[]>((resolve, reject) => {
-      this.GetLeagueFiles().then((leagueFiles) => {
-        leagueFiles.forEach(leagueFile => {
-          this.GetLeagueSaveData(leagueFile.FileName).then(leageSaveData => {
-            let leagueOverview = {
-              ID: leageSaveData.LeagueInfo.ID,
-              Name: leageSaveData.LeagueInfo.Name,
-              FileName: leagueFile.FileName,
-              PrizeAmountPerWeek: leageSaveData.LeagueInfo.PrizeAmountPerWeek,
-              Players: leageSaveData.PlayerInfos.length,
-              Teams: leageSaveData.TeamInfos.length,
-              LaneFeePerWeek: leageSaveData.LeagueInfo.LaneFee,
-              NumberOfWeeks: leageSaveData.LeagueInfo.NumberOfWeeks,
-              WeeksRecored: leageSaveData.PlayerInfos.reduce((currentMax, currentPlayer) => currentMax = (currentPlayer.AmountPaidEachWeek.length > currentMax) ? currentPlayer.AmountPaidEachWeek.length : currentMax, 0),
-              TotalCollected: leageSaveData.PlayerInfos.reduce((currentValue, currentPlayer) => currentValue += currentPlayer.AmountPaidEachWeek.reduce((current, week) => current += week),0),
-            } as ILeagueOverView;
+  GetLeagueOverviews(): Observable<ILeagueOverView[]>{
+    let leagueOverviews: BehaviorSubjectArray<ILeagueOverView> = new BehaviorSubjectArray<ILeagueOverView>([]);
+    
+    this.GetLeagueFiles().then((leagueFiles) => {
+      leagueFiles.forEach(leagueFile => {
+        this.GetLeagueSaveData(leagueFile.FileName).then(leageSaveData => {
+          let leagueOverview = {
+            ID: leageSaveData.LeagueInfo.ID,
+            Name: leageSaveData.LeagueInfo.Name,
+            FileName: leagueFile.FileName,
+            PrizeAmountPerWeek: leageSaveData.LeagueInfo.PrizeAmountPerWeek,
+            Players: leageSaveData.PlayerInfos.length,
+            Teams: leageSaveData.TeamInfos.length,
+            LaneFeePerWeek: leageSaveData.LeagueInfo.LaneFee,
+            NumberOfWeeks: leageSaveData.LeagueInfo.NumberOfWeeks,
+            WeeksRecored: leageSaveData.PlayerInfos.reduce((currentMax, currentPlayer) => currentMax = (currentPlayer.AmountPaidEachWeek.length > currentMax) ? currentPlayer.AmountPaidEachWeek.length : currentMax, 0),
+            TotalCollected: leageSaveData.PlayerInfos.reduce((currentValue, currentPlayer) => currentValue += (currentPlayer.AmountPaidEachWeek.length == 0) ? 0 : currentPlayer.AmountPaidEachWeek.reduce((current, week) => current += week),0),
+          } as ILeagueOverView;
 
-            leagueOverview.LaneFeesCollected = leagueOverview.WeeksRecored * leagueOverview.LaneFeePerWeek;
-            if(leagueOverview.LaneFeesCollected > leagueOverview.TotalCollected){
-              leagueOverview.LaneFeesCollected = leagueOverview.TotalCollected;
-            }
+          leagueOverview.LaneFeesCollected = leagueOverview.WeeksRecored * leagueOverview.LaneFeePerWeek;
+          if(leagueOverview.LaneFeesCollected > leagueOverview.TotalCollected){
+            leagueOverview.LaneFeesCollected = leagueOverview.TotalCollected;
+          }
 
-            leagueOverview.PrizeAmountCollected = leagueOverview.LaneFeesCollected - leagueOverview.TotalCollected;
-            if(leagueOverview.PrizeAmountCollected < 0){
-              leagueOverview.PrizeAmountCollected = 0;
-            }
+          leagueOverview.PrizeAmountCollected = leagueOverview.LaneFeesCollected - leagueOverview.TotalCollected;
+          if(leagueOverview.PrizeAmountCollected < 0){
+            leagueOverview.PrizeAmountCollected = 0;
+          }
 
-            leagueOverviews.push(leagueOverview);
-          }).catch(reject);
-        });
-        resolve(leagueOverviews);
-      }).catch(reject);
-    });
+          leagueOverviews.push(leagueOverview);
+        }).catch(leagueOverviews.error);
+      });
+    }).catch(leagueOverviews.error);
+
+    return leagueOverviews.asObservable();
   }
 
   LoadLeagues(){
