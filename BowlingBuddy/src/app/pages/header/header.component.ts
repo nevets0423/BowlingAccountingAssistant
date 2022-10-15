@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { filter, skip, take } from 'rxjs';
 import { ILeagueFile } from '../../models/interfaces/ILeagueFile';
 import { DataManagerService } from '../../services/data-manager.service';
@@ -13,6 +13,7 @@ export class HeaderComponent implements OnInit {
   leagueFiles: ILeagueFile[] = [];
   selectedLeague: string = "";
   loading: boolean = true;
+  showDropDown: boolean = true;
 
   constructor(private _dataManager: DataManagerService, private _router: Router) { }
 
@@ -56,6 +57,16 @@ export class HeaderComponent implements OnInit {
       this.selectedLeague = leagueFile.FileName;
       this._dataManager.LoadLeague(this.selectedLeague);
       this._router.navigate(['/manage-teams']);
+    });
+
+    this._router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
+      let navigationEnd = event as NavigationEnd;
+      if(navigationEnd.url == '/manage-league'){
+        this.showDropDown = false;
+      }
+      else{
+        this.showDropDown = true;
+      }
     });
   }
 
