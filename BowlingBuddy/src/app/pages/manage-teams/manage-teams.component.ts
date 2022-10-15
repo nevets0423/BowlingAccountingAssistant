@@ -26,8 +26,8 @@ export class ManageTeamsComponent implements OnInit {
 
   private _gridApis: Map<number, any> = new Map<number, any>();
   public defaultColDef = {
-    sortable: false,
-    filter: true
+    sortable: true,
+    filter: false
   };
 
   public columnDefs = [
