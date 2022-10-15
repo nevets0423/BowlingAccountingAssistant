@@ -1,24 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
+import { buttonRendererParams } from './button-renderer-params';
 
 @Component({
   selector: 'app-button-cell-rendere',
   template: `
-    <button >New League</button>
+    <button (click)="onClick()">{{rendererParameters.Name}}</button>
   `,
   styles: [
   ]
 })
 export class ButtonCellRendereComponent implements ICellRendererAngularComp {
+  private _params: ICellRendererParams<any, any> | undefined;
+  rendererParameters: buttonRendererParams = {
+    Name: "",
+    onClick: function (params: ICellRendererParams<any, any> | undefined): void {}
+  };
 
   constructor() { }
   
   agInit(params: ICellRendererParams<any, any>): void {
-    throw new Error('Method not implemented.');
+    this._params = params;
+    this.rendererParameters = params.colDef?.cellRendererParams;
   }
+  
   refresh(params: ICellRendererParams<any, any>): boolean {
-    throw new Error('Method not implemented.');
+    return false;
+  }
+
+  onClick(){
+    if (this.rendererParameters?.onClick instanceof Function) {
+      this.rendererParameters?.onClick(this._params);
+    }
   }
 
 }

@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ILeagueOverView } from 'src/app/models/interfaces/ILeagueOverView';
 import { DataManagerService } from '../../services/data-manager.service';
+import { GridApi, ICellRendererParams } from 'ag-grid-community/main'
+import { ButtonCellRendereComponent as ButtonCellRendererComponent } from 'src/app/grid-render-components/button-cell-renderer/button-cell-renderer.component';
+import { buttonRendererParams } from 'src/app/grid-render-components/button-cell-renderer/button-renderer-params';
 
 @Component({
   selector: 'app-manage-leagues',
   templateUrl: './manage-leagues.component.html',
   styleUrls: ['./manage-leagues.component.scss']
 })
-export class ManageLeaguesComponent implements OnInit {
+export class ManageLeaguesComponent implements OnInit, OnDestroy {
   public leagueOverViews: ILeagueOverView[] = [];
-  private _gridApi: any = null;
+  private _gridApi: GridApi | null = null;
 
   public defaultColDef = {
     sortable: true,
@@ -17,6 +20,26 @@ export class ManageLeaguesComponent implements OnInit {
   };
 
   public columnDefs = [
+    {
+      headerName: '', 
+      field: 'FileName', 
+      width: 100,
+      cellRenderer: ButtonCellRendererComponent,
+      cellRendererParams: {
+        Name: "Open",
+        onClick: this.openLeague
+      } as buttonRendererParams
+    },
+    {
+      headerName: '', 
+      field: 'FileName', 
+      width: 150,
+      cellRenderer: ButtonCellRendererComponent,
+      cellRendererParams: {
+        Name: "Delete",
+        onClick: this.deleteLeague
+      } as buttonRendererParams
+    },
     {
       headerName: 'Name', 
       field: 'Name',
@@ -61,6 +84,10 @@ export class ManageLeaguesComponent implements OnInit {
 
   constructor(private _dataManager: DataManagerService) { }
 
+  ngOnDestroy(): void {
+    this._gridApi = null;
+  }
+
   ngOnInit(): void {
     this._dataManager.GetLeagueOverviews().pipe().subscribe((overviews) => {
       this.leagueOverViews = overviews;
@@ -71,9 +98,22 @@ export class ManageLeaguesComponent implements OnInit {
     });
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this._gridApi?.sizeColumnsToFit();
+  }
+
   onGridReady(params: any) {
     this._gridApi = params.api;
-    this._gridApi.setRowData(this.leagueOverViews);
-    this._gridApi.sizeColumnsToFit();
+    this._gridApi?.setRowData(this.leagueOverViews);
+    this._gridApi?.sizeColumnsToFit();
+  }
+
+  openLeague(params: ICellRendererParams<any, any> | undefined){
+    console.log("open", params);
+  }
+
+  deleteLeague(params: ICellRendererParams<any, any> | undefined){
+    console.log("delete", params);
   }
 }
