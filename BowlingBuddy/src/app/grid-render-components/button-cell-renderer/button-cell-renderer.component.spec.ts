@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ButtonCellRendereComponent as ButtonCellRendererComponent } from './button-cell-rendere.component';
+import { ButtonCellRendereComponent as ButtonCellRendererComponent } from './button-cell-renderer.component';
 
 describe('ButtonCellRendereComponent', () => {
   let component: ButtonCellRendererComponent;
