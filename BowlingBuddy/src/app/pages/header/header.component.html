@@ -1,10 +1,38 @@
 <div>
-    <mat-form-field appearance="fill">
-        <mat-label>Select a League</mat-label>
-        <mat-select [(ngModel)]="selectedLeague" (selectionChange)="onSelectionChanged()">
-            <mat-option *ngFor="let league of leagueFiles" [value]="league?.FileName">{{league?.DisplayName}}</mat-option>
-        </mat-select>
-    </mat-form-field>
+    <div class="columns">
+        <div class="column is-narrow">
+            <mat-toolbar>
+                <mat-toolbar-row>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>menu</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <a *ngIf="!NoLeagueSelected" class="nav-item nav-link-edit" mat-menu-item href="#" [routerLink]="['weekly-tabs']">
+                            <h3>Weeks</h3>
+                        </a>
+                        <a *ngIf="!NoLeagueSelected" class="nav-item nav-link-edit" mat-menu-item href="#" [routerLink]="['manage-teams']">
+                            <h3>Manage Teams</h3>
+                        </a>
+                        <a class="nav-item nav-link-edit" mat-menu-item href="#" [routerLink]="['new-league']">
+                            <h3>New League</h3>
+                        </a>
+                        <a *ngIf="AnyLeagues" class="nav-item nav-link-edit" mat-menu-item href="#" [routerLink]="['manage-league']">
+                            <h3>Manage Leagues</h3>
+                        </a>
+                    </mat-menu>
+                </mat-toolbar-row>
+            </mat-toolbar>
+        </div>
+    
+        <div class="column is-half">
+            <mat-form-field appearance="fill" >
+                <mat-label>Select a League</mat-label>
+                <mat-select [(ngModel)]="selectedLeague" (selectionChange)="onSelectionChanged()">
+                    <mat-option *ngFor="let league of leagueFiles" [value]="league?.FileName">{{league?.DisplayName}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
 
 
     <div>

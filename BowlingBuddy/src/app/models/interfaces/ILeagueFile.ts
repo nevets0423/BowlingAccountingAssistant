@@ -1,4 +1,4 @@
 export interface ILeagueFile{
-    FileName: String;
-    DisplayName: String;
+    FileName: string;
+    DisplayName: string;
 }

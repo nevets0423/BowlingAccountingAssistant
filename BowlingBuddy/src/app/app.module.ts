@@ -7,6 +7,9 @@ import { CreateLeagueComponent } from './pages/create-league/create-league.compo
 import { ManageTeamsComponent } from './pages/manage-teams/manage-teams.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 import { HeaderComponent } from './pages/header/header.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { CheckBoxCellRendererComponent } from './grid-render-components/check-box-cell-renderer/check-box-cell-renderer.component';
@@ -17,6 +20,7 @@ import { TextInputCellRendererComponent } from './grid-render-components/text-in
 import { WeekDisplayComponent } from './pages/week-display/week-display.component';
 import { WeeklyTabsComponent } from './pages/weekly-tabs/weekly-tabs.component';
 import { GenericInputCellRendererComponent } from './grid-render-components/generic-input-cell-renderer/generic-input-cell-renderer.component';
+import { ManageLeaguesComponent } from './pages/manage-leagues/manage-leagues.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +32,8 @@ import { GenericInputCellRendererComponent } from './grid-render-components/gene
     TextInputCellRendererComponent,
     WeekDisplayComponent,
     WeeklyTabsComponent,
-    GenericInputCellRendererComponent
+    GenericInputCellRendererComponent,
+    ManageLeaguesComponent
   ],
   imports:[
     BrowserModule,
@@ -38,6 +43,9 @@ import { GenericInputCellRendererComponent } from './grid-render-components/gene
     NgxElectronModule,
     MatInputModule,
     MatSelectModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
     BrowserAnimationsModule,
     AgGridModule
   ],

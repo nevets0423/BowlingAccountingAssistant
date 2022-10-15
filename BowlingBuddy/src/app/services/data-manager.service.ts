@@ -24,6 +24,7 @@ export class DataManagerService implements OnDestroy {
   private _loadingLeaugeInfo: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _error: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _saving: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _newLeagueCreated: BehaviorSubject<ILeagueFile|null> = new BehaviorSubject<ILeagueFile|null>(null);
   private _errorMessage: string = "";
   private _dirty: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _leagueInfo: BehaviorSubject<ILeagueInfo|null> = new BehaviorSubject<ILeagueInfo|null>(null);
@@ -52,6 +53,10 @@ export class DataManagerService implements OnDestroy {
 
   ngOnDestroy() {
     clearTimeout(DataManagerService._timer);
+  }
+
+  get NewLeagueCreated(): Observable<ILeagueFile|null> {
+    return this._newLeagueCreated.asObservable();
   }
 
   get MigrationLastRunOnVersion(){
@@ -181,10 +186,12 @@ export class DataManagerService implements OnDestroy {
 
     this._fileManager.WriteToFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, newFileName), JSON.stringify(dataSaveObject), (content: string)=> {
       console.log("New League Created", dataSaveObject);
-      this._leagues.push({
+      let leagueFile = {
         DisplayName: value.Name,
         FileName: newFileName
-      } as ILeagueFile);
+      } as ILeagueFile;
+      this._leagues.push(leagueFile);
+      this._newLeagueCreated.next(leagueFile);
     }, (value: any) => this.HandleError(value));
   }
 
