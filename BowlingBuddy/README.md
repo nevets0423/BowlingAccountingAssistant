@@ -28,3 +28,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Tutorial Followed for Electron
 https://buddy.works/tutorials/building-a-desktop-app-with-electron-and-angular
+
+## Create component with inline style and template
+ng g c <<Component>> --inline-style --inline-template

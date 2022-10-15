@@ -21,6 +21,7 @@ import { WeekDisplayComponent } from './pages/week-display/week-display.componen
 import { WeeklyTabsComponent } from './pages/weekly-tabs/weekly-tabs.component';
 import { GenericInputCellRendererComponent } from './grid-render-components/generic-input-cell-renderer/generic-input-cell-renderer.component';
 import { ManageLeaguesComponent } from './pages/manage-leagues/manage-leagues.component';
+import { ButtonCellRendereComponent } from './grid-render-components/button-cell-rendere/button-cell-rendere.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ManageLeaguesComponent } from './pages/manage-leagues/manage-leagues.co
     WeekDisplayComponent,
     WeeklyTabsComponent,
     GenericInputCellRendererComponent,
-    ManageLeaguesComponent
+    ManageLeaguesComponent,
+    ButtonCellRendereComponent
   ],
   imports:[
     BrowserModule,
