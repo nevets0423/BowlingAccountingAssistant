@@ -24,7 +24,8 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
     {
       headerName: '', 
       field: 'FileName', 
-      width: 100,
+      width: 80,
+      suppressSizeToFit:true,
       cellRenderer: ButtonCellRendererComponent,
       cellRendererParams: {
         Name: "Open",
@@ -34,7 +35,8 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
     {
       headerName: '', 
       field: 'FileName', 
-      width: 150,
+      width: 80,
+      suppressSizeToFit:true,
       cellRenderer: ButtonCellRendererComponent,
       cellRendererParams: {
         Name: "Delete",
