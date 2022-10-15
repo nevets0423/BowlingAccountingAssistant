@@ -6,6 +6,7 @@ import { IAutoNum } from '../models/interfaces/IAutoNum';
 import { IDataSaveObject } from '../models/interfaces/IDataSaveObject';
 import { ILeagueFile } from '../models/interfaces/ILeagueFile';
 import { ILeagueInfo } from '../models/interfaces/ILeagueInfo';
+import { ILeagueOverView } from '../models/interfaces/ILeagueOverView';
 import { IMigrationInfo } from '../models/interfaces/IMigrationInfo';
 import { IPlayerInfo } from '../models/interfaces/IPlayerInfo';
 import { ITeamInfoDTO } from '../models/interfaces/ITeamInfoDTO';
@@ -107,60 +108,65 @@ export class DataManagerService implements OnDestroy {
     return this._players.asObservable();
   }
 
+  GetLeagueOverviews(): Promise<ILeagueOverView[]>{
+    let leagueOverviews: ILeagueOverView[] = [];
+    return new Promise<ILeagueOverView[]>((resolve, reject) => {
+      this.GetLeagueFiles().then((leagueFiles) => {
+        leagueFiles.forEach(leagueFile => {
+          this.GetLeagueSaveData(leagueFile.FileName).then(leageSaveData => {
+            let leagueOverview = {
+              ID: leageSaveData.LeagueInfo.ID,
+              Name: leageSaveData.LeagueInfo.Name,
+              FileName: leagueFile.FileName,
+              PrizeAmountPerWeek: leageSaveData.LeagueInfo.PrizeAmountPerWeek,
+              Players: leageSaveData.PlayerInfos.length,
+              Teams: leageSaveData.TeamInfos.length,
+              LaneFeePerWeek: leageSaveData.LeagueInfo.LaneFee,
+              NumberOfWeeks: leageSaveData.LeagueInfo.NumberOfWeeks,
+              WeeksRecored: leageSaveData.PlayerInfos.reduce((currentMax, currentPlayer) => currentMax = (currentPlayer.AmountPaidEachWeek.length > currentMax) ? currentPlayer.AmountPaidEachWeek.length : currentMax, 0),
+              TotalCollected: leageSaveData.PlayerInfos.reduce((currentValue, currentPlayer) => currentValue += currentPlayer.AmountPaidEachWeek.reduce((current, week) => current += week),0),
+            } as ILeagueOverView;
+
+            leagueOverview.LaneFeesCollected = leagueOverview.WeeksRecored * leagueOverview.LaneFeePerWeek;
+            if(leagueOverview.LaneFeesCollected > leagueOverview.TotalCollected){
+              leagueOverview.LaneFeesCollected = leagueOverview.TotalCollected;
+            }
+
+            leagueOverview.PrizeAmountCollected = leagueOverview.LaneFeesCollected - leagueOverview.TotalCollected;
+            if(leagueOverview.PrizeAmountCollected < 0){
+              leagueOverview.PrizeAmountCollected = 0;
+            }
+
+            leagueOverviews.push(leagueOverview);
+          }).catch(reject);
+        });
+        resolve(leagueOverviews);
+      }).catch(reject);
+    });
+  }
+
   LoadLeagues(){
     this._loadingLeauges.next(true);
     this._leagues.clear();
-    this._fileManager.GetAllFiles(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName), (fileNames: string[]) => {
-      if(fileNames.length > 0){
-        this._leagues.clear();
-      }
-
-      fileNames.forEach(fileName => {
-        if(!fileName.endsWith('.sav')){
-          return;//Continue in this context
-        }
-
-        this._leagues.push({
-          FileName: fileName,
-          DisplayName: fileName.replace(".sav", "")
-        } as ILeagueFile);
-      });
-
+    this.GetLeagueFiles().then((leagueFiles) => {
+      this._leagues.next(leagueFiles);
       this._loadingLeauges.next(false);
-    }, (value: any) => this.HandleError(value));
+    }).catch((error) => {this.HandleError(error)});
   }
 
   LoadLeague(fileName: string){
     this._loadingLeaugeInfo.next(true);
     this.ClearError();
     this.Save();
-    this._fileManager.ReadFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName), (content: string) => {
-      try{
-        if(!content){
-          console.error("File was empty.", content);
-          throw new Error("File was empty.");
-        }
-        let dataSaveObject: IDataSaveObject = JSON.parse(content);
-
-        if(!dataSaveObject){
-          console.error("Failed to load content from league.", content);
-          throw new Error("Failed to load content from league.");
-        }
-        
-        this._leagueInfo.next(dataSaveObject.LeagueInfo);
-        this._teams.next(dataSaveObject.TeamInfos);
-        this._players.next(dataSaveObject.PlayerInfos);
-        this._autoNumbers = new AutoNum(dataSaveObject.AutoNumber);
-        this._migrationInfo = dataSaveObject.MirgrationInfo;
-        this._migrationInfo.LastRunOnVersion = new Version(this._migrationInfo.LastRunOnVersionInterface);
-        this._loadedLeagueFileName = fileName;
-      }
-      catch(error){
-        console.error("Failed to load content from league.", content);
-        this.HandleError(error);
-      }
-      this._loadingLeaugeInfo.next(false);
-    }, (value: any) => this.HandleError(value));
+    this.GetLeagueSaveData(fileName).then((dataSaveObject) => {
+      this._leagueInfo.next(dataSaveObject.LeagueInfo);
+      this._teams.next(dataSaveObject.TeamInfos);
+      this._players.next(dataSaveObject.PlayerInfos);
+      this._autoNumbers = new AutoNum(dataSaveObject.AutoNumber);
+      this._migrationInfo = dataSaveObject.MirgrationInfo;
+      this._migrationInfo.LastRunOnVersion = new Version(this._migrationInfo.LastRunOnVersionInterface);
+      this._loadedLeagueFileName = fileName;
+    }).catch((error) => {this.HandleError(error)});;
   }
 
   CreateLeague(value: ILeagueInfo){
@@ -309,6 +315,50 @@ export class DataManagerService implements OnDestroy {
       return player.TeamID == team.ID;
     });
     this._dirty.next(true);
+  }
+
+  private GetLeagueFiles(): Promise<ILeagueFile[]>{
+    let leagueFiles: ILeagueFile[] = [];
+    return new Promise<ILeagueFile[]>((resolve, reject) => {
+      this._fileManager.GetAllFiles(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName), (fileNames: string[]) => {
+        fileNames.forEach(fileName => {
+          if(!fileName.endsWith('.sav')){
+            return;//Continue in this context
+          }
+  
+          leagueFiles.push({
+            FileName: fileName,
+            DisplayName: fileName.replace(".sav", "")
+          } as ILeagueFile);
+        });
+        resolve(leagueFiles);
+      }, (value: any) => reject(value));
+    });
+  }
+
+  private GetLeagueSaveData(fileName: string): Promise<IDataSaveObject>{
+    return new Promise<IDataSaveObject>((resolve, reject) => {
+      this._fileManager.ReadFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName), (content: string) => {
+        try{
+          if(!content){
+            console.error("File was empty.", content);
+            reject("File was empty.");
+          }
+          let dataSaveObject: IDataSaveObject = JSON.parse(content);
+  
+          if(!dataSaveObject){
+            console.error("Failed to load content from league.", content);
+            reject("Failed to load content from league.");
+          }
+          
+          resolve(dataSaveObject);
+        }
+        catch(error){
+          console.error("Failed to load content from league.", content);
+          reject(error);
+        }
+      }, (value: any) => reject(value));
+    });
   }
 
   private ClearError(){
