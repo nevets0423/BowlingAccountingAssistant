@@ -4,6 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MigrationManagerService {
+  private _lockHeader: boolean = true;
 
   constructor() { }
+
+  get LockHeader(){
+    return this._lockHeader;
+  }
+
+  unlockHeader(){
+    this._lockHeader = false;
+  }
 }
