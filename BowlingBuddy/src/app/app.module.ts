@@ -22,6 +22,7 @@ import { WeeklyTabsComponent } from './pages/weekly-tabs/weekly-tabs.component';
 import { GenericInputCellRendererComponent } from './grid-render-components/generic-input-cell-renderer/generic-input-cell-renderer.component';
 import { ManageLeaguesComponent } from './pages/manage-leagues/manage-leagues.component';
 import { ButtonCellRendereComponent } from './grid-render-components/button-cell-renderer/button-cell-renderer.component';
+import { WelcomeScreenComponent } from './pages/welcome-screen/welcome-screen.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ButtonCellRendereComponent } from './grid-render-components/button-cell
     WeeklyTabsComponent,
     GenericInputCellRendererComponent,
     ManageLeaguesComponent,
-    ButtonCellRendereComponent
+    ButtonCellRendereComponent,
+    WelcomeScreenComponent
   ],
   imports:[
     BrowserModule,
