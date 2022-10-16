@@ -20,6 +20,7 @@ export class DataManagerService implements OnDestroy {
   private _pathToDocuments: string = "";
   private _mainFolderName: string = "BowlerBuddy";
   private _leagueFolderName: string = "Leagues";
+  private _arichiveFolderName: string = "Archive";
   private _loadedLeagueFileName: BehaviorSubject<string> = new BehaviorSubject<string>("");
   private _loadingLeauges: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _loadingLeaugeInfo: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -205,6 +206,29 @@ export class DataManagerService implements OnDestroy {
     }, (value: any) => this.HandleError(value));
   }
 
+  ArchiveLeague(fileName: string){
+    if(fileName == null || fileName.length == 0){
+      return;
+    }
+    console.log(`Archiving league ${fileName}.`);
+
+    this._saving.next(true);
+    if(this._loadedLeagueFileName.value == fileName){
+      this._leagueInfo.next(null);
+      this._loadedLeagueFileName.next("");
+    }
+
+    let sourcePath = this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName);
+    let date = new Date();
+    let dateString = `${date.getFullYear()}${date.getMonth()}${date.getDay()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
+    let destinationPath = this.CreatePath(this._pathToDocuments, this._mainFolderName, this._arichiveFolderName, `${dateString}--${fileName}`);
+    this._fileManager.MoveFile(sourcePath, destinationPath, (content: string) => {
+      this._leagues.remove((value: ILeagueFile) => value.FileName == fileName);
+      this._saving.next(false);
+      console.log("League Archived");
+    }, (value: any) => this.HandleError(value));
+  }
+
   Save(){
     if(!this._dirty.value){
       console.log('nothing dirty');
@@ -371,10 +395,12 @@ export class DataManagerService implements OnDestroy {
   }
 
   private HandleError(value: any): void{
+    console.error(value);
     this._error.next(true);
     this._loadingLeaugeInfo.next(false);
     this._loadingLeauges.next(false);
     this._errorMessage = value;
+    this._saving.next(false);
   }
 
   private CreatePath(...values: string[]): string{

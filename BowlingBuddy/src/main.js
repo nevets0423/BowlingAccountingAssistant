@@ -91,3 +91,32 @@ ipcMain.on(SAVEFILE, (event, args) => {
     event.reply(SAVEFILE + REPLY, {error: true, errorMessage: error});
   }
 });
+
+const MOVEFILE = "MoveFile";
+ipcMain.on(MOVEFILE, (event, args) => {
+  var sourceFolderPath = args[0];
+  var destFolderPath = args[1];
+  var sourcePathToFile = sourceFolderPath + "\\" + args[2];
+  var destPathToFile = destFolderPath + "\\" + args[3];
+
+  try{
+    if (!fs.existsSync(destPathToFile)) {
+      fs.mkdirSync(destFolderPath, { recursive: true });
+    }
+  
+    let errorOccurred = false;
+    fs.rename(sourcePathToFile, destPathToFile, (error) => {
+      errorOccurred = true;
+      event.reply(MOVEFILE + REPLY, {error: true, errorMessage: error});
+    });
+
+    if(errorOccurred){
+      return;
+    }
+    event.reply(MOVEFILE + REPLY, {content: "", error: false, errorMessage: null});
+  }
+  catch (error) {
+    console.error('ERROR', error);
+    event.reply(MOVEFILE + REPLY, {error: true, errorMessage: error});
+  }
+});

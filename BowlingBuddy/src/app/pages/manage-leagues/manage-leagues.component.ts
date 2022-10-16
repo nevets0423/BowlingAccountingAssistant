@@ -35,12 +35,12 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
     {
       headerName: '', 
       field: 'FileName', 
-      width: 80,
+      width: 100,
       suppressSizeToFit:true,
       cellRenderer: ButtonCellRendererComponent,
       cellRendererParams: {
-        Name: "Delete",
-        onClick: this.deleteLeague.bind(this)
+        Name: "Arichive",
+        onClick: this.arichiveLeague.bind(this)
       } as buttonRendererParams
     },
     {
@@ -113,12 +113,14 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
   }
 
   openLeague(params: ICellRendererParams<any, any> | undefined){
-    console.log("open", params);
     this._dataManager.LoadLeague(params?.value);
     this._router.navigate(['/weekly-tabs']);
   }
 
-  deleteLeague(params: ICellRendererParams<any, any> | undefined){
-    console.log("delete", params);
+  arichiveLeague(params: ICellRendererParams<any, any> | undefined){
+    if(confirm(`Are you sure you want to archive league ${params?.data.Name}.\nArchiving this league will make it no longer available to edit.`)){
+      this._dataManager.ArchiveLeague(params?.value);
+      this._gridApi?.applyTransaction({remove: [params?.node.data]})
+    }
   }
 }
