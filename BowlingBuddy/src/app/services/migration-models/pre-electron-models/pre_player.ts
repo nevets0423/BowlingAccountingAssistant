@@ -4,5 +4,9 @@ export interface pre_Player{
 	Name: string;
 	PaidToDate: Number;
 	WeekStarted: Number;
+	WeekEnded: Number;
 	AmountPaidEachWeek: Number[];
+	paid: Number;
+	oweToDate: Number;
+	difference: Number;
 }

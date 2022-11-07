@@ -92,6 +92,11 @@ ipcMain.on(SAVEFILE, (event, args) => {
   }
 });
 
+const FILEEXISTS = "FileExists";
+ipcMain.on(FILEEXISTS, (event, path) => {
+  event.reply(MOVEFILE + REPLY, {content: fs.existsSync(path)});
+});
+
 const MOVEFILE = "MoveFile";
 ipcMain.on(MOVEFILE, (event, args) => {
   var sourceFolderPath = args[0];

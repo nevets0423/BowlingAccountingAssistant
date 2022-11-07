@@ -23,6 +23,10 @@ export class FileManagerService {
     this.Execute('ReadFile', path, next, error);
   }
 
+  FileExists(path: string, next: (value: boolean) => void){
+    this.Execute('FileExists', path, (value: string) => {next(value.toLocaleLowerCase() == 'true')}, null);
+  }
+
   MoveFile(sourcePath: string, destinationPath: string, next: (value: string) => void, error: { (value: any) : void } | null = null){
     
     var sourceFileName = this.GetFileName(sourcePath, error);

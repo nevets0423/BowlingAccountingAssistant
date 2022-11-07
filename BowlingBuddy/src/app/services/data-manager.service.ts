@@ -12,6 +12,7 @@ import { IPlayerInfo } from '../models/interfaces/IPlayerInfo';
 import { ITeamInfoDTO } from '../models/interfaces/ITeamInfoDTO';
 import { Version } from '../models/Version';
 import { FileManagerService } from './file-manager.service';
+import { Path } from './../Helpers/file-path-builder';
 
 @Injectable({
   providedIn: 'root'
@@ -195,7 +196,7 @@ export class DataManagerService implements OnDestroy {
       MirgrationInfo: mirgrationInfo
     };
 
-    this._fileManager.WriteToFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, newFileName), JSON.stringify(dataSaveObject), (content: string)=> {
+    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, newFileName), JSON.stringify(dataSaveObject), (content: string)=> {
       console.log("New League Created", dataSaveObject);
       let leagueFile = {
         DisplayName: value.Name,
@@ -218,10 +219,10 @@ export class DataManagerService implements OnDestroy {
       this._loadedLeagueFileName.next("");
     }
 
-    let sourcePath = this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName);
+    let sourcePath = Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName);
     let date = new Date();
     let dateString = `${date.getFullYear()}${date.getMonth()}${date.getDay()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
-    let destinationPath = this.CreatePath(this._pathToDocuments, this._mainFolderName, this._arichiveFolderName, `${dateString}--${fileName}`);
+    let destinationPath = Path.Create(this._pathToDocuments, this._mainFolderName, this._arichiveFolderName, `${dateString}--${fileName}`);
     this._fileManager.MoveFile(sourcePath, destinationPath, (content: string) => {
       this._leagues.remove((value: ILeagueFile) => value.FileName == fileName);
       this._saving.next(false);
@@ -251,7 +252,7 @@ export class DataManagerService implements OnDestroy {
       MirgrationInfo: this._migrationInfo
     };
 
-    this._fileManager.WriteToFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, this._loadedLeagueFileName.value), JSON.stringify(dataSaveObject), 
+    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, this._loadedLeagueFileName.value), JSON.stringify(dataSaveObject), 
       (content: string) => {
         console.log("League Saved", dataSaveObject);
         this._saving.next(false);
@@ -348,7 +349,7 @@ export class DataManagerService implements OnDestroy {
   private GetLeagueFiles(): Promise<ILeagueFile[]>{
     let leagueFiles: ILeagueFile[] = [];
     return new Promise<ILeagueFile[]>((resolve, reject) => {
-      this._fileManager.GetAllFiles(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName), (fileNames: string[]) => {
+      this._fileManager.GetAllFiles(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName), (fileNames: string[]) => {
         fileNames.forEach(fileName => {
           if(!fileName.endsWith('.sav')){
             return;//Continue in this context
@@ -366,7 +367,7 @@ export class DataManagerService implements OnDestroy {
 
   private GetLeagueSaveData(fileName: string): Promise<IDataSaveObject>{
     return new Promise<IDataSaveObject>((resolve, reject) => {
-      this._fileManager.ReadFile(this.CreatePath(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName), (content: string) => {
+      this._fileManager.ReadFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName), (content: string) => {
         try{
           if(!content){
             console.error("File was empty.", content);
@@ -401,14 +402,5 @@ export class DataManagerService implements OnDestroy {
     this._loadingLeauges.next(false);
     this._errorMessage = value;
     this._saving.next(false);
-  }
-
-  private CreatePath(...values: string[]): string{
-    let path = "";
-    values.forEach(value => {
-      let trimmedValue = value.trim();
-      path += trimmedValue.endsWith('\\') || trimmedValue.endsWith('/') ? trimmedValue : (trimmedValue + "\\");
-    });
-    return path.endsWith('\\') || path.endsWith('/') ? path.slice(0, -1) : path;
   }
 }
