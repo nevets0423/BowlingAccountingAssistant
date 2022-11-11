@@ -94,7 +94,7 @@ describe('DataManagerService', () => {
       service.LoadLeagues();
     });
 
-    it('should set error if an error occures', () => {
+    it('should set error if an error occures', fakeAsync(() => {
       _fileManager.GetAllFiles.and.callFake((path: string) => {
         return new Promise<string[]>((resolve, reject) => {
           reject("BOOM");
@@ -109,12 +109,13 @@ describe('DataManagerService', () => {
       });
 
       service.LoadLeagues();
+      tick(1000);
       expect(service.ErrorMessage).toBe("BOOM");
-    });
+    }));
   });
 
   describe('LoadLeague', () => {
-    it('should set error if error occures', () => {
+    it('should set error if error occures', fakeAsync(() => {
       _fileManager.ReadFile.and.callFake((path: string)=>{
         return new Promise<string[]>((resolve, reject) => {
           reject("BOOM");
@@ -130,9 +131,9 @@ describe('DataManagerService', () => {
       });
 
       service.LoadLeague("LeagueName");
-      
+      tick(1000);
       expect(service.ErrorMessage).toBe("BOOM");
-    });
+    }));
 
     it('should set error if file was empty', () => {
       _fileManager.ReadFile.and.callFake((path: string)=>{
