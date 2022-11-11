@@ -2,6 +2,6 @@ export interface IIpcRendererQueueItem{
     Params: any;
     Channel: string;
     ResponseChannel: string;
-    next: (value: any) => void;
-    error: { (value: any) : void } | null;
+    resolve: (value: any) => void;
+    reject: (value: any) => void;
 }

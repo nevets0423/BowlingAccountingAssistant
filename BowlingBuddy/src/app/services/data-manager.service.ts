@@ -40,10 +40,11 @@ export class DataManagerService implements OnDestroy {
   private static _timer: NodeJS.Timer|undefined = undefined;
 
   constructor(private _fileManager: FileManagerService) { 
-    _fileManager.GetPath("documents", (value: string) => { 
+    _fileManager.GetPath("documents")
+    .then((value: string) => {
       this._pathToDocuments = value;
       this._ready.next(true);
-    }, (value: any) => this.HandleError(value));
+    }, error => this.HandleError(error));
 
     if(DataManagerService._timer){
       clearTimeout(DataManagerService._timer);
@@ -196,7 +197,8 @@ export class DataManagerService implements OnDestroy {
       MirgrationInfo: mirgrationInfo
     };
 
-    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, newFileName), JSON.stringify(dataSaveObject), (content: string)=> {
+    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, newFileName), JSON.stringify(dataSaveObject))
+    .then((content: string) => {
       console.log("New League Created", dataSaveObject);
       let leagueFile = {
         DisplayName: value.Name,
@@ -204,7 +206,7 @@ export class DataManagerService implements OnDestroy {
       } as ILeagueFile;
       this._leagues.push(leagueFile);
       this._newLeagueCreated.next(leagueFile);
-    }, (value: any) => this.HandleError(value));
+    },(error: any) => this.HandleError(error));
   }
 
   ArchiveLeague(fileName: string){
@@ -223,11 +225,13 @@ export class DataManagerService implements OnDestroy {
     let date = new Date();
     let dateString = `${date.getFullYear()}${date.getMonth()}${date.getDay()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
     let destinationPath = Path.Create(this._pathToDocuments, this._mainFolderName, this._arichiveFolderName, `${dateString}--${fileName}`);
-    this._fileManager.MoveFile(sourcePath, destinationPath, (content: string) => {
+
+    this._fileManager.MoveFile(sourcePath, destinationPath)
+    .then((content: string) => {
       this._leagues.remove((value: ILeagueFile) => value.FileName == fileName);
       this._saving.next(false);
       console.log("League Archived");
-    }, (value: any) => this.HandleError(value));
+    }, error => this.HandleError(error));
   }
 
   Save(){
@@ -252,12 +256,12 @@ export class DataManagerService implements OnDestroy {
       MirgrationInfo: this._migrationInfo
     };
 
-    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, this._loadedLeagueFileName.value), JSON.stringify(dataSaveObject), 
-      (content: string) => {
-        console.log("League Saved", dataSaveObject);
-        this._saving.next(false);
-        this._dirty.next(false);
-      }, (value: any) => this.HandleError(value));
+    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, this._loadedLeagueFileName.value), JSON.stringify(dataSaveObject))
+    .then((content: string) => {
+      console.log("League Saved", dataSaveObject);
+      this._saving.next(false);
+      this._dirty.next(false);
+    }, (error: any) => this.HandleError(error));
   }
 
   AddPlayer(value: IPlayerInfo): number{
@@ -349,7 +353,8 @@ export class DataManagerService implements OnDestroy {
   private GetLeagueFiles(): Promise<ILeagueFile[]>{
     let leagueFiles: ILeagueFile[] = [];
     return new Promise<ILeagueFile[]>((resolve, reject) => {
-      this._fileManager.GetAllFiles(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName), (fileNames: string[]) => {
+      this._fileManager.GetAllFiles(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName))
+      .then((fileNames: string[]) => {
         fileNames.forEach(fileName => {
           if(!fileName.endsWith('.sav')){
             return;//Continue in this context
@@ -361,23 +366,26 @@ export class DataManagerService implements OnDestroy {
           } as ILeagueFile);
         });
         resolve(leagueFiles);
-      }, (value: any) => reject(value));
+      }, (error: any) => reject(error));
     });
   }
 
   private GetLeagueSaveData(fileName: string): Promise<IDataSaveObject>{
     return new Promise<IDataSaveObject>((resolve, reject) => {
-      this._fileManager.ReadFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName), (content: string) => {
+      this._fileManager.ReadFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName))
+      .then((content: string) => {
         try{
           if(!content){
             console.error("File was empty.", content);
             reject("File was empty.");
+            return;
           }
           let dataSaveObject: IDataSaveObject = JSON.parse(content);
   
           if(!dataSaveObject){
             console.error("Failed to load content from league.", content);
             reject("Failed to load content from league.");
+            return;
           }
           
           resolve(dataSaveObject);
@@ -386,7 +394,7 @@ export class DataManagerService implements OnDestroy {
           console.error("Failed to load content from league.", content);
           reject(error);
         }
-      }, (value: any) => reject(value));
+      }, (error: any) => reject(error));
     });
   }
 
