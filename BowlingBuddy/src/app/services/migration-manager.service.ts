@@ -5,6 +5,7 @@ import { Version } from '../models/Version';
 import { Path } from './../Helpers/file-path-builder';
 import { FileManagerService } from './file-manager.service';
 import { preDataSaveObject } from './migration-models/pre-electron-models/pre-data-save-object';
+import { pre_League } from './migration-models/pre-electron-models/pre_league';
 import { v1_0_0_IAutoNum } from './migration-models/v1.0.0-models/v1.0.0-IAutoNum';
 import { v1_0_0_IDataSaveObject } from './migration-models/v1.0.0-models/v1.0.0-IDataSaveObject';
 import { v1_0_0_ILeagueInfo } from './migration-models/v1.0.0-models/v1.0.0-ILeagueInfo';
@@ -38,11 +39,13 @@ export class MigrationManagerService {
 
   MigrateData(){
     this._migrating.next(true);
-    this._fileManager.GetPath("documents", (value: string) => { 
+    this._fileManager.GetPath("documents")
+    .then((value: string) => {
       this._pathToDocuments = value;
       this.MigratePreElectron();
       this.RunMigrations();
-    }, (value: any) => this.HandleError(value));
+      this._migrating.next(false);
+    }, error => this.HandleError(error));
   }
 
   /*
@@ -62,76 +65,92 @@ export class MigrationManagerService {
 
   }
 
-  private MigratePreElectron(){
+  private MigratePreElectron() {
     let pathToOldSave = Path.Create(this._pathToDocuments, this._mainFolderName, "BowlerBuddy.sav");
-    this._fileManager.FileExists(pathToOldSave, (exists: boolean) => {
+    let arichivePath = Path.Create(this._pathToDocuments, this._mainFolderName, this._arichiveFolderName, "BowlerBuddy.sav");
+
+    this._fileManager.FileExists(pathToOldSave)
+    .then((exists: boolean) => {
       if(!exists){
         return;
       }
 
-      this._fileManager.ReadFile(pathToOldSave, (content: string) => {
+      this._fileManager.ReadFile(pathToOldSave)
+      .then((content: string) => {
         if(!content){
           console.log("File was empty. No migration needed.", content);
-          let destinationPath = Path.Create(this._pathToDocuments, this._mainFolderName, this._arichiveFolderName, "BowlerBuddy.sav");
-          this.ArchiveFile(pathToOldSave, destinationPath);
+          this.ArchiveFile(pathToOldSave, arichivePath);
           return;
         }
 
-        let dataSaveObject: preDataSaveObject = JSON.parse(content);
-        if(!dataSaveObject){
-          console.error("Failed to load old league data. skipping migration.", content);
-          return;
+        try{
+          let dataSaveObject: preDataSaveObject = JSON.parse(content);
+          if(!dataSaveObject){
+            console.error("Failed to load old league data. skipping migration.", content);
+            this.HandleError("Failed to load old league data. skipping migration.");
+            return;
+          }
+  
+          let newLeagueDataSaveObjects = dataSaveObject.Leagues.map((league: pre_League) => {
+            return this.PreLeagueMappedToV1(league, dataSaveObject);
+          });
+  
+          Promise.all(newLeagueDataSaveObjects.map(leagueSaveData => {
+            var fileName = leagueSaveData.LeagueInfo.Name + ".sav";
+            return this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName), JSON.stringify(leagueSaveData));
+          }))
+          .then((content: string[]) => {
+            console.log("All Leagues Saved");
+            this.ArchiveFile(pathToOldSave, arichivePath);
+          }, error => {
+            console.error('failed to save league in new format');
+            this.HandleError(error);
+          });
         }
+        catch(error){
+          console.error(error);
+          this.HandleError("Failed to load old league data. skipping migration.");
+        }
+      }, error => this.HandleError(error));
+    }, error => this.HandleError(error));
+  }
 
-        let newLeagueDataSaveObjects = dataSaveObject.Leagues.map(league => {
-          return {
-            AutoNumber: {
-              LeagueId: dataSaveObject.AutoNum.LeageId,
-              PlayerId: dataSaveObject.AutoNum.PlayerId,
-              TeamId: dataSaveObject.AutoNum.TeamId
-            } as v1_0_0_IAutoNum,
-            MirgrationInfo: {
-              LastMigrationRun: 0,
-              LastRunOnVersion: new Version({Major: 1, Minor: 0, Revision: 0} as IVersion),
-              LastRunOnVersionInterface: {
-                Major: 1,
-                Minor: 0, 
-                Revision: 0
-              } as v1_0_0_IVersion
-            } as v1_0_0_IMigrationInfo,
-            LeagueInfo: {
-              ID: league.Id,
-              LaneFee: league.LaneFee,
-              Name: league.Name,
-              NumberOfWeeks: league.NumberOfWeeks,
-              PrizeAmountPerWeek: league.PrizeAmountPerWeek
-            } as v1_0_0_ILeagueInfo,
-            PlayerInfos: dataSaveObject.Teams.filter(team => team.LeagueId == league.Id).map(team => team.Players.map(player => { return {
-              ID: player.Id,
-              AmountPaidEachWeek: player.AmountPaidEachWeek,
-              Name: player.Name,
-              TeamID: player.TeamId,
-              WeekEnded: player.WeekEnded,
-              WeekStarted: player.WeekStarted
-            } as v1_0_0_IPlayerInfo})).flat(),
-            TeamInfos: dataSaveObject.Teams.map(team => {return {
-              ID: team.Id,
-              LeagueID: team.LeagueId
-            } as v1_0_0_ITeamInfoDTO})
-          } as v1_0_0_IDataSaveObject;
-        });
-
-        newLeagueDataSaveObjects.forEach(leagueSaveData => {
-          var fileName = leagueSaveData.LeagueInfo.Name + ".sav";
-          this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._leagueFolderName, fileName), JSON.stringify(leagueSaveData), (content: string)=> {
-            console.log("League Saved", leagueSaveData.LeagueInfo.Name);
-          }, (value: any) => this.HandleError(value));
-        });
-        
-        let destinationPath = Path.Create(this._pathToDocuments, this._mainFolderName, this._arichiveFolderName, "BowlerBuddy.sav");
-        this.ArchiveFile(pathToOldSave, destinationPath);
-      }, this.HandleError);
-    });
+  private PreLeagueMappedToV1(league: pre_League, dataSaveObject: preDataSaveObject): v1_0_0_IDataSaveObject{
+    return {
+      AutoNumber: {
+        LeagueId: dataSaveObject.AutoNum.LeageId,
+        PlayerId: dataSaveObject.AutoNum.PlayerId,
+        TeamId: dataSaveObject.AutoNum.TeamId
+      } as v1_0_0_IAutoNum,
+      MirgrationInfo: {
+        LastMigrationRun: 0,
+        LastRunOnVersion: new Version({Major: 1, Minor: 0, Revision: 0} as IVersion),
+        LastRunOnVersionInterface: {
+          Major: 1,
+          Minor: 0, 
+          Revision: 0
+        } as v1_0_0_IVersion
+      } as v1_0_0_IMigrationInfo,
+      LeagueInfo: {
+        ID: league.Id,
+        LaneFee: league.LaneFee,
+        Name: league.Name,
+        NumberOfWeeks: league.NumberOfWeeks,
+        PrizeAmountPerWeek: league.PrizeAmountPerWeek
+      } as v1_0_0_ILeagueInfo,
+      PlayerInfos: dataSaveObject.Teams.filter(team => team.LeagueId == league.Id).map(team => team.Players.map(player => { return {
+        ID: player.Id,
+        AmountPaidEachWeek: player.AmountPaidEachWeek,
+        Name: player.Name,
+        TeamID: player.TeamId,
+        WeekEnded: player.WeekEnded,
+        WeekStarted: player.WeekStarted
+      } as v1_0_0_IPlayerInfo})).flat(),
+      TeamInfos: dataSaveObject.Teams.filter(team => team.LeagueId == league.Id).map(team => {return {
+        ID: team.Id,
+        LeagueID: team.LeagueId
+      } as v1_0_0_ITeamInfoDTO})
+    } as v1_0_0_IDataSaveObject;
   }
 
   private ArchiveFile(sourcePath: string, destinationPath: string){
@@ -143,9 +162,10 @@ export class MigrationManagerService {
       return;
     }
 
-    this._fileManager.MoveFile(sourcePath, destinationPath, (content: string) => {
+    this._fileManager.MoveFile(sourcePath, destinationPath)
+    .then((content: string) => {
       console.log("File Archived");
-    }, (value: any) => this.HandleError(value));
+    }, error => this.HandleError(error));
   }
 
   private HandleError(error: any){
