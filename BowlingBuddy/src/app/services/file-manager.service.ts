@@ -128,6 +128,8 @@ export class FileManagerService {
       request?.resolve(results);
     }, error => {
       request?.reject(error);
+    }).finally(() => {
+      this._running = false;
     });
   }
 

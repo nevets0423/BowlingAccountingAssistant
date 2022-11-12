@@ -54,9 +54,12 @@ export class HeaderComponent implements OnInit {
       if(leagueFile == null){
         return;
       }
-      this.selectedLeague = leagueFile.FileName;
-      this._dataManager.LoadLeague(this.selectedLeague);
-      this._router.navigate(['/manage-teams']);
+
+      this._dataManager.LoadLeague(leagueFile.FileName);
+      this._dataManager.LeagueInfo.pipe(filter(value => value != null), take(1)).subscribe(league => {
+        this.selectedLeague = leagueFile.FileName;
+        this._router.navigate(['/home/manage-teams']);
+      });
     });
 
     this._dataManager.LoadedLeagueFileName.subscribe(fileName => {
@@ -80,6 +83,6 @@ export class HeaderComponent implements OnInit {
 
   onSelectionChanged(){
     this._dataManager.LoadLeague(this.selectedLeague);
-    this._router.navigate(['/weekly-tabs']);
+    this._router.navigate(['/home/weekly-tabs']);
   }
 }

@@ -241,7 +241,6 @@ export class DataManagerService implements OnDestroy {
     }
 
     if(this._leagueInfo.value == null){
-      console.log('no league');
       this.HandleError("Failed to save. No League currently open.");
       return;
     }

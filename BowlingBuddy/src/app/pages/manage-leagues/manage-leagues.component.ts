@@ -114,7 +114,7 @@ export class ManageLeaguesComponent implements OnInit, OnDestroy {
 
   openLeague(params: ICellRendererParams<any, any> | undefined){
     this._dataManager.LoadLeague(params?.value);
-    this._router.navigate(['/weekly-tabs']);
+    this._router.navigate(['/home/weekly-tabs']);
   }
 
   arichiveLeague(params: ICellRendererParams<any, any> | undefined){

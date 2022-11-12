@@ -13,19 +13,20 @@ export class Fake_ElectronService {
 
     private _storage: any = {};
 
-    public run(channel: string, ...args: any[]): Promise<any>{
+    public run(channel: string, args: any): Promise<any>{
         console.log(`calling channel ${channel} with `, args);
+
         switch(channel){
             case this.GETPATH:
-                return this.GetPath(args[0]);
+                return this.GetPath(args);
             case this.GETALLFILES:
-                return this.GetAllFiles(args[0]);
+                return this.GetAllFiles(args);
             case this.READFILE:
-                return this.ReadFile(args[0]);
+                return this.ReadFile(args);
             case this.SAVEFILE:
                 return this.SaveFile(args[0], args[1], args[2]);
             case this.FILEEXISTS:
-                return this.FileExists(args[0]);
+                return this.FileExists(args);
             case this.MOVEFILE:
                 return this.MoveFile(args[0], args[1], args[2], args[3]);
             default:
