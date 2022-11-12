@@ -23,6 +23,7 @@ import { GenericInputCellRendererComponent } from './grid-render-components/gene
 import { ManageLeaguesComponent } from './pages/manage-leagues/manage-leagues.component';
 import { ButtonCellRendereComponent } from './grid-render-components/button-cell-renderer/button-cell-renderer.component';
 import { WelcomeScreenComponent } from './pages/welcome-screen/welcome-screen.component';
+import { MainRoutingPageComponent } from './pages/main-routing-page/main-routing-page.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { WelcomeScreenComponent } from './pages/welcome-screen/welcome-screen.co
     GenericInputCellRendererComponent,
     ManageLeaguesComponent,
     ButtonCellRendereComponent,
-    WelcomeScreenComponent
+    WelcomeScreenComponent,
+    MainRoutingPageComponent
   ],
   imports:[
     BrowserModule,

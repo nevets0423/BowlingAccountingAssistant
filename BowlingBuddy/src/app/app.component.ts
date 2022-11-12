@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MigrationManagerService } from './services/migration-manager.service';
 
 @Component({
@@ -9,10 +9,5 @@ import { MigrationManagerService } from './services/migration-manager.service';
 export class AppComponent{
   title = 'BowlingBuddy';
 
-  get isDisabled(){
-    return this._migrationManager.LockHeader;
-  }
-
-  constructor(private _migrationManager: MigrationManagerService) { }
-
+  constructor() { }
 }
