@@ -19,9 +19,12 @@ export class DataManagerMock{
     private _teams: BehaviorSubjectArray<ITeamInfoDTO> = new BehaviorSubjectArray<ITeamInfoDTO>([]);
     private _players: BehaviorSubjectArray<IPlayerInfo> = new BehaviorSubjectArray<IPlayerInfo>([]);
     private _ready: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private _newLeagueCreated: BehaviorSubjectArray<ILeagueFile> = new BehaviorSubjectArray<ILeagueFile>([]);
+    private _loadedLeagueFileName: BehaviorSubject<string> = new BehaviorSubject<string>("");
+
 
     constructor(){
-        this.DataManagerMockService = jasmine.createSpyObj('DataManagerService', ['LoadLeagues', 'LoadLeague']);
+        this.DataManagerMockService = jasmine.createSpyObj('DataManagerService', ['LoadLeagues', 'LoadLeague', 'GetLeagueOverviews']);
         (this.DataManagerMockService as any).OnReady = this._ready.asObservable();
         (this.DataManagerMockService as any).Saving = this._saving.asObservable();
         (this.DataManagerMockService as any).Dirty = this._dirty.asObservable();
@@ -32,6 +35,8 @@ export class DataManagerMock{
         (this.DataManagerMockService as any).LeagueInfo = this._leagueInfo.asObservable();
         (this.DataManagerMockService as any).Teams = this._teams.asObservable();
         (this.DataManagerMockService as any).Players = this._players.asObservable();
+        (this.DataManagerMockService as any).NewLeagueCreated = this._newLeagueCreated.asObservable();
+        (this.DataManagerMockService as any).LoadedLeagueFileName = this._loadedLeagueFileName.asObservable();
     }
 
     get Provider(){

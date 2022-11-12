@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { IVersion } from '../models/interfaces/IVersion';
 import { Version } from '../models/Version';
 import { Path } from './../Helpers/file-path-builder';
@@ -18,7 +18,6 @@ import { v1_0_0_IVersion } from './migration-models/v1.0.0-models/v1.0.0-IVersio
   providedIn: 'root'
 })
 export class MigrationManagerService {
-  private _lockHeader: boolean = true;
   private _error: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _migrating: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _errorMessage: string = "";
@@ -27,15 +26,19 @@ export class MigrationManagerService {
   private _leagueFolderName: string = "Leagues";
   private _arichiveFolderName: string = "Archive";
 
+  get ErrorMessage(): string {
+    return this._errorMessage;
+  }
+
+  get Error(): Observable<boolean>{
+    return this._error.asObservable();
+  }
+
+  get Migrating(): Observable<boolean>{
+    return this._migrating.asObservable();
+  }
+
   constructor(private _fileManager: FileManagerService) { }
-
-  get LockHeader(){
-    return this._lockHeader;
-  }
-
-  unlockHeader(){
-    this._lockHeader = false;
-  }
 
   MigrateData(){
     this._migrating.next(true);
