@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { IIpcRendererQueueItem } from '../models/interfaces/IIpcRendererQueueItem';
+import { Fake_ElectronService } from './fake_electron-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class FileManagerService {
   private _running: boolean = false;
   private _queue: IIpcRendererQueueItem[] = [];
 
-  constructor(private _electronService: ElectronService, private _zone: NgZone) { }
+  constructor(private _electronService: ElectronService, private _zone: NgZone, private _fakeElectronService: Fake_ElectronService) { }
 
   GetPath(name: string): Promise<string> {
     return this.Execute('GetPath', name);
@@ -111,6 +112,26 @@ export class FileManagerService {
     }
 
     this._running = true;
+    if(this._electronService.isElectronApp){
+      this.ExecuteForElectron(request);
+    }
+    else{
+      this.ExecuteForTestingEnv(request);
+    }
+
+
+  }
+
+  private ExecuteForTestingEnv(request: IIpcRendererQueueItem){
+    this._fakeElectronService.run(request.Channel, request.Params)
+    .then(results => {
+      request?.resolve(results);
+    }, error => {
+      request?.reject(error);
+    });
+  }
+
+  private ExecuteForElectron(request: IIpcRendererQueueItem) {
     this._electronService.ipcRenderer.send(request.Channel, request.Params);
     this._electronService.ipcRenderer.once(request.ResponseChannel, (event, results: any) => {
       this._zone.run(() => {
