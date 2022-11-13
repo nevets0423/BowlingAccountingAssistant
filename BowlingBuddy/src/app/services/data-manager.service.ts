@@ -13,6 +13,7 @@ import { ITeamInfoDTO } from '../models/interfaces/ITeamInfoDTO';
 import { Version } from '../models/Version';
 import { FileManagerService } from './file-manager.service';
 import { Path } from './../Helpers/file-path-builder';
+import { ISettings } from '../models/interfaces/ISettings';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class DataManagerService implements OnDestroy {
   private _mainFolderName: string = "BowlerBuddy";
   private _leagueFolderName: string = "Leagues";
   private _arichiveFolderName: string = "Archive";
+  private _settingsFileName: string = "Settings.config";
   private _loadedLeagueFileName: BehaviorSubject<string> = new BehaviorSubject<string>("");
   private _loadingLeauges: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _loadingLeaugeInfo: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -34,6 +36,7 @@ export class DataManagerService implements OnDestroy {
   private _leagues: BehaviorSubjectArray<ILeagueFile> = new BehaviorSubjectArray<ILeagueFile>([]);
   private _teams: BehaviorSubjectArray<ITeamInfoDTO> = new BehaviorSubjectArray<ITeamInfoDTO>([]);
   private _players: BehaviorSubjectArray<IPlayerInfo> = new BehaviorSubjectArray<IPlayerInfo>([]);
+  private _settings: BehaviorSubject<ISettings> = new BehaviorSubject<ISettings>({} as ISettings);
   private _ready: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _autoNumbers: AutoNum = new AutoNum({LeagueId: 0, PlayerId: 0, TeamId: 0} as IAutoNum);
   private _migrationInfo: IMigrationInfo = {LastMigrationRun: -1, LastRunOnVersion: new Version({Major: 0, Minor: 0, Revision: 0}), LastRunOnVersionInterface: {Major: 0, Minor: 0, Revision: 0}};
@@ -113,6 +116,10 @@ export class DataManagerService implements OnDestroy {
 
   get LoadedLeagueFileName() : Observable<string>{
     return this._loadedLeagueFileName.asObservable();
+  }
+
+  get Settings(): Observable<ISettings> {
+    return this._settings.asObservable();
   }
 
   GetLeagueOverviews(): Observable<ILeagueOverView[]>{
@@ -353,6 +360,26 @@ export class DataManagerService implements OnDestroy {
       return player.TeamID == team.ID;
     });
     this._dirty.next(true);
+  }
+
+  LoadSettings(){
+    this._fileManager.ReadFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._settingsFileName))
+    .then((content: string) => {
+      try{
+        this._settings.next(JSON.parse(content));
+      }
+      catch(error){
+        console.error('failed to read settings', error);
+      }
+    }, error => {
+      console.error('failed to read settings', error);
+    });
+  }
+
+  UpdateSettings(settings: ISettings){
+    this._settings.next(settings);
+    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._settingsFileName), JSON.stringify(settings))
+    .then(value => {}, error => {console.error('failed to update settings', error);});
   }
 
   private GetLeagueFiles(): Promise<ILeagueFile[]>{
