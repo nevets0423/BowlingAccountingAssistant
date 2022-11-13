@@ -152,13 +152,19 @@ export class DataManagerService implements OnDestroy {
     return leagueOverviews.asObservable();
   }
 
-  LoadLeagues(){
-    this._loadingLeauges.next(true);
-    this._leagues.clear();
-    this.GetLeagueFiles().then((leagueFiles) => {
-      this._leagues.next(leagueFiles);
-      this._loadingLeauges.next(false);
-    }).catch((error) => {this.HandleError(error)});
+  LoadLeagues(): Promise<ILeagueFile[]>{
+    return new Promise<ILeagueFile[]>((resolve, reject) => {
+      this._loadingLeauges.next(true);
+      this._leagues.clear();
+      this.GetLeagueFiles().then((leagueFiles) => {
+        this._leagues.next(leagueFiles);
+        this._loadingLeauges.next(false);
+        resolve(leagueFiles);
+      }).catch((error) => {
+        this.HandleError(error);
+        reject(error);
+      });
+    });
   }
 
   LoadLeague(fileName: string){
