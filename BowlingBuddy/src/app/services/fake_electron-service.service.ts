@@ -12,7 +12,10 @@ export class Fake_ElectronService {
     private MOVEFILE = "MoveFile";
 
     //private _storage: any = {};
-    private _storage: any = {"PathToDocFolder\\BowlerBuddy\\Leagues\\1234.sav": "{\"AutoNumber\":{\"PlayerId\":0,\"LeagueId\":1,\"TeamId\":0},\"LeagueInfo\":{\"ID\":0,\"LaneFee\":12,\"Name\":\"1234\",\"NumberOfWeeks\":12,\"PrizeAmountPerWeek\":12},\"PlayerInfos\":[],\"TeamInfos\":[],\"MirgrationInfo\":{\"LastMigrationRun\":0,\"LastRunOnVersion\":{\"_major\":1,\"_minor\":0,\"_revision\":0},\"LastRunOnVersionInterface\":{\"Major\":1,\"Minor\":0,\"Revision\":0}}}"};
+    private _storage: any = {
+        "PathToDocFolder\\BowlerBuddy\\Leagues\\1234.sav": "{\"AutoNumber\":{\"PlayerId\":0,\"LeagueId\":1,\"TeamId\":0},\"LeagueInfo\":{\"ID\":0,\"LaneFee\":12,\"Name\":\"1234\",\"NumberOfWeeks\":12,\"PrizeAmountPerWeek\":12},\"PlayerInfos\":[],\"TeamInfos\":[],\"MirgrationInfo\":{\"LastMigrationRun\":0,\"LastRunOnVersion\":{\"_major\":1,\"_minor\":0,\"_revision\":0},\"LastRunOnVersionInterface\":{\"Major\":1,\"Minor\":0,\"Revision\":0}}}",
+        "PathToDocFolder\\BowlerBuddy\\Settings.config": "{\"lastOpenedLeague\":\"1234.sav\"}"
+    };
 
     public run(channel: string, args: any): Promise<any>{
         console.log(`calling channel ${channel} with `, args);
@@ -46,7 +49,7 @@ export class Fake_ElectronService {
 
     private GetAllFiles(path: string): Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
-            let propertyNames = Object.getOwnPropertyNames(this._storage);
+            let propertyNames = Object.getOwnPropertyNames(this._storage).filter(name => {return name.includes(path)});
             resolve(propertyNames.map(propertyName => {
                 let index = propertyName.lastIndexOf('\\') + 1;
                 return propertyName.substring(index);

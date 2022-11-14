@@ -130,6 +130,7 @@ export class FileManagerService {
       request?.reject(error);
     }).finally(() => {
       this._running = false;
+      this.ExecuteNext();
     });
   }
 
