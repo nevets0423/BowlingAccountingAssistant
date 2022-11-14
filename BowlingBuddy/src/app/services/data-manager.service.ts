@@ -47,6 +47,7 @@ export class DataManagerService implements OnDestroy {
     .then((value: string) => {
       this._pathToDocuments = value;
       this._ready.next(true);
+      this.LoadSettings();
     }, error => this.HandleError(error));
 
     if(DataManagerService._timer){
@@ -100,6 +101,10 @@ export class DataManagerService implements OnDestroy {
 
   get Leagues(): Observable<ILeagueFile[]>{
     return this._leagues.asObservable();
+  }
+
+  get LeagueLoaded(): boolean{
+    return this._leagueInfo.value != null;
   }
 
   get LeagueInfo(): Observable<ILeagueInfo|null>{
@@ -179,6 +184,10 @@ export class DataManagerService implements OnDestroy {
     this.ClearError();
     this.Save();
     this.GetLeagueSaveData(fileName).then((dataSaveObject) => {
+      let newSettings = this._settings.value;
+      newSettings.lastOpenedLeague = fileName;
+      this.UpdateSettings(newSettings);
+
       this._leagueInfo.next(dataSaveObject.LeagueInfo);
       this._teams.next(dataSaveObject.TeamInfos);
       this._players.next(dataSaveObject.PlayerInfos);
@@ -362,7 +371,13 @@ export class DataManagerService implements OnDestroy {
     this._dirty.next(true);
   }
 
-  LoadSettings(){
+  UpdateSettings(settings: ISettings){
+    this._settings.next(settings);
+    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._settingsFileName), JSON.stringify(settings))
+    .then(value => {}, error => {console.error('failed to update settings', error);});
+  }
+
+  private LoadSettings(){
     this._fileManager.ReadFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._settingsFileName))
     .then((content: string) => {
       try{
@@ -374,12 +389,6 @@ export class DataManagerService implements OnDestroy {
     }, error => {
       console.error('failed to read settings', error);
     });
-  }
-
-  UpdateSettings(settings: ISettings){
-    this._settings.next(settings);
-    this._fileManager.WriteToFile(Path.Create(this._pathToDocuments, this._mainFolderName, this._settingsFileName), JSON.stringify(settings))
-    .then(value => {}, error => {console.error('failed to update settings', error);});
   }
 
   private GetLeagueFiles(): Promise<ILeagueFile[]>{

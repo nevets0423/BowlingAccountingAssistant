@@ -50,6 +50,18 @@ export class HeaderComponent implements OnInit {
       this._dataManager.LoadLeagues();
     });
 
+    this._dataManager.Settings.subscribe(settings => {
+      if(this._dataManager.LeagueLoaded || settings.lastOpenedLeague == null ){
+        return;
+      }
+
+      this._dataManager.LoadLeague(settings.lastOpenedLeague);
+      this._dataManager.LeagueInfo.pipe(filter(value => value != null), take(1)).subscribe(league => {
+        this.selectedLeague = settings.lastOpenedLeague;
+        this._router.navigate(['/home/weekly-tabs']);
+      });
+    });
+
     this._dataManager.NewLeagueCreated.pipe(filter(value => value != null)).subscribe(leagueFile => {
       if(leagueFile == null){
         return;
