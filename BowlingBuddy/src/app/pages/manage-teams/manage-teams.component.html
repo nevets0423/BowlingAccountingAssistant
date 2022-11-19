@@ -1,11 +1,11 @@
-<button (click)="CreateNewTeam()">New Team</button>
-<button (click)="DeleteTeams()">Delete Teams</button>
+<button mat-raised-button class="formatedButton" (click)="CreateNewTeam()">New Team</button>
+<button mat-raised-button class="formatedButton" (click)="DeleteTeams()">Delete Teams</button>
 
 <div class="box is-fluid columns is-multiline is-centered">
     <div *ngFor="let team of Teams" class="column is-narrow">
-        <button (click)="CreateNewPlayer(team.ID)">New Player</button>
-        <button (click)="DeletePlayers(team.ID)">Delete Players</button>
-        <input type="checkbox" [(ngModel)]="team.Checked">
+        <button mat-raised-button class="formatedButton" (click)="CreateNewPlayer(team.ID)">New Player</button>
+        <button mat-raised-button class="formatedButton" (click)="DeletePlayers(team.ID)">Delete Players</button>
+        <mat-checkbox type="checkbox" [(ngModel)]="team.Checked"></mat-checkbox>
         <ag-grid-angular
             style="height: 180px; width: 480px;"
             class="ag-theme-balham"

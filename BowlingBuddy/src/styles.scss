@@ -4,4 +4,48 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { 
+    margin: 0; 
+    font-family: Roboto, 
+    "Helvetica Neue", 
+    sans-serif; 
+    background-color: #16161a;
+}
+
+:root {
+    --background: #16161a;
+    --cardBackGround: #242629;
+    --cardHeadline: #fffffe;
+    --cardParagraph: #94a1b2;
+    --cardTagBackGround: #7f5af0;
+    --cardTagText: #fffffe;
+    --cardHighlight: #fffffe;
+    --headline: #fffffe;
+    --paragraph: #94a1b2;
+    --button: #7f5af0;
+    --button-hover: #6436ee;
+    --buttonText: #fffffe;
+    --stroke: #010101;
+    --main: #fffffe;
+    --hightlight: #7f5af0;
+    --secondary: #72757e;
+    --tertiary: #2cb67d;
+    --link: #7f5af0;
+
+    --ag-header-foreground-color: var(--cardHeadline);
+    --ag-header-background-color: black;
+    --ag-foreground-color: var(--cardHeadline);
+    --ag-background-color: var(--cardBackGround);
+
+    --ag-odd-row-background-color: var(--background);
+    --ag-row-hover-color: transparent;
+}
+
+.header-text{
+    color: var(--headline);
+}
+
+.secondary-text{
+    color: var(--paragraph);
+}
+

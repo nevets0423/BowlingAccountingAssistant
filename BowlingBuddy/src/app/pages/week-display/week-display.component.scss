@@ -2,7 +2,27 @@
     max-width: 125px;
 }
 
-.missing-payment{
-    background-color: #aa2e25;
-    font-weight: bold;
+.box.headers{
+    background: var(--cardBackGround);
+    & label{
+        color: var(--cardHeadline);
+    }
+}
+
+.box:not(.headers){
+    background: var(--background);
+}
+
+::ng-deep ag-grid-angular{
+    .no-payment {
+        background-color: var(--button);
+    }
+    
+    .some-payment {
+        background-color: var(--tertiary);
+    }
+}
+
+.readonly-input{
+    cursor: default;
 }

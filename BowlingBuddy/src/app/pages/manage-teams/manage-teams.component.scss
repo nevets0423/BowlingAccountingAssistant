@@ -1,0 +1,30 @@
+.box {
+    background-color: var(--background);
+}
+
+button.formatedButton{
+    background-color: var(--button);
+    &:hover{
+        background-color: var(--button-hover);
+    }
+
+    color: var(--cardHeadline);
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+::ng-deep .mat-checkbox-ripple .mat-ripple-element {
+    background-color: var(--button) !important;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+    background-color: var(--button) !important;
+}
+
+::ng-deep mat-checkbox {
+    & .mat-checkbox-background, .mat-checkbox-frame {
+      border-radius: 70% !important;
+      border-color: var(--button);
+    }
+}

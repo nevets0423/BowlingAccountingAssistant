@@ -4,6 +4,7 @@ import { filter, skip, take } from 'rxjs';
 import { ILeagueFile } from '../../models/interfaces/ILeagueFile';
 import { ILeagueInfo } from '../../models/interfaces/ILeagueInfo';
 import { DataManagerService } from '../../services/data-manager.service';
+import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-create-league',
@@ -13,6 +14,7 @@ import { DataManagerService } from '../../services/data-manager.service';
 export class CreateLeagueComponent implements OnInit {
   leagueForm!: FormGroup;
   loading: boolean = false;
+  dollarSignIcon = faDollarSign;
 
   private _existingFiles: ILeagueFile[] = [];
 

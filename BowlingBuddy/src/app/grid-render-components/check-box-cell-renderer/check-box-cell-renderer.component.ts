@@ -5,7 +5,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular'
   selector: 'app-check-box-cell-renderer',
   template: `
   <label class="checkbox">
-    <input type="checkbox" [(ngModel)]="state" (ngModelChange)="onChange(state)">
+    <mat-checkbox type="checkbox" [(ngModel)]="state" (ngModelChange)="onChange(state)"> </mat-checkbox>
   </label>
   `,
   styles: [

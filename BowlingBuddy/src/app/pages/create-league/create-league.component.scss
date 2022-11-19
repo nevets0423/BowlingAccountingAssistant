@@ -1,0 +1,42 @@
+.is-card{
+    background-color: var(--cardBackGround);
+}
+
+.is-card-header{
+    color: var(--cardHeadline);
+}
+
+.label {
+    color: var(--headline);
+}
+
+.alert{
+    margin-top: 5px;
+    color: red;
+}
+
+.icon{
+    color: var(--tertiary);
+}
+
+.info{
+    padding-top: 15px;
+}
+
+#cost, #totalCost{
+    color: var(--cardHeadline);
+}
+
+button.formatedButton{
+    background-color: var(--button);
+    color: var(--cardHeadline);
+    margin-top: 10px;
+
+    &:hover{
+        background-color: var(--button-hover);
+    }
+
+    &:disabled{
+        background-color: var(--cardBackGround);
+    }
+}

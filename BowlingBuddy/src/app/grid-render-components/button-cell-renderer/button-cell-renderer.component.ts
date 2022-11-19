@@ -6,10 +6,9 @@ import { buttonRendererParams } from './button-renderer-params';
 @Component({
   selector: 'app-button-cell-rendere',
   template: `
-    <button (click)="onClick()">{{rendererParameters.Name}}</button>
+    <button mat-raised-button class='formatedButton' (click)="onClick()">{{rendererParameters.Name}}</button>
   `,
-  styles: [
-  ]
+  styleUrls: ['./button-cell-renderer.component.scss']
 })
 export class ButtonCellRendereComponent implements ICellRendererAngularComp {
   private _params: ICellRendererParams<any, any> | undefined;

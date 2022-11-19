@@ -1,0 +1,9 @@
+button.formatedButton {
+    background-color: var(--button);
+    &:hover{
+        background-color: var(--button-hover);
+    }
+    
+    width: 100% - 5;
+    height: 80% - 5;
+}

@@ -1,6 +1,7 @@
 <ag-grid-angular
     style="height: 50%; min-width: 480px;"
     class="ag-theme-balham"
+    [rowHeight]="45"
     [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef"
     (gridReady)="onGridReady($event)">

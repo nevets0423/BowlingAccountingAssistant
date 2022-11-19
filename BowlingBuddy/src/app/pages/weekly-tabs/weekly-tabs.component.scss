@@ -1,0 +1,13 @@
+.tabs li{
+    &:not(.is-active)a {
+        color: var(--headline);
+    }
+
+    &.is-active a {
+        color: var(--button);
+    }
+
+    &:not(.is-active):hover a{
+        color: var(--paragraph)
+    }
+}

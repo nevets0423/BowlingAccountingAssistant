@@ -26,7 +26,7 @@
     
         <div class="column is-half">
             <mat-form-field appearance="fill" *ngIf="showDropDown">
-                <mat-label>Select a League</mat-label>
+                <mat-label class="header-text">Select a League</mat-label>
                 <mat-select [(ngModel)]="selectedLeague" (selectionChange)="onSelectionChanged()">
                     <mat-option *ngFor="let league of leagueFiles" [value]="league?.FileName">{{league?.DisplayName}}</mat-option>
                 </mat-select>
@@ -35,7 +35,7 @@
     </div>
 
 
-    <div>
+    <div class="saveNotification">
         <td *ngIf="!(Dirty | async) && !(Saving | async)">&#10004;</td>
         <td *ngIf="(Dirty | async) && !(Saving | async)">-</td>
         <div *ngIf="(Saving | async)" [ngClass]="{'is-active': (Saving | async)}" class="loader-wrapper">

@@ -24,6 +24,9 @@ import { ManageLeaguesComponent } from './pages/manage-leagues/manage-leagues.co
 import { ButtonCellRendereComponent } from './grid-render-components/button-cell-renderer/button-cell-renderer.component';
 import { WelcomeScreenComponent } from './pages/welcome-screen/welcome-screen.component';
 import { MainRoutingPageComponent } from './pages/main-routing-page/main-routing-page.component';
+import {MatButtonModule} from '@angular/material/button'; 
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -52,8 +55,11 @@ import { MainRoutingPageComponent } from './pages/main-routing-page/main-routing
     MatToolbarModule,
     MatIconModule,
     MatMenuModule,
+    MatButtonModule,
+    MatCheckboxModule,
     BrowserAnimationsModule,
-    AgGridModule
+    AgGridModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

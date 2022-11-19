@@ -7,6 +7,7 @@ import { GenericInputCellRendererComponent } from 'src/app/grid-render-component
 import { InputCellRedererParameters } from 'src/app/grid-render-components/generic-input-cell-renderer/input-cell-rederer-parameters';
 import { ICellRendererParams } from 'ag-grid-community';
 
+//BUG: something is wrong with calculating weeks. when a player starts on week 1 they are not showing up till week 2
 @Component({
   selector: 'app-week-display',
   templateUrl: './week-display.component.html',
@@ -38,7 +39,7 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
       headerName: 'Name', 
       field: 'Name', 
       width: 125,
-      cellStyle: this.NameCellStyle.bind(this)
+      cellClass: this.NameCellStyle.bind(this)
     },
     {
       headerName: 'Paid', 
@@ -103,9 +104,9 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
         readonly: true,
         updateData: undefined
       } as InputCellRedererParameters,
-      cellStyle: (params: any) => {
+      cellClass: (params: any) => {
         if((this.PlayerPaidToDate(params) - this.PlayerOwes(params)) < 0){
-          return {backgroundColor: 'firebrick'};
+          return 'no-payment';
         }
         return null;
       }
@@ -198,15 +199,15 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
     let player: IPlayerInfo = params.data;
     let difference = this.PlayerPaidToDate(params) - this.PlayerOwes(params);
     if(difference < 0 && player.AmountPaidEachWeek.length <= this.Week){
-      return {backgroundColor: 'firebrick'};
+      return 'no-payment';
     }
   
     let amountOwed = (this._leagueInfo?.LaneFee || 0) + (this._leagueInfo?.PrizeAmountPerWeek || 0);
     if(difference < 0 && player.AmountPaidEachWeek[this.Week] > 0 && player.AmountPaidEachWeek[this.Week] < amountOwed){
-      return {backgroundColor: 'gold'};
+      return 'some-payment';
     }
     if(difference < 0 && player.AmountPaidEachWeek[this.Week] < amountOwed){
-      return {backgroundColor: 'firebrick'};
+      return 'no-payment';
     }
     return null;
   }

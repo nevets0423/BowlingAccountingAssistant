@@ -1,52 +1,91 @@
-<h1>Create League</h1>
+<section class="hero is-card has-text-centered">
+    <div class="hero-body">
+        <p class="title is-card-header"> Create League </p>
+    </div> 
+</section>
+
 <form [formGroup]="leagueForm" (ngSubmit)="CreateLeague()">
-    <div>
-        <label> Name: <input formControlName="name" placeholder="League Name"> </label>
-        <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="alert">
-            <div *ngIf="name?.errors?.['required']">Name is required.</div>
-            <div *ngIf="name?.errors?.['minlength']">Name must be at least 4 characters long.</div>
-            <div *ngIf="name?.errors?.['maxlength']">Name must be at less than 100 characters long.</div>
-            <div *ngIf="name?.errors?.['notUnique']">Name already exists.</div>
-            <div *ngIf="name?.errors?.['specialCharactors']">Name can not contain special charactors.</div>
+    <div class="has-text-centered">
+        <div class="field">
+            <label class="label"> Name: </label>
+            <div class="control">
+                <input formControlName="name" placeholder="League Name">
+                <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="alert">
+                    <div *ngIf="name?.errors?.['required']">Name is required.</div>
+                    <div *ngIf="name?.errors?.['minlength']">Name must be at least 4 characters long.</div>
+                    <div *ngIf="name?.errors?.['maxlength']">Name must be at less than 100 characters long.</div>
+                    <div *ngIf="name?.errors?.['notUnique']">Name already exists.</div>
+                    <div *ngIf="name?.errors?.['specialCharactors']">Name can not contain special charactors.</div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div>
-        <label> Lane Fee: $<input formControlName="fee"> </label>
-        <div *ngIf="fee?.invalid && (fee?.dirty || fee?.touched)" class="alert">
-            <div *ngIf="fee?.errors?.['required']">Lane Fee is required.</div>
-            <div *ngIf="fee?.errors?.['maxlength']">Lane Fee must be less than 10 digits.</div>
-            <div *ngIf="fee?.errors?.['toManyDecimal']">Lane Fee must only have two decimal places.</div>
-            <div *ngIf="fee?.errors?.['isNotNumber']">Lane Fee must be a number.</div>
-            <div *ngIf="fee?.errors?.['greaterThanZero']">Lane Fee must be greater than zero.</div>
+        <div class="field">
+            <label class="label"> Lane Fee:</label>
+            <div class="control">
+                <span class="icon is-small">
+                    <fa-icon [icon]="dollarSignIcon"></fa-icon>
+                </span>
+                <input formControlName="fee">
+                <div *ngIf="fee?.invalid && (fee?.dirty || fee?.touched)" class="alert">
+                    <div *ngIf="fee?.errors?.['required']">Lane Fee is required.</div>
+                    <div *ngIf="fee?.errors?.['maxlength']">Lane Fee must be less than 10 digits.</div>
+                    <div *ngIf="fee?.errors?.['toManyDecimal']">Lane Fee must only have two decimal places.</div>
+                    <div *ngIf="fee?.errors?.['isNotNumber']">Lane Fee must be a number.</div>
+                    <div *ngIf="fee?.errors?.['greaterThanZero']">Lane Fee must be greater than zero.</div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div>
-        <label> Prize Amount Per Week: $<input formControlName="prize"> </label>
-        <div *ngIf="prize?.invalid && (prize?.dirty || prize?.touched)" class="alert">
-            <div *ngIf="prize?.errors?.['required']">Prize Amount is required.</div>
-            <div *ngIf="prize?.errors?.['maxlength']">Prize Amount must be less than 10 digits.</div>
-            <div *ngIf="fee?.errors?.['toManyDecimal']">Prize Amount must only have two decimal places.</div>
-            <div *ngIf="fee?.errors?.['isNotNumber']">Prize Amount must be a number.</div>
-            <div *ngIf="fee?.errors?.['greaterThanZero']">Prize Amount must be greater than zero.</div>
+        <div class="field">
+            <label class="label"> Prize Amount Per Week:</label>
+            <div class="control">
+                <span class="icon is-small">
+                    <fa-icon [icon]="dollarSignIcon"></fa-icon>
+                </span>
+                <input formControlName="prize">
+                <div *ngIf="prize?.invalid && (prize?.dirty || prize?.touched)" class="alert">
+                    <div *ngIf="prize?.errors?.['required']">Prize Amount is required.</div>
+                    <div *ngIf="prize?.errors?.['maxlength']">Prize Amount must be less than 10 digits.</div>
+                    <div *ngIf="fee?.errors?.['toManyDecimal']">Prize Amount must only have two decimal places.</div>
+                    <div *ngIf="fee?.errors?.['isNotNumber']">Prize Amount must be a number.</div>
+                    <div *ngIf="fee?.errors?.['greaterThanZero']">Prize Amount must be greater than zero.</div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div>
-        <label> Weeks: <input formControlName="weeks"> </label>
-        <div *ngIf="weeks?.invalid && (weeks?.dirty || weeks?.touched)" class="alert">
-            <div *ngIf="weeks?.errors?.['required']">Weeks is required.</div>
-            <div *ngIf="weeks?.errors?.['maxlength']">Weeks must be less than 10 digits.</div>
-            <div *ngIf="fee?.errors?.['isNotNumber']">Weeks must be a number.</div>
-            <div *ngIf="fee?.errors?.['greaterThanZero']">Weeks must be greater than zero.</div>
-            <div *ngIf="fee?.errors?.['notWholeNumber']">Weeks must be a whole number.</div>
+        <div class="field">
+            <label class="label"> Weeks: </label>
+            <div class="control">
+                <input formControlName="weeks">
+                <div *ngIf="weeks?.invalid && (weeks?.dirty || weeks?.touched)" class="alert">
+                    <div *ngIf="weeks?.errors?.['required']">Weeks is required.</div>
+                    <div *ngIf="weeks?.errors?.['maxlength']">Weeks must be less than 10 digits.</div>
+                    <div *ngIf="fee?.errors?.['isNotNumber']">Weeks must be a number.</div>
+                    <div *ngIf="fee?.errors?.['greaterThanZero']">Weeks must be greater than zero.</div>
+                    <div *ngIf="fee?.errors?.['notWholeNumber']">Weeks must be a whole number.</div>
+                </div>
+            </div>
         </div>
+        <div class="info">
+            <div class="field">
+                <label class="label"> Cost Per Week </label>
+                <div class="control">
+                    <span class="icon is-small">
+                        <fa-icon [icon]="dollarSignIcon"></fa-icon>
+                    </span>
+                    <input type="text" id="cost" name="cost" class="form-control" disabled="true" [ngModel]="CostPerWeek" [ngModelOptions]="{standalone: true}">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"> Total Cost </label>
+                <div class="control">
+                    <span class="icon is-small">
+                        <fa-icon [icon]="dollarSignIcon"></fa-icon>
+                    </span>
+                    <input type="text" id="totalCost" name="totalCost" class="form-control" disabled="true" [ngModel]="TotalCost" [ngModelOptions]="{standalone: true}">
+                </div>
+            </div>
+        </div>
+        <button mat-raised-button class="formatedButton" type="submit" [disabled]="leagueForm.invalid">Create</button>
     </div>
-    <div>
-        Cost Per Week <input type="text" id="cost" name="cost" class="form-control" disabled="true" [ngModel]="CostPerWeek" [ngModelOptions]="{standalone: true}">
-    </div>
-    <div>
-        Total Cost <input type="text" id="totalCost" name="totalCost" class="form-control" disabled="true" [ngModel]="TotalCost" [ngModelOptions]="{standalone: true}">
-    </div>
-    <button type="submit" [disabled]="leagueForm.invalid">Create</button>
 </form>
   
   
