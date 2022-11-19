@@ -172,7 +172,8 @@ export class DataManagerService implements OnDestroy {
         this._leagues.next(leagueFiles);
         this._loadingLeauges.next(false);
         resolve(leagueFiles);
-      }).catch((error) => {
+      },
+      error => {
         this.HandleError(error);
         reject(error);
       });

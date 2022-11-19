@@ -3,6 +3,7 @@ import { BehaviorSubjectArray } from "../models/BehaviorSubjectArray";
 import { ILeagueFile } from "../models/interfaces/ILeagueFile";
 import { ILeagueInfo } from "../models/interfaces/ILeagueInfo";
 import { IPlayerInfo } from "../models/interfaces/IPlayerInfo";
+import { ISettings } from "../models/interfaces/ISettings";
 import { ITeamInfoDTO } from "../models/interfaces/ITeamInfoDTO";
 import { DataManagerService } from "../services/data-manager.service";
 
@@ -20,6 +21,7 @@ export class DataManagerMock{
     private _players: BehaviorSubjectArray<IPlayerInfo> = new BehaviorSubjectArray<IPlayerInfo>([]);
     private _ready: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     private _newLeagueCreated: BehaviorSubjectArray<ILeagueFile> = new BehaviorSubjectArray<ILeagueFile>([]);
+    private _settings: BehaviorSubject<ISettings> = new BehaviorSubject<ISettings>({lastOpenedLeague: '123.sav'});
     private _loadedLeagueFileName: BehaviorSubject<string> = new BehaviorSubject<string>("");
 
 
@@ -37,6 +39,7 @@ export class DataManagerMock{
         (this.DataManagerMockService as any).Players = this._players.asObservable();
         (this.DataManagerMockService as any).NewLeagueCreated = this._newLeagueCreated.asObservable();
         (this.DataManagerMockService as any).LoadedLeagueFileName = this._loadedLeagueFileName.asObservable();
+        (this.DataManagerMockService as any).Settings = this._settings.asObservable();
     }
 
     get Provider(){
@@ -81,5 +84,9 @@ export class DataManagerMock{
 
     set LeagueInfo(value: ILeagueInfo){
         this._leagueInfo.next(value);
+    }
+
+    set Settings(value: ISettings){
+        this._settings.next(value);
     }
 }

@@ -1,5 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { skip, take } from 'rxjs';
+import { of, skip, take } from 'rxjs';
 
 import { DataManagerService } from '../data-manager.service';
 import { FileManagerService } from '../file-manager.service';
@@ -21,6 +21,16 @@ describe('DataManagerService', () => {
     _fileManager.GetPath.and.callFake((name: string) => {
       return new Promise<string>((resolve) => {
         resolve("path");
+      });
+    });
+
+    _fileManager.ReadFile.and.callFake((path: string) => {
+      if(!path.includes("Settings.config")){
+        fail("It called the pre for constructor mock.");
+      }
+    
+      return new Promise<string>((resolve) => {
+        resolve(JSON.stringify({someSettings: "somethingCool"}));
       });
     });
     
@@ -108,7 +118,9 @@ describe('DataManagerService', () => {
         expect(value).toBeFalse();
       });
 
-      service.LoadLeagues();
+      service.LoadLeagues().then(value => {fail()}, error => {
+        expect(error).toBe("BOOM");
+      });
       tick(1000);
       expect(service.ErrorMessage).toBe("BOOM");
     }));

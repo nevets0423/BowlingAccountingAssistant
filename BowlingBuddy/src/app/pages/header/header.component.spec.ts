@@ -3,9 +3,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataManagerMock } from '../../test-helpers/data-manager-mock';
-import { DataManagerService } from '../../services/data-manager.service';
 
 import { HeaderComponent } from './header.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -22,7 +25,11 @@ describe('HeaderComponent', () => {
       imports:[
         FormsModule,
         ReactiveFormsModule,
+        MatInputModule,
         MatSelectModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatMenuModule,
         BrowserAnimationsModule,
       ],
       providers:[
