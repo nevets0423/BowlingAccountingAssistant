@@ -81,17 +81,17 @@ describe('WeekDisplayComponent', () => {
 
   describe('player should be', () => {
     [
-      { week: 0, weekStarted: 0, weekEnded: 8, shouldBeActive: true },
-      { week: 0, weekStarted: 1, weekEnded: 8, shouldBeActive: false },
-      { week: 0, weekStarted: 2, weekEnded: 8, shouldBeActive: false },
-      { week: 1, weekStarted: 0, weekEnded: 8, shouldBeActive: true },
-      { week: 1, weekStarted: 1, weekEnded: 8, shouldBeActive: true },
-      { week: 1, weekStarted: 0, weekEnded: 0, shouldBeActive: false },
-      { week: 1, weekStarted: 2, weekEnded: 8, shouldBeActive: false },
-      { week: 2, weekStarted: 1, weekEnded: 8, shouldBeActive: true },
-      { week: 2, weekStarted: 0, weekEnded: 0, shouldBeActive: false },
+      { week: 0, weekStarted: 1, weekEnded: 9, shouldBeActive: true },
+      { week: 0, weekStarted: 2, weekEnded: 9, shouldBeActive: false },
+      { week: 0, weekStarted: 3, weekEnded: 9, shouldBeActive: false },
+      { week: 1, weekStarted: 1, weekEnded: 9, shouldBeActive: true },
+      { week: 1, weekStarted: 2, weekEnded: 9, shouldBeActive: true },
+      { week: 1, weekStarted: 1, weekEnded: 1, shouldBeActive: false },
+      { week: 1, weekStarted: 3, weekEnded: 9, shouldBeActive: false },
+      { week: 2, weekStarted: 2, weekEnded: 9, shouldBeActive: true },
       { week: 2, weekStarted: 1, weekEnded: 1, shouldBeActive: false },
-      { week: 2, weekStarted: 3, weekEnded: 8, shouldBeActive: false },
+      { week: 2, weekStarted: 2, weekEnded: 2, shouldBeActive: false },
+      { week: 2, weekStarted: 4, weekEnded: 9, shouldBeActive: false },
     ].forEach((params: any,) => {
       it(`${params.shouldBeActive ? "active": "not active"} for week ${params.week} when they started on week ${params.weekStarted}`, async () => {
         let players = CreatePlayers(1);
@@ -105,25 +105,25 @@ describe('WeekDisplayComponent', () => {
 
   describe('total amount paid today sums correctly', () => {
     [
-      { week: 0, expectResult: 20, playerOneStartDate: 0},
-      { week: 0, expectResult: 10, playerOneStartDate: 3},
-      { week: 0, expectResult: 10, playerOneStartDate: 1},
+      { week: 0, expectResult: 20, playerOneStartDate: 1},
+      { week: 0, expectResult: 10, playerOneStartDate: 4},
+      { week: 0, expectResult: 10, playerOneStartDate: 2},
 
-      { week: 1, expectResult: 20, playerOneStartDate: 0},
-      { week: 1, expectResult: 10, playerOneStartDate: 2},
+      { week: 1, expectResult: 20, playerOneStartDate: 1},
       { week: 1, expectResult: 10, playerOneStartDate: 3},
+      { week: 1, expectResult: 10, playerOneStartDate: 4},
 
-      { week: 2, expectResult: 50, playerOneStartDate: 0},
-      { week: 2, expectResult: 50, playerOneStartDate: 2},
-      { week: 2, expectResult: 25, playerOneStartDate: 3},
+      { week: 2, expectResult: 50, playerOneStartDate: 1},
+      { week: 2, expectResult: 50, playerOneStartDate: 3},
       { week: 2, expectResult: 25, playerOneStartDate: 4},
+      { week: 2, expectResult: 25, playerOneStartDate: 5},
 
-      { week: 3, expectResult: 30, playerOneStartDate: 0},
-      { week: 3, expectResult: 30, playerOneStartDate: 3},
-      { week: 3, expectResult: 15, playerOneStartDate: 4},
+      { week: 3, expectResult: 30, playerOneStartDate: 1},
+      { week: 3, expectResult: 30, playerOneStartDate: 4},
+      { week: 3, expectResult: 15, playerOneStartDate: 5},
 
-      { week: 4, expectResult: 0, playerOneStartDate: 0},
-      { week: 4, expectResult: 0, playerOneStartDate: 3},
+      { week: 4, expectResult: 0, playerOneStartDate: 1},
+      { week: 4, expectResult: 0, playerOneStartDate: 4},
     ].forEach((params: any, index: number) => {
       it(`${index} -- week ${params.week} should total ${params.expectResult} when player one starts on week ${params.playerOneStartDate}`, async () => {
         let players = CreatePlayers(2);
@@ -144,16 +144,16 @@ describe('WeekDisplayComponent', () => {
 
   describe('total amount paid to date sums correctly', () => {
     [
-      {week: 0, expectedResults: 10, playerOneStartDate: 1},
-      {week: 0, expectedResults: 20, playerOneStartDate: 0},
-      {week: 1, expectedResults: 40, playerOneStartDate: 0},
-      {week: 1, expectedResults: 30, playerOneStartDate: 1},
-      {week: 1, expectedResults: 20, playerOneStartDate: 2},
+      {week: 0, expectedResults: 10, playerOneStartDate: 2},
+      {week: 0, expectedResults: 20, playerOneStartDate: 1},
+      {week: 1, expectedResults: 40, playerOneStartDate: 1},
+      {week: 1, expectedResults: 30, playerOneStartDate: 2},
       {week: 1, expectedResults: 20, playerOneStartDate: 3},
-      {week: 2, expectedResults: 90, playerOneStartDate: 0},
-      {week: 2, expectedResults: 80, playerOneStartDate: 1},
-      {week: 2, expectedResults: 70, playerOneStartDate: 2},
-      {week: 2, expectedResults: 45, playerOneStartDate: 3},
+      {week: 1, expectedResults: 20, playerOneStartDate: 4},
+      {week: 2, expectedResults: 90, playerOneStartDate: 1},
+      {week: 2, expectedResults: 80, playerOneStartDate: 2},
+      {week: 2, expectedResults: 70, playerOneStartDate: 3},
+      {week: 2, expectedResults: 45, playerOneStartDate: 4},
     ].forEach(params => {
       it(`week ${params.week} should be ${params.expectedResults} when player one starts on week ${params.playerOneStartDate}`, async () =>{
         let players = CreatePlayers(3);
@@ -175,15 +175,15 @@ describe('WeekDisplayComponent', () => {
 
   describe('total paid to lanes sums correctly', () => {
     [
-      {week: 0, expectedResults: 20, playerOneStartDate: 0},
-      {week: 0, expectedResults: 10, playerOneStartDate: 1},
-      {week: 1, expectedResults: 40, playerOneStartDate: 0},
-      {week: 1, expectedResults: 30, playerOneStartDate: 1},
-      {week: 1, expectedResults: 20, playerOneStartDate: 2},
-      {week: 2, expectedResults: 60, playerOneStartDate: 0},
-      {week: 2, expectedResults: 50, playerOneStartDate: 1},
-      {week: 2, expectedResults: 40, playerOneStartDate: 2},
-      {week: 2, expectedResults: 30, playerOneStartDate: 3},
+      {week: 0, expectedResults: 20, playerOneStartDate: 1},
+      {week: 0, expectedResults: 10, playerOneStartDate: 2},
+      {week: 1, expectedResults: 40, playerOneStartDate: 1},
+      {week: 1, expectedResults: 30, playerOneStartDate: 2},
+      {week: 1, expectedResults: 20, playerOneStartDate: 3},
+      {week: 2, expectedResults: 60, playerOneStartDate: 1},
+      {week: 2, expectedResults: 50, playerOneStartDate: 2},
+      {week: 2, expectedResults: 40, playerOneStartDate: 3},
+      {week: 2, expectedResults: 30, playerOneStartDate: 4},
     ].forEach(params => {
       it(`week ${params.week} should total ${params.expectedResults} when player one starts on week ${params.playerOneStartDate}`, async () => {
         let players = CreatePlayers(2);
@@ -204,12 +204,12 @@ describe('WeekDisplayComponent', () => {
 
   describe('total lane fee owed sums correctly', () => {
     [
-      { week: 0, players: 1, expectResult: 10, playerOneStartDate: 0, playerOneEndDate: 10},
-      { week: 1, players: 1, expectResult: 20, playerOneStartDate: 0, playerOneEndDate: 10},
-      { week: 2, players: 2, expectResult: 60, playerOneStartDate: 0, playerOneEndDate: 10},
-      { week: 3, players: 3, expectResult: 120, playerOneStartDate: 0, playerOneEndDate: 10},
-      { week: 1, players: 2, expectResult: 20, playerOneStartDate: 2, playerOneEndDate: 10},
-      { week: 1, players: 2, expectResult: 30, playerOneStartDate: 1, playerOneEndDate: 10},
+      { week: 0, players: 1, expectResult: 10, playerOneStartDate: 1, playerOneEndDate: 11},
+      { week: 1, players: 1, expectResult: 20, playerOneStartDate: 1, playerOneEndDate: 11},
+      { week: 2, players: 2, expectResult: 60, playerOneStartDate: 1, playerOneEndDate: 11},
+      { week: 3, players: 3, expectResult: 120, playerOneStartDate: 1, playerOneEndDate: 11},
+      { week: 1, players: 2, expectResult: 20, playerOneStartDate: 3, playerOneEndDate: 11},
+      { week: 1, players: 2, expectResult: 30, playerOneStartDate: 2, playerOneEndDate: 11},
     ].forEach((params: any) => {
       it(`week ${params.week} should total ${params.expectResult} with ${params.players} players, when player one starts on week ${params.playerOneStartDate} and stops week ${params.playerOneEndDate}`, async () => {
         component.week = params.week;
@@ -231,20 +231,20 @@ describe('WeekDisplayComponent', () => {
 
   describe('total prize amount sums correctly', () => {
     [
-      {week: 0, expectedResults: 0, playerOneStartDate: 0},
       {week: 0, expectedResults: 0, playerOneStartDate: 1},
-      {week: 1, expectedResults: 0, playerOneStartDate: 0},
+      {week: 0, expectedResults: 0, playerOneStartDate: 2},
       {week: 1, expectedResults: 0, playerOneStartDate: 1},
       {week: 1, expectedResults: 0, playerOneStartDate: 2},
-      {week: 2, expectedResults: 30, playerOneStartDate: 0},
+      {week: 1, expectedResults: 0, playerOneStartDate: 3},
       {week: 2, expectedResults: 30, playerOneStartDate: 1},
       {week: 2, expectedResults: 30, playerOneStartDate: 2},
-      {week: 2, expectedResults: 15, playerOneStartDate: 3},
-      {week: 3, expectedResults: 40, playerOneStartDate: 0},
+      {week: 2, expectedResults: 30, playerOneStartDate: 3},
+      {week: 2, expectedResults: 15, playerOneStartDate: 4},
       {week: 3, expectedResults: 40, playerOneStartDate: 1},
       {week: 3, expectedResults: 40, playerOneStartDate: 2},
-      {week: 3, expectedResults: 25, playerOneStartDate: 3},
-      {week: 3, expectedResults: 20, playerOneStartDate: 4},
+      {week: 3, expectedResults: 40, playerOneStartDate: 3},
+      {week: 3, expectedResults: 25, playerOneStartDate: 4},
+      {week: 3, expectedResults: 20, playerOneStartDate: 5},
     ].forEach(params => {
       it(`week ${params.week} should total ${params.expectedResults} when player one starts on week ${params.playerOneStartDate}`, async () => {
         let players = CreatePlayers(2);
@@ -265,9 +265,9 @@ describe('WeekDisplayComponent', () => {
 
   describe('total paid to date by player sums correctly', () => {
     [
-      { week: 0, playerOneStartDate: 0, expectResult: 10},
-      { week: 1, playerOneStartDate: 0, expectResult: 20},
-      { week: 1, playerOneStartDate: 1, expectResult: 10},
+      { week: 0, playerOneStartDate: 1, expectResult: 10},
+      { week: 1, playerOneStartDate: 1, expectResult: 20},
+      { week: 1, playerOneStartDate: 2, expectResult: 10},
     ].forEach((params: any) => {
       it(`week ${params.week} should total ${params.expectResult}, when player starts on week ${params.playerOneStartDate}`, async () => {
         component.week = params.week;
@@ -288,9 +288,9 @@ describe('WeekDisplayComponent', () => {
 
   describe('total player owes to date sums correctly', () => {
     [
-      { week: 0, playerOneStartDate: 0, expectResult: 15},
-      { week: 1, playerOneStartDate: 0, expectResult: 30},
-      { week: 1, playerOneStartDate: 1, expectResult: 15},
+      { week: 0, playerOneStartDate: 1, expectResult: 15},
+      { week: 1, playerOneStartDate: 1, expectResult: 30},
+      { week: 1, playerOneStartDate: 2, expectResult: 15},
     ].forEach((params: any) => {
       it(`week ${params.week} should total ${params.expectResult}, when player starts on week ${params.playerOneStartDate}`, async () => {
         component.week = params.week;
@@ -311,10 +311,10 @@ describe('WeekDisplayComponent', () => {
 
   describe('players difference to date sums correctly', () => {
     [
-      { week: 0, playerOneStartDate: 0, expectResult: -5},
-      { week: 1, playerOneStartDate: 0, expectResult: -10},
-      { week: 1, playerOneStartDate: 1, expectResult: -5},
-      { week: 2, playerOneStartDate: 0, expectResult: 0},
+      { week: 0, playerOneStartDate: 1, expectResult: -5},
+      { week: 1, playerOneStartDate: 1, expectResult: -10},
+      { week: 1, playerOneStartDate: 2, expectResult: -5},
+      { week: 2, playerOneStartDate: 1, expectResult: 0},
     ].forEach((params: any) => {
       it(`week ${params.week} should total ${params.expectResult}, when player starts on week ${params.playerOneStartDate}`, async () => {
         component.week = params.week;
@@ -335,11 +335,12 @@ describe('WeekDisplayComponent', () => {
 
   describe('player name is color coded correctly', () => {
     [
-      {color: "gold", paidToday: 5, shouldContain: true},
-      {color: "firebrick", paidToday: 0, shouldContain: true},
-      {color: "background-color", paidToday: 15, shouldContain: false}
+      {class: "some-payment", paidToday: 5, shouldContain: true},
+      {class: "no-payment", paidToday: 0, shouldContain: true},
+      {class: "some-payment", paidToday: 15, shouldContain: false},
+      {class: "no-payment", paidToday: 15, shouldContain: false}
     ].forEach((params: any) => {
-      it(`player background should be ${params.color} when they pay ${params.paidToday}`, async () => {
+      it(`player class should be ${params.class} when they pay ${params.paidToday}`, async () => {
         let players = CreatePlayers(1);
         players[0].AmountPaidEachWeek[0] = params.paidToday;
         mockDataManagerService.Players = players;
@@ -350,11 +351,12 @@ describe('WeekDisplayComponent', () => {
 
         expect(element).toBeTruthy();
 
+        console.log('class', element?.className);
         if(params.shouldContain){
-          expect(element?.attributes.getNamedItem("style")?.value).toContain(params.color.toString());
+          expect(element?.className).toContain(params.class.toString());
         }
         else{
-          expect(element?.attributes.getNamedItem("style")?.value).not.toContain(params.color.toString());
+          expect(element?.className).not.toContain(params.class.toString());
         }
       });
     });
@@ -362,10 +364,10 @@ describe('WeekDisplayComponent', () => {
 
   describe('player difference is color coded correctly', () => {
     [
-      {color: "firebrick", paidToday: 0, shouldContain: true},
-      {color: "background-color", paidToday: 15, shouldContain: false}
+      {class: "no-payment", paidToday: 0, shouldContain: true},
+      {class: "no-payment", paidToday: 15, shouldContain: false}
     ].forEach((params: any) => {
-      it(`player background should be ${params.color} when they pay ${params.paidToday}`, async () => {
+      it(`player class should be ${params.color} when they pay ${params.paidToday}`, async () => {
         let players = CreatePlayers(1);
         players[0].AmountPaidEachWeek[0] = params.paidToday;
         mockDataManagerService.Players = players;
@@ -377,10 +379,10 @@ describe('WeekDisplayComponent', () => {
         expect(element).toBeTruthy();
 
         if(params.shouldContain){
-          expect(element?.attributes.getNamedItem("style")?.value).toContain(params.color.toString());
+          expect(element?.className).toContain(params.class.toString());
         }
         else{
-          expect(element?.attributes.getNamedItem("style")?.value).not.toContain(params.color.toString());
+          expect(element?.className).not.toContain(params.class.toString());
         }
       });
     });
@@ -395,8 +397,8 @@ function CreatePlayers(count: number){
       Name: `player${i}`,
       TeamID: 0,
       AmountPaidEachWeek: [10,10,25,15],
-      WeekStarted: 0,
-      WeekEnded: 4
+      WeekStarted: 1,
+      WeekEnded: 5
     });
   }
 

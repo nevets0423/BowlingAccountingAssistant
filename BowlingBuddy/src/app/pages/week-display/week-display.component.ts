@@ -248,6 +248,6 @@ export class WeekDisplayComponent implements OnInit, OnChanges {
     if(!player){
       return false;
     }
-    return player.WeekStarted <= week && player.WeekEnded > week;
+    return player.WeekStarted - 1 <= week && player.WeekEnded - 1 > week;
   }
 }
